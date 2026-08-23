@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — How the Internet Works</title>
+<style>
+  body { font-family: Georgia, serif; color:#1a1a2e; max-width:44rem; margin:0 auto; padding:2rem 1.25rem; line-height:1.55; }
+  h1 { font-size:1.6rem; border-bottom:2px solid #2563eb; padding-bottom:.4rem; }
+  dt { font-weight:bold; font-family:system-ui,sans-serif; margin-top:1rem; }
+  dd { margin:.2rem 0 0 0; color:#374151; }
+  .aka { color:#6b7280; font-size:.85em; font-weight:normal; }
+  @media print { body { font-size:11pt; max-width:none; } }
+</style>
+</head>
+<body>
+<h1>Glossary — How the Internet Works</h1>
+<p>Terms used across all lessons. One line each — interview-answer length.</p>
+<dl>
+  <dt>DNS <span class="aka">(Domain Name System)</span></dt>
+  <dd>The internet's phonebook: translates domain names (google.com) into IP addresses.</dd>
+
+  <dt>IP address</dt>
+  <dd>A numeric address identifying a device on a network, e.g. 142.250.80.46. Traffic is routed by IP, not by name.</dd>
+
+  <dt>Packet</dt>
+  <dd>A chunk of data plus a header (source, destination). All internet traffic is broken into packets.</dd>
+
+  <dt>TCP <span class="aka">(Transmission Control Protocol)</span></dt>
+  <dd>Connection-oriented transport: reliable, ordered delivery. Opens with a 3-way handshake: SYN, SYN-ACK, ACK.</dd>
+
+  <dt>UDP <span class="aka">(User Datagram Protocol)</span></dt>
+  <dd>Connectionless transport: fast, no guarantees, no handshake. Used by DNS queries, video, games.</dd>
+
+  <dt>TLS <span class="aka">(Transport Layer Security)</span></dt>
+  <dd>Encryption + authentication layer on top of TCP. The "S" in HTTPS: verifies the server's certificate, then agrees a shared key.</dd>
+
+  <dt>HTTP <span class="aka">(HyperText Transfer Protocol)</span></dt>
+  <dd>Request/response protocol of the web: client sends <code>GET /path</code>, server replies with a status code and content.</dd>
+
+  <dt>HTTPS</dt>
+  <dd>HTTP inside a TLS-encrypted connection. Default port 443 (plain HTTP: 80).</dd>
+
+  <dt>URL <span class="aka">(Uniform Resource Locator)</span></dt>
+  <dd>Full address of a resource: scheme + host + path, e.g. <code>https://google.com/search</code>.</dd>
+
+  <dt>Port</dt>
+  <dd>A number (0–65535) identifying which service on a machine should receive traffic. 443 = HTTPS, 80 = HTTP, 53 = DNS.</dd>
+
+  <dt>Handshake</dt>
+  <dd>An opening exchange to establish a connection. TCP: 3 packets. TLS: negotiates encryption after TCP is up.</dd>
+
+  <dt>Resolver <span class="aka">(recursive resolver)</span></dt>
+  <dd>The server (usually your ISP's) that chases down a DNS answer for you: root → TLD → authoritative nameserver.</dd>
+
+  <dt>ISP <span class="aka">(Internet Service Provider)</span></dt>
+  <dd>The company connecting you to the internet; typically provides your DNS resolver by default.</dd>
+
+  <dt>CDN <span class="aka">(Content Delivery Network)</span></dt>
+  <dd>Globally distributed servers that cache content near users. Your "google.com" request usually hits a CDN edge, not one central server.</dd>
+
+  <dt>Root nameserver</dt>
+  <dd>Top of the DNS hierarchy. Doesn't know IPs — it points you at the right TLD server.</dd>
+
+  <dt>TLD <span class="aka">(Top-Level Domain)</span></dt>
+  <dd>The last part of a domain: .com, .org, .dev. TLD servers point to the domain's own nameservers.</dd>
+
+  <dt>Authoritative nameserver</dt>
+  <dd>The DNS server that actually holds a domain's records and gives the final answer. End of the lookup chain.</dd>
+
+  <dt>A record / AAAA record</dt>
+  <dd>DNS records mapping a name to an IPv4 (A) or IPv6 (AAAA) address.</dd>
+
+  <dt>CNAME record</dt>
+  <dd>DNS alias: points a name at another name instead of an IP. Costs an extra lookup.</dd>
+
+  <dt>TTL <span class="aka">(Time To Live)</span></dt>
+  <dd>How long a record may be cached before re-fetching, in seconds. Why DNS changes "propagate" slowly.</dd>
+
+  <dt>Sequence number</dt>
+  <dd>Per-byte counter in every TCP segment. Lets the receiver order segments, detect loss and duplicates.</dd>
+
+  <dt>Flow control</dt>
+  <dd>Receiver advertises its buffer space so the sender doesn't overwhelm it.</dd>
+
+  <dt>Congestion control</dt>
+  <dd>Sender slows down when it detects loss/delay, protecting the network from itself.</dd>
+
+  <dt>RTT <span class="aka">(Round-Trip Time)</span></dt>
+  <dd>Time for a packet to go somewhere and come back. Every handshake costs at least one RTT.</dd>
+</dl>
+</body>
+</html>

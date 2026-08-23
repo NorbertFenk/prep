@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 3 — TCP: the three-way handshake and why not two</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .wire{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  .wire .c{color:#7dd3fc}.wire .s{color:#fca5a5}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0003 · How the Internet Works · ~15 min · builds on lesson 0001 step 3</p>
+<h1>TCP: the three-way handshake</h1>
+<p>You already know the sequence: <b>SYN → SYN-ACK → ACK</b>. Interviews don't stop there.
+The killer follow-up is <i>"why three packets — wouldn't two be enough?"</i> That's this lesson's
+one thing: understanding what the handshake actually negotiates.</p>
+
+<h2>What TCP promises you</h2>
+<ul>
+  <li><b>Reliable</b> — lost segments get retransmitted.</li>
+  <li><b>Ordered</b> — bytes arrive in send-order, even if packets take different paths.</li>
+  <li><b>Flow control</b> — the receiver won't be flooded beyond its buffer.</li>
+  <li><b>Congestion control</b> — the sender backs off when the network is struggling.</li>
+</ul>
+<p>All of that needs one thing before any data flows: both sides agreeing on
+<b>where the byte stream starts</b>. That agreement is the handshake.</p>
+
+<h2>The handshake, on the wire</h2>
+<div class="wire">
+<span class="c">client → server : SYN,  seq=x</span><br>
+<span class="s">server → client : SYN+ACK, seq=y, ack=x+1</span><br>
+<span class="c">client → server : ACK, ack=y+1</span>
+</div>
+<div class="step"><div class="num">1</div><div><b>SYN</b><p>Client picks a random starting sequence number x and sends it. "I want to talk; I'll count my bytes from x."</p></div></div>
+<div class="step"><div class="num">2</div><div><b>SYN-ACK</b><p>Server replies with its own starting number y, plus ack=x+1 — "got your x; everything up to x is confirmed."</p></div></div>
+<div class="step"><div class="num">3</div><div><b>ACK</b><p>Client confirms y: "got your y." Both directions are now open with agreed starting points. Data flows.</p></div></div>
+
+<h2>Why not two?</h2>
+<p>The classic trap answer: "to establish the connection." The real reason: each side must hear
+its own sequence number <i>acknowledged</i>. After two packets the client knows the server got x,
+but the <b>server has no confirmation that the client received y</b>. Without that third packet,
+an old duplicate SYN arriving late could make a half-open connection the server thinks is live.
+Three packets = both directions proven, both ISNs locked in.</p>
+
+<h2>Closing down</h2>
+<p>Symmetric teardown: side sends <b>FIN</b>, other side <b>ACK</b>s, then sends its own <b>FIN</b>,
+first side <b>ACK</b>s back. Four packets because each direction closes independently —
+you can stop sending while still receiving.</p>
+
+<h2>TCP vs UDP — when you skip all of this</h2>
+<p>UDP is TCP's no-guarantees sibling: no handshake, no ordering, no retransmission — just fire
+the datagram. That's not "worse", it's a different deal:</p>
+<table>
+<tr><th></th><th>TCP</th><th>UDP</th></tr>
+<tr><td>Connection</td><td>handshake first</td><td>none — just send</td></tr>
+<tr><td>Delivery</td><td>guaranteed, ordered</td><td>best-effort, may drop/reorder</td></tr>
+<tr><td>Speed to first byte</td><td>≥ 1 RTT for handshake</td><td>0 RTT</td></tr>
+<tr><td>Used by</td><td>HTTP/1.1, HTTP/2, SSH, email</td><td>DNS queries, video calls, gaming, QUIC/HTTP/3</td></tr>
+</table>
+<p>Interview heuristic: <b>if a late packet is worse than a lost packet, use UDP.</b>
+A retransmitted video frame from three seconds ago is useless; a DNS query is one tiny
+request-response where a handshake would double the cost.</p>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="1">
+  <p>1. Why does TCP use three packets instead of two?</p>
+  <button>Three is the minimum for encryption to start</button>
+  <button>Both sides must have their starting sequence number acknowledged</button>
+  <button>To synchronize clocks between client and server</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>2. What does <code>ack=y+1</code> in the SYN-ACK actually tell the client?</p>
+  <button>"Send y+1 more bytes"</button>
+  <button>"My sequence number is y+1"</button>
+  <button>"I received everything up to y — next byte please"</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>3. A live video call is best served by which protocol, and why?</p>
+  <button>UDP — a late retransmitted frame is worthless</button>
+  <button>TCP — video must never lose data</button>
+  <button>TCP — it has lower latency per packet</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>4. Packets arrive out of order (2,3,1). What makes the app never notice?</p>
+  <button>The router reorders them before delivery</button>
+  <button>The OS buffers and reorders segments using sequence numbers</button>
+  <button>UDP renumbers them at the destination</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>5. Why does closing a TCP connection take four packets?</p>
+  <button>Closing must mirror opening exactly</button>
+  <button>Two packets are reserved for error codes</button>
+  <button>Each direction closes independently — FIN/ACK per side</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<p>Two prompts, 30 seconds each, out loud:</p>
+<ol>
+  <li><i>"Walk me through the TCP handshake."</i></li>
+  <li><i>"Why wouldn't two packets be enough?"</i> — this is where candidates freeze.</li>
+</ol>
+
+<details>
+  <summary>Model answers (peek only after trying)</summary>
+  <p><b>Handshake:</b> "The client sends SYN with its initial sequence number x. The server
+  responds SYN-ACK with its own starting number y and ack x+1. The client ACKs y+1. Now both
+  directions have agreed starting points and are open."</p>
+  <p><b>Why not two:</b> "After two packets the server has acknowledged the client's ISN but
+  has no proof the client ever got the server's sequence number. A stale duplicate SYN could
+  leave a half-open connection the server thinks is live. The third packet closes that loop —
+  both ISNs are confirmed in both directions."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://hpbn.co/building-blocks-of-tcp/">HPBN: Building Blocks of TCP</a> — handshake cost, flow vs congestion control, slow-start.</li>
+  <li><a href="https://hpbn.co/building-blocks-of-udp/">HPBN: Building Blocks of UDP</a> — what you give up, NAT traversal.</li>
+  <li><a href="https://github.com/alex/what-happens-when">alex/what-happens-when</a> — "Opening of a socket" section: socket → segment → packet → frame layering.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — sequence number, flow control, congestion control, RTT added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "why does slow-start exist?", "what's
+head-of-line blocking?", or have me drill the why-not-two answer until it's automatic. Next chapter:
+the TLS handshake that rides on top of this connection.</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken answers.' : ' — review what you missed, then do the spoken answers.');
+  }));
+});
+</script>
+</body>
+</html>

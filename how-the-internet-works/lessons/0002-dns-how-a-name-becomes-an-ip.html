@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2 — DNS: how a name becomes an IP</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  td code{white-space:nowrap}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0002 · How the Internet Works · ~15 min · builds on lesson 0001, step 2</p>
+<h1>DNS: how a name becomes an IP address</h1>
+<p>Last lesson, step 2 was a black box called "DNS lookup". Interviews open that box:
+<i>"walk me through a DNS resolution."</i> By the end you'll answer it cleanly, plus the
+follow-ups: <i>CNAME vs A record? Why does DNS use UDP? Why do changes propagate slowly?</i></p>
+
+<h2>The cast</h2>
+<p>Four servers can be involved when nothing is cached:</p>
+<div class="step"><div class="num">R</div><div><b>Recursive resolver</b><p>Your delegate — usually your ISP's (or 8.8.8.8 / 1.1.1.1). It does the legwork on your behalf and caches answers.</p></div></div>
+<div class="step"><div class="num">.</div><div><b>Root nameserver</b><p>Doesn't know any IPs. Only knows: "for <code>.com</code>, ask these TLD servers."</p></div></div>
+<div class="step"><div class="num">T</div><div><b>TLD nameserver</b><p>Owns all of <code>.com</code>. Knows: "for <code>example.com</code>, ask its authoritative nameserver."</p></div></div>
+<div class="step"><div class="num">A</div><div><b>Authoritative nameserver</b><p>Holds the domain's actual records. Gives the final answer: the A record with the IP. End of the chain.</p></div></div>
+
+<h2>The lookup, step by step</h2>
+<div class="step"><div class="num">1</div><div><b>Check the caches first</b><p>Browser cache → OS resolver cache → recursive resolver's cache. Any hit ends the journey here — most lookups never leave the resolver.</p></div></div>
+<div class="step"><div class="num">2</div><div><b>Resolver → root</b><p>"Where do I find <code>.com</code>?" Root replies with the TLD servers for <code>.com</code>.</p></div></div>
+<div class="step"><div class="num">3</div><div><b>Resolver → TLD</b><p>"Where's <code>example.com</code>?" TLD replies with the domain's authoritative nameservers.</p></div></div>
+<div class="step"><div class="num">4</div><div><b>Resolver → authoritative</b><p>"What's the A record for <code>example.com</code>?" It answers with the IP.</p></div></div>
+<div class="step"><div class="num">5</div><div><b>Answer travels back — and gets cached</b><p>The resolver returns the IP to your browser and stores it for the record's <b>TTL</b>. Next visitor with the same question is served from cache.</p></div></div>
+
+<h2>Records worth knowing by name</h2>
+<table>
+<tr><th>Type</th><th>Maps</th><th>Example</th><th>Interview note</th></tr>
+<tr><td><code>A</code></td><td>name → IPv4</td><td><code>example.com → 93.184.216.34</code></td><td>The workhorse answer.</td></tr>
+<tr><td><code>AAAA</code></td><td>name → IPv6</td><td>same, 128-bit addresses</td><td>Say "quad-A".</td></tr>
+<tr><td><code>CNAME</code></td><td>name → another name</td><td><code>www → example.com</code></td><td>An alias: costs a second lookup to get the real IP.</td></tr>
+<tr><td><code>MX</code></td><td>domain → mail servers</td><td><code>example.com → mail.isp.net</code></td><td>Mail routing, priority numbers included.</td></tr>
+<tr><td><code>NS</code></td><td>domain → its nameservers</td><td>what TLD hands back</td><td>Delegation between levels.</td></tr>
+<tr><td><code>TXT</code></td><td>free text</td><td>SPF, domain verification</td><td>"Prove you own this domain" tricks live here.</td></tr>
+</table>
+
+<h2>Warm-up — lesson 1 recall (no scrolling up!)</h2>
+
+<div class="q" data-answer="2">
+  <p>W1. In the 7-step journey, what comes immediately after the DNS lookup?</p>
+  <button>TLS handshake</button>
+  <button>HTTP request</button>
+  <button>TCP 3-way handshake</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>W2. Name the TCP handshake packets, in order.</p>
+  <button>SYN, ACK, SYN-ACK</button>
+  <button>SYN, SYN-ACK, ACK</button>
+  <button>SYN, ACK, FIN</button>
+  <div class="fb"></div>
+</div>
+
+<h2>Check yourself — DNS</h2>
+
+<div class="q" data-answer="0">
+  <p>1. Nothing is cached. Who does your browser send its DNS query to?</p>
+  <button>The recursive resolver (e.g. your ISP's)</button>
+  <button>The root nameserver directly</button>
+  <button>The domain's authoritative nameserver</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>2. The root nameserver is asked "where is example.com?" What does it answer?</p>
+  <button>The IP address of example.com</button>
+  <button>"Ask the .com TLD servers — here they are"</button>
+  <button>"example.com does not exist"</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>3. Which server gives the final IP answer?</p>
+  <button>Root</button>
+  <button>TLD</button>
+  <button>Authoritative nameserver</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>4. CNAME vs A record — what's the difference?</p>
+  <button>CNAME points to another name; A points straight to an IP</button>
+  <button>CNAME is for IPv6; A is for IPv4</button>
+  <button>CNAME is faster because it's cached longer</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>5. You change a DNS record, but some users still see the old IP for an hour. Why?</p>
+  <button>DNS changes always take exactly 24 hours</button>
+  <button>Resolvers cache answers for the record's TTL before re-fetching</button>
+  <button>The authoritative server pushes updates only once a day</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Interview follow-ups you now can handle</h2>
+<ul>
+  <li><b>"Why does DNS use UDP?"</b> — One small question, one small answer: no connection setup, no handshake overhead. If the response is too big for one packet (or gets lost), it falls back to TCP. Modern note: DNS-over-HTTPS and QUIC are changing this story.</li>
+  <li><b>"What happens if the resolver can't answer?"</b> — It iterates: root → TLD → authoritative, exactly as above.</li>
+  <li><b>"Why so many caches?"</b> — Each layer (browser, OS, resolver) short-circuits the trip. TTL controls how stale a cached answer may get.</li>
+</ul>
+
+<h2>The real skill: say it out loud</h2>
+<p>45-second timer, out loud: <i>"Walk me through what happens when a browser resolves example.com."</i></p>
+
+<details>
+  <summary>Model answer (peek only after trying)</summary>
+  <p>"The browser checks its own cache first, then the OS's — usually it stops there because
+  resolvers cache aggressively. On a cold lookup, my query goes to a recursive resolver — my ISP's
+  or something like 1.1.1.1. The resolver asks a root nameserver, which doesn't know IPs but
+  refers it to the .com TLD servers. The TLD points at example.com's authoritative nameserver,
+  which actually holds the records and returns the A record with the IP. The resolver hands me
+  the IP and caches everything along that chain for the TTL, so the next lookup for that domain
+  never leaves the cache."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://www.cloudflare.com/learning/dns/what-is-dns/">Cloudflare: What is DNS?</a> — the 8-step lookup and the four server types.</li>
+  <li><a href="https://www.cloudflare.com/learning/dns/dns-records/">Cloudflare: DNS records</a> — every record type explained.</li>
+  <li><a href="https://github.com/alex/what-happens-when">alex/what-happens-when</a> — "DNS lookup" section, including hosts-file checks before DNS runs.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — six new DNS terms added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent anything — "how do I look up DNS myself?"
+(nslookup / dig — next lesson could be exactly that), "what breaks when DNS breaks?", or quiz me on this chapter.</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do the spoken answer.' : ' — review what you missed, then do the spoken answer.');
+  }));
+});
+</script>
+</body>
+</html>
