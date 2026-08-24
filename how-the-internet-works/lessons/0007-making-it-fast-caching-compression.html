@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 7 — Performance: caching, compression, and where the milliseconds go</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .wire{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  .wire .c{color:#7dd3fc}.wire .s{color:#fca5a5}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0007 · How the Internet Works · ~15 min · builds on lesson 0006</p>
+<h1>Performance: caching, compression, and where the milliseconds go</h1>
+<p>You now know the whole journey — DNS, TCP, TLS, HTTP, rendering. Every one of those steps
+costs time, and interviewers love the follow-up: <i>"the page is slow — where would you look,
+and what would you do?"</i> The answer is a short mental model: find where the time goes, then
+apply three levers — <b>fewer bytes</b>, <b>fewer round trips</b>, <b>don't repeat work</b>.</p>
+
+<h2>Where the milliseconds go</h2>
+<div class="wire">
+<span class="c">DNS lookup      ~20–120 ms</span><span class="s">   (skipped when cached)</span><br>
+<span class="s">TCP handshake   1 RTT</span><br>
+<span class="c">TLS handshake   1–2 RTT</span><span class="s">   (TLS 1.3: 1)</span><br>
+<span class="s">request → wait  = TTFB</span><span class="c">   (time to first byte: network + server thinking)</span><br>
+<span class="c">download        bytes ÷ bandwidth</span><br>
+<span class="s">parse + render  lesson 0006</span>
+</div>
+<p>Notice the pattern: <b>latency dominates, not bandwidth</b>. Every handshake is a round trip
+bounded by the speed of light — a bigger pipe doesn't make a packet arrive sooner. So the wins
+come from removing round trips and bytes, not buying more bandwidth.</p>
+
+<h2>Lever 1: caching — skip the whole journey</h2>
+<p>The fastest request is the one never sent. HTTP caching is a contract in the response headers:</p>
+<table>
+<tr><th>Header</th><th>What it means</th></tr>
+<tr><td><code>Cache-Control: max-age=3600</code></td><td>Fresh for an hour — the browser uses its copy without contacting anyone.</td></tr>
+<tr><td><code>ETag</code> + <code>If-None-Match</code></td><td>Revalidation: "has it changed?" If not, the server answers <code>304 Not Modified</code> — headers only, no body.</td></tr>
+<tr><td><code>Cache-Control: no-store</code></td><td>Never cache (bank statements, personal data).</td></tr>
+</table>
+<p>CDNs are the same idea at the network level: copies of your assets cached at edges near users,
+so the round trip is short even on a cache miss.</p>
+
+<h2>Lever 2: compression — shrink the bytes</h2>
+<p>Text is full of repetition, so lossless compression (<code>Content-Encoding: br</code> or
+<code>gzip</code>) typically shrinks HTML/CSS/JS by <b>70–80%</b>, negotiated automatically in the
+request's <code>Accept-Encoding</code> header. Rules of thumb: compress text, pick the right
+image format (WebP/AVIF over JPEG/PNG, sized to how it's displayed), and don't bother
+re-compressing things that are already compressed (JPEG, video, WOFF2 fonts).</p>
+
+<h2>Lever 3: fewer round trips</h2>
+<table>
+<tr><th>Problem</th><th>Fix</th></tr>
+<tr><td>Re-fetching unchanged assets</td><td><code>Cache-Control</code> + <code>ETag</code></td></tr>
+<tr><td>Too many bytes</td><td>Compression, minification, right image formats</td></tr>
+<tr><td>Handshake per request</td><td>keep-alive / HTTP/2 one connection, TLS session resumption</td></tr>
+<tr><td>Requests queueing behind each other</td><td>HTTP/2 multiplexing over one connection</td></tr>
+<tr><td>Server far away</td><td>CDN edge</td></tr>
+</table>
+
+<h2>Bonus points interviewers love</h2>
+<ul>
+  <li><b>Measure before optimizing.</b> The resource waterfall (devtools Network tab) shows every
+  request as a bar — DNS, handshake, TTFB, download — so you see which lever actually matters.</li>
+  <li><b>Web Vitals vocabulary:</b> FCP (first contentful paint), LCP (largest contentful paint),
+  CLS (layout shift) — Google uses them, and naming them signals you've done this for real.</li>
+  <li><b>Static assets get long max-age + versioned filenames</b> (<code>app.a1b2c3.js</code>):
+  cache forever, deploy a new name, zero revalidation traffic.</li>
+</ul>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="2">
+  <p>1. What's the fastest way for the browser to get an asset?</p>
+  <button>Fetch it over HTTP/2</button>
+  <button>Fetch it from a nearby CDN edge</button>
+  <button>Not fetch it at all — serve it from its own cache</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>2. A response says <code>Cache-Control: max-age=3600</code>. What does that mean?</p>
+  <button>The server promises to generate the response within an hour</button>
+  <button>The browser may use its cached copy for an hour without asking the server</button>
+  <button>The cache entry is deleted after an hour no matter what</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>3. On reload the server answers <code>304 Not Modified</code>. What crossed the wire?</p>
+  <button>Only headers — the browser keeps using its cached body</button>
+  <button>The full page again, but compressed</button>
+  <button>Nothing at all — the browser never contacted the server</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>4. Why does gzip/brotli shrink HTML and JS by ~70% but barely touch a JPEG?</p>
+  <button>JPEGs travel over a different protocol that forbids compression</button>
+  <button>Text files are always smaller to start with</button>
+  <button>Text is highly repetitive and compressors exploit repetition — JPEGs are already compressed</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>5. A page served across continents is slow. What's usually the dominant cost?</p>
+  <button>Not enough bandwidth on the connection</button>
+  <button>Latency — each round trip (DNS, TCP, TLS, requests) costs tens of milliseconds at the speed of light</button>
+  <button>The server's CPU being too slow to render HTML</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"A user says your site is slow. Walk me through how you'd diagnose and fix it."</i> — 45 seconds.</li>
+  <li><i>"How does browser caching work?"</i></li>
+</ol>
+
+<details>
+  <summary>Model answers (peek only after trying)</summary>
+  <p><b>Slow site:</b> "First I'd measure, not guess — open the network waterfall and see where
+  time goes: DNS and handshakes, time to first byte, or downloading big resources. Then I pull
+  the three levers. Fewer bytes: compression for text, right formats and sizes for images.
+  Fewer round trips: connection reuse, HTTP/2 multiplexing, a CDN so the server is close. And
+  don't repeat work: Cache-Control for freshness, ETags for cheap revalidation, so repeat visits
+  barely touch the network. Latency usually dominates bandwidth, so removing round trips beats
+  shrinking files once the basics are done."</p>
+  <p><b>Browser caching:</b> "Caching is a contract set by response headers. Cache-Control
+  max-age says how long a copy stays fresh — while fresh, the browser serves itself and sends
+  nothing. Once stale, it revalidates: it sends the ETag it stored via If-None-Match, and the
+  server either returns the new body or just 304 Not Modified — headers only, the cached body
+  stays valid. Sensitive data gets no-store. CDNs apply the same idea between data centers and
+  users."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://hpbn.co/primer-on-web-performance/">HPBN: Primer on Web Performance</a> — latency vs bandwidth, the resource waterfall.</li>
+  <li><a href="https://hpbn.co/optimizing-application-delivery/">HPBN: Optimizing Application Delivery</a> — caching, compression, the evergreen checklist.</li>
+  <li><a href="https://www.cloudflare.com/learning/performance/why-site-speed-matters/">Cloudflare: Why does site speed matter?</a> — page weight, TTFB, round trips, CDNs.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — browser cache, Cache-Control, ETag, compression, resource waterfall, TTFB added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what's inside an ETag?",
+"how does a CDN decide what to cache?", or drill the model answers with me. Next chapter: the
+other side of the wire — reverse proxies, load balancers, and how one domain becomes a fleet
+of servers.</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken answers.' : ' — review what you missed, then do the spoken answers.');
+  }));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 — Rendering: how the browser turns HTML into pixels</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .wire{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  .wire .c{color:#7dd3fc}.wire .s{color:#fca5a5}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0006 · How the Internet Works · ~15 min · builds on lesson 0005</p>
+<h1>Rendering: how the browser turns HTML into pixels</h1>
+<p>Last chapter ended with the server's response: <code>200 OK</code> plus a body of HTML.
+That's just bytes. The browser now has to turn them into pixels — and it does it in a fixed
+sequence called the <b>critical rendering path</b>. The interview core:
+<i>name the steps from bytes to pixels, and know what blocks them.</i></p>
+
+<h2>The pipeline at a glance</h2>
+<div class="wire">
+<span class="c">HTML bytes   →  DOM</span><span class="s">   (parse tags into a tree of nodes)</span><br>
+<span class="s">CSS bytes    →  CSSOM</span><span class="c">   (parse styles — paint waits for this)</span><br>
+<span class="c">DOM + CSSOM  →  render tree</span><span class="s">   (visible nodes only)</span><br>
+<span class="s">render tree  →  layout</span><span class="c">   (exact position + size of everything)</span><br>
+<span class="c">layout       →  paint + composite  →  pixels on screen</span>
+</div>
+
+<div class="step"><div class="num">1</div><div><b>HTML → DOM</b><p>The parser builds the Document Object Model as bytes arrive — it doesn't wait for the whole file. Every tag becomes a node in a tree. HTML is forgiving: broken markup gets fixed silently, you never get a syntax error.</p></div></div>
+<div class="step"><div class="num">2</div><div><b>CSS → CSSOM (render-blocking)</b><p>Styles are parsed into the CSS Object Model. The browser won't paint until it has them — better to wait a moment than paint wrong styles and redraw everything. The "cascade": when rules conflict, the most specific one wins.</p></div></div>
+<div class="step"><div class="num">3</div><div><b>JavaScript: the parser-blocker</b><p>A <code>&lt;script&gt;</code> tag stops HTML parsing until it downloads and runs — because JS can rewrite the DOM (<code>document.write</code>). <code>defer</code> = download in parallel, run after parsing. <code>async</code> = run as soon as downloaded, order not guaranteed. That's why scripts traditionally go at the bottom.</p></div></div>
+<div class="step"><div class="num">4</div><div><b>Render tree</b><p>DOM + CSSOM merged. Only nodes that show up: anything with <code>display:none</code> is left out (a <code>head</code> element, hidden elements).</p></div></div>
+<div class="step"><div class="num">5</div><div><b>Layout → paint → composite</b><p><b>Layout</b> (aka reflow) computes the exact geometry — where every box goes, how big it is. <b>Paint</b> fills in pixels. <b>Composite</b> stacks the layers in the right order. Then you see the page.</p></div></div>
+
+<h2>Bonus points interviewers love</h2>
+<ul>
+  <li><b>Reflow costs more than repaint.</b> Changing geometry (width, position, a div appearing) forces layout again — often for neighbors too. Changing only color or background skips layout and just repaints. Cheapest change: one the browser doesn't have to redo.</li>
+  <li><b>Shrink the critical path</b> to get first paint faster: inline the CSS you need immediately, <code>defer</code> the JS you don't, and keep the HTML itself small. Fewer blocking resources = earlier paint.</li>
+  <li><b>Subresources replay lesson 1.</b> Every image, stylesheet, script and font in the HTML fires its own HTTP request. One on a different origin redoes DNS + TCP + TLS from scratch — which is why CDNs and connection reuse matter.</li>
+</ul>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="1">
+  <p>1. Why is CSS render-blocking by default?</p>
+  <button>CSS files must be validated by the server before use</button>
+  <button>The browser waits for the CSSOM so it doesn't paint wrong styles and redo the work</button>
+  <button>CSS can only be parsed after the DOM is 100% complete</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>2. A &lt;script&gt; tag without defer or async appears mid-page. What happens?</p>
+  <button>HTML parsing pauses until the script downloads and executes</button>
+  <button>It automatically runs only after the page has fully loaded</button>
+  <button>The browser skips it to protect the DOM from modification</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>3. What is the render tree?</p>
+  <button>A copy of the DOM that also includes hidden elements</button>
+  <button>The browser's cache of pages it rendered before</button>
+  <button>The DOM combined with the CSSOM, keeping only the nodes that will be visible</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>4. What does the layout (reflow) step compute?</p>
+  <button>The exact position and size of every element on the page</button>
+  <button>Which fonts are installed on the user's machine</button>
+  <button>The network route used to fetch the remaining assets</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>5. Which is the correct order of the critical rendering path?</p>
+  <button>paint → layout → render tree → DOM</button>
+  <button>DOM + CSSOM → render tree → layout → paint</button>
+  <button>render tree → CSSOM → paint → layout</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"Walk me through what the browser does after it receives the HTML."</i> — 45 seconds, bytes to pixels.</li>
+  <li><i>"Why does CSS block rendering — and what does <code>defer</code> do for scripts?"</i></li>
+</ol>
+
+<details>
+  <summary>Model answers (peek only after trying)</summary>
+  <p><b>Bytes to pixels:</b> "The browser parses the HTML into the DOM — incrementally, as bytes
+  arrive — and parses CSS into the CSSOM. It merges the two into the render tree, which only
+  contains visible nodes. Then layout computes the exact position and size of every element,
+  paint fills in pixels, and compositing stacks the layers. That sequence is the critical
+  rendering path, and the page appears as soon as it completes."</p>
+  <p><b>CSS blocking + defer:</b> "CSS is render-blocking because the browser refuses to paint
+  without styles — painting unstyled content and redrawing it later is worse than waiting for the
+  CSSOM. Scripts are different but worse: a plain script tag halts the HTML parser itself, because
+  the script might rewrite the DOM. The defer attribute fixes that: the script downloads in
+  parallel and executes only after parsing finishes, so it never blocks page construction."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://web.dev/articles/howbrowserswork">web.dev: How browsers work</a> — the classic deep dive: parsing, DOM, render tree, layout, paint.</li>
+  <li><a href="https://web.dev/learn/performance/understanding-the-critical-path">web.dev: Understand the critical path</a> — render-blocking resources, defer vs async, first paint.</li>
+  <li><a href="https://github.com/alex/what-happens-when">alex/what-happens-when</a> — the "browser rendering" section of the full journey.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — DOM, CSSOM, render tree, layout/reflow, paint, critical rendering path added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what exactly is compositing?",
+"why do JS frameworks batch DOM updates?", or drill the model answers with me. That completes the
+full journey from URL to pixels. Next chapter: making that journey fast — caching, compression,
+and where the milliseconds actually go.</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken answers.' : ' — review what you missed, then do the spoken answers.');
+  }));
+});
+</script>
+</body>
+</html>

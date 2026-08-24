@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5 — HTTP: the request/response pair that carries the web</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .wire{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  .wire .c{color:#7dd3fc}.wire .s{color:#fca5a5}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0005 · How the Internet Works · ~15 min · builds on lesson 0004</p>
+<h1>HTTP: the request/response pair that carries the web</h1>
+<p>Last chapter ended with an encrypted TLS tunnel to the server. So what finally travels
+through it? <b>HTTP</b> — a plain-text protocol with exactly one pattern: the client sends a
+<b>request</b>, the server sends a <b>response</b>. Nothing else. It's also <b>stateless</b>:
+the server forgets you the moment the response is sent. The interview core:
+<i>what's inside a request and a response, and how do methods, status codes and cookies fit in?</i></p>
+
+<h2>The request, on the wire</h2>
+<div class="wire">
+<span class="c">client → server : GET /search?q=tcp HTTP/1.1</span><span class="s">   ← request line: method + path + version</span><br>
+<span class="c">                  Host: www.google.com</span><span class="s">   ← which site (one server hosts many)</span><br>
+<span class="c">                  Cookie: session=abc123</span><span class="s">   ← state the server set earlier</span><br>
+<span class="c">                  Accept: text/html</span><span class="s">   ← what I can handle</span><br>
+<span class="c">                  (blank line, then the body — empty for GET)</span>
+</div>
+<table>
+<tr><th>Part</th><th>What it says</th></tr>
+<tr><td>Request line</td><td>Method (what to do) + path (to which resource) + HTTP version.</td></tr>
+<tr><td>Headers</td><td><code>Name: value</code> metadata — host, cookies, accepted formats, cache hints.</td></tr>
+<tr><td>Blank line</td><td>Marks the end of headers. Everything after is the body.</td></tr>
+<tr><td>Body</td><td>The payload. Empty for GET; carries form data or JSON for POST/PUT.</td></tr>
+</table>
+
+<h2>The response, on the wire</h2>
+<div class="wire">
+<span class="s">server → client : HTTP/1.1 200 OK</span><span class="c">   ← status line: version + code + reason</span><br>
+<span class="s">                  Content-Type: text/html; charset=UTF-8</span><span class="c">   ← what the body is</span><br>
+<span class="s">                  Set-Cookie: session=abc123</span><span class="c">   ← "remember this next time"</span><br>
+<span class="s">                  (blank line)</span><br>
+<span class="s">                  &lt;!doctype html&gt;…the actual page…</span>
+</div>
+<p>The <b>status code</b> is the server's one-word answer. Interviewers expect the classes cold:</p>
+<table>
+<tr><th>Class</th><th>Meaning</th><th>Famous examples</th></tr>
+<tr><td>2xx</td><td>Success</td><td><code>200 OK</code>, <code>201 Created</code>, <code>204 No Content</code></td></tr>
+<tr><td>3xx</td><td>Redirect — go somewhere else</td><td><code>301 Moved Permanently</code>, <code>302 Found</code></td></tr>
+<tr><td>4xx</td><td><b>Client</b> error — your request is wrong</td><td><code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>404 Not Found</code></td></tr>
+<tr><td>5xx</td><td><b>Server</b> error — the request was fine, we broke</td><td><code>500 Internal Server Error</code>, <code>503 Service Unavailable</code></td></tr>
+</table>
+
+<h2>Methods: what you're asking for</h2>
+<table>
+<tr><th>Method</th><th>Intent</th><th>Body?</th><th>Idempotent?</th></tr>
+<tr><td><code>GET</code></td><td>Read this resource</td><td>no</td><td>yes — retrying is safe</td></tr>
+<tr><td><code>POST</code></td><td>Create / submit something</td><td>yes</td><td><b>no</b> — retry may duplicate</td></tr>
+<tr><td><code>PUT</code></td><td>Replace this resource</td><td>yes</td><td>yes — same result if repeated</td></tr>
+<tr><td><code>DELETE</code></td><td>Remove this resource</td><td>no</td><td>yes — deleting twice is still deleted</td></tr>
+</table>
+<p><b>Idempotent</b> = repeating the request leaves the server in the same state. That's why a
+timed-out GET can be retried blindly but a timed-out POST ("charge my card?") must not be.</p>
+
+<h2>Bonus points interviewers love</h2>
+<ul>
+  <li><b>Stateless → cookies.</b> The server has no memory between requests. <code>Set-Cookie</code> hands the
+  browser a token; the browser echoes it in a <code>Cookie</code> header on every later request. Sessions are this plus a database.</li>
+  <li><b>Connection reuse.</b> One page needs ~100 requests. HTTP keep-alive reuses the same TCP+TLS connection;
+  HTTP/2 multiplexes many requests over it at once — you don't pay the handshake per request.</li>
+  <li><b>Caching headers.</b> <code>Cache-Control</code> tells browsers and CDNs how long a response stays fresh —
+  that's why static assets load instantly on revisit.</li>
+</ul>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="2">
+  <p>1. What does the HTTP method (GET, POST, …) tell the server?</p>
+  <button>How strongly the connection should be encrypted</button>
+  <button>Which website the browser is trying to reach</button>
+  <button>What action the client wants performed on the resource</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>2. Your form submission comes back with status 500. Where's the problem?</p>
+  <button>Server side — 5xx means the server failed to handle a request it received</button>
+  <button>Client side — 5xx means the request was malformed</button>
+  <button>DNS — the domain couldn't be resolved</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>3. HTTP is stateless. How does a site keep you logged in as you click around?</p>
+  <button>The server memorizes your IP address</button>
+  <button>The server sets a cookie; the browser sends it back with every following request</button>
+  <button>The TCP connection stays open forever and carries the session with it</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>4. Why is it safe to retry a timed-out GET but risky to retry a timed-out POST?</p>
+  <button>GET requests are always smaller than POST requests</button>
+  <button>POST requires an extra TLS handshake first</button>
+  <button>GET is idempotent — repeating it gives the same result; a repeated POST may act twice</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>5. What does the Host header let a single server do?</p>
+  <button>Encrypt traffic for many different domains</button>
+  <button>Serve many domains from one IP and route each request to the right site</button>
+  <button>Cache responses on behalf of many users</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"What's inside an HTTP request and response?"</i> — 45 seconds, name each part.</li>
+  <li><i>"HTTP is stateless — how does a site keep you logged in?"</i></li>
+</ol>
+
+<details>
+  <summary>Model answers (peek only after trying)</summary>
+  <p><b>Request/response:</b> "A request is a start line — method, path, HTTP version — plus
+  headers like Host, Cookie and Accept, a blank line, and an optional body. The server answers
+  with a status line — version, status code, reason — its own headers like Content-Type and
+  Set-Cookie, a blank line, and the body: the HTML or JSON. Methods say what to do — GET reads,
+  POST creates — and the status code class says how it went: 2xx success, 3xx redirect, 4xx my
+  mistake, 5xx the server's mistake."</p>
+  <p><b>Stateless login:</b> "HTTP has no memory — every request is standalone, the server forgets
+  you after each response. Login works around that with cookies: after authenticating, the server
+  sends Set-Cookie with a session token, and my browser attaches that Cookie header to every later
+  request. The token is the only continuity; the server looks it up in its database to remember
+  who I am."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://www.cloudflare.com/learning/ssl/what-is-http/">Cloudflare: What is HTTP?</a> — request/response anatomy, methods, status codes.</li>
+  <li><a href="https://hpbn.co/http1x/">HPBN: HTTP/1.X</a> — keepalive and connection reuse (see also <a href="https://hpbn.co/http2/">HTTP/2</a> for multiplexing).</li>
+  <li><a href="https://github.com/alex/what-happens-when">alex/what-happens-when</a> — where HTTP sits after DNS/TCP/TLS in the full flow.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — method, status code, header, cookie, idempotent added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what exactly is in a JWT?",
+"how does a CDN decide what to cache?", or drill the model answers with me. Next chapter: what
+your browser does with the response — parsing and rendering the page.</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken answers.' : ' — review what you missed, then do the spoken answers.');
+  }));
+});
+</script>
+</body>
+</html>

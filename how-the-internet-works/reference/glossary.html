@@ -100,6 +100,57 @@
 
   <dt>CA <span class="aka">(Certificate Authority)</span></dt>
   <dd>Trusted third party that signs certificates. Browsers ship with ~150 root CAs they already trust.</dd>
+
+  <dt>Method <span class="aka">(HTTP method/verb)</span></dt>
+  <dd>What the request asks for: GET reads, POST creates, PUT replaces, DELETE removes. First word of the request line.</dd>
+
+  <dt>Status code</dt>
+  <dd>The server's one-word answer: 2xx success, 3xx redirect, 4xx client error (404), 5xx server error (500).</dd>
+
+  <dt>Header</dt>
+  <dd>A <code>Name: value</code> metadata line in a request or response — Host, Cookie, Content-Type, Cache-Control.</dd>
+
+  <dt>Cookie</dt>
+  <dd>A token the server sets (<code>Set-Cookie</code>) and the browser echoes back on every later request — how stateless HTTP remembers you.</dd>
+
+  <dt>Idempotent</dt>
+  <dd>Repeating the request leaves the server in the same state. GET/PUT/DELETE are; POST isn't — retrying it may act twice.</dd>
+
+  <dt>DOM <span class="aka">(Document Object Model)</span></dt>
+  <dd>The HTML document parsed into a tree of nodes. JavaScript's interface to the page.</dd>
+
+  <dt>CSSOM <span class="aka">(CSS Object Model)</span></dt>
+  <dd>All the page's CSS parsed into a structure the browser can apply. Building it blocks painting.</dd>
+
+  <dt>Render tree</dt>
+  <dd>DOM + CSSOM merged, keeping only visible nodes. The input to layout.</dd>
+
+  <dt>Layout <span class="aka">(reflow)</span></dt>
+  <dd>Computes exact position and size of every element. Geometry changes force it to run again — expensive.</dd>
+
+  <dt>Paint</dt>
+  <dd>Filling in pixels for the laid-out elements, then compositing layers into what you see.</dd>
+
+  <dt>Critical rendering path</dt>
+  <dd>The sequence from bytes to pixels: DOM, CSSOM, render tree, layout, paint. Fewer blocking resources = faster first paint.</dd>
+
+  <dt>Browser cache</dt>
+  <dd>Local store of past responses. Freshness and revalidation are controlled by response headers — the fastest request is the one never sent.</dd>
+
+  <dt>Cache-Control</dt>
+  <dd>Response header defining cache rules: <code>max-age=N</code> (fresh for N seconds), <code>no-store</code> (never cache).</dd>
+
+  <dt>ETag</dt>
+  <dd>A version fingerprint for a resource. The browser sends it back (<code>If-None-Match</code>) to ask "changed?" — unchanged gets <code>304 Not Modified</code>, headers only.</dd>
+
+  <dt>Compression <span class="aka">(Content-Encoding)</span></dt>
+  <dd>Lossless shrinking of responses (brotli/gzip) — 70–80% for HTML/CSS/JS. Negotiated via Accept-Encoding; don't re-compress already-compressed media.</dd>
+
+  <dt>Resource waterfall</dt>
+  <dd>The devtools view of every request as a bar (DNS, handshake, TTFB, download) — how you see where the time actually goes.</dd>
+
+  <dt>TTFB <span class="aka">(Time To First Byte)</span></dt>
+  <dd>Time from sending the request to receiving the first byte: network round trip plus the server's own processing.</dd>
 </dl>
 </body>
 </html>
