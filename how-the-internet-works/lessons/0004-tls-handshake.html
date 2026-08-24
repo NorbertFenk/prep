@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 4 — TLS: the handshake that turns TCP into HTTPS</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .wire{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  .wire .c{color:#7dd3fc}.wire .s{color:#fca5a5}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0004 · How the Internet Works · ~15 min · builds on lesson 0001 step 4 and lesson 0003</p>
+<h1>TLS: the handshake that turns TCP into HTTPS</h1>
+<p>Last chapter your browser finished the TCP handshake with port 443. The connection is open —
+and completely readable by anyone on the path. TLS fixes three things:
+<b>encryption</b> (nobody can read it), <b>integrity</b> (nobody can tamper undetected), and
+<b>authentication</b> (you're really talking to Google, not a wifi snooper impersonating them).
+The interview core: <i>how does the handshake deliver all three?</i></p>
+
+<h2>Two cryptosystems, one trick</h2>
+<table>
+<tr><th></th><th>Asymmetric (public/private key)</th><th>Symmetric (shared secret)</th></tr>
+<tr><td>Speed</td><td>slow (~1000× slower)</td><td>fast — used for all the data</td></tr>
+<tr><td>Key problem</td><td>publish half, guard half</td><td>how do two strangers share a secret on an open wire?</td></tr>
+<tr><td>Role in TLS</td><td>bootstrap: prove identity + agree a key</td><td>carry the actual HTTP traffic</td></tr>
+</table>
+<p>The handshake exists to solve exactly this: use slow asymmetric crypto for a few packets
+to establish a fast symmetric <b>session key</b>, then switch.</p>
+
+<h2>The handshake, step by step</h2>
+<div class="wire">
+<span class="c">client → server : ClientHello</span><span class="s">   (TLS versions + cipher suites I support)</span><br>
+<span class="s">server → client : ServerHello + Certificate</span><span class="c">   (chosen cipher + proof of identity)</span><br>
+<span class="c">client          : verify cert, do key exchange</span><br>
+<span class="s">both            : derive the same session key</span><br>
+<span class="c">client ↔ server : Finished</span><span class="s">   (encrypted from here on)</span>
+</div>
+
+<div class="step"><div class="num">1</div><div><b>ClientHello</b><p>"I speak TLS 1.2 and 1.3, here are my supported cipher suites." Also carries random bytes used later in key derivation.</p></div></div>
+<div class="step"><div class="num">2</div><div><b>ServerHello + Certificate</b><p>Server picks the cipher (TLS 1.3 usually) and sends its certificate chain: its domain name, its public key, signed by a CA.</p></div></div>
+<div class="step"><div class="num">3</div><div><b>Certificate verification</b><p>The client checks: signature chains up to a root CA already in my trust store? Domain matches the one I'm visiting? Not expired or revoked? Any failure → full-page warning.</p></div></div>
+<div class="step"><div class="num">4</div><div><b>Key exchange</b><p>Using Diffie-Hellman math, both sides compute the same session key — without ever transmitting it. An eavesdropper sees everything except the key itself (<i>forward secrecy</i>).</p></div></div>
+<div class="step"><div class="num">5</div><div><b>Finished</b><p>Both sides send a MAC of the whole handshake. If a man-in-the-middle altered anything earlier, the hashes mismatch and the connection dies. Then encrypted application data flows.</p></div></div>
+
+<h2>Bonus points interviewers love</h2>
+<ul>
+  <li><b>TLS 1.3 = one fewer round trip.</b> TLS 1.2 needs 2-RTT before data; 1.3 needs 1-RTT, and 0-RTT if you've connected before. Milliseconds matter.</li>
+  <li><b>SNI</b>: during ClientHello the client names which hostname it wants — that's how one server serves many HTTPS domains.</li>
+  <li><b>Session resumption</b>: cached session tickets skip most of the handshake next visit.</li>
+</ul>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="2">
+  <p>1. What does the server's certificate actually prove?</p>
+  <button>That the server cannot be hacked</button>
+  <button>That the connection is encrypted</button>
+  <button>That a trusted CA vouches this public key belongs to this domain</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>2. Why does TLS switch to symmetric encryption after the handshake?</p>
+  <button>Asymmetric crypto is far too slow for bulk data</button>
+  <button>Symmetric keys are impossible to steal</button>
+  <button>Certificates only work with symmetric ciphers</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>3. An attacker relays every message between you and google.com. What stops this man-in-the-middle?</p>
+  <button>TCP sequence numbers won't line up</button>
+  <button>The certificate chain fails to verify — the attacker has no valid cert for google.com</button>
+  <button>Nothing — TLS only protects against eavesdropping, not relaying</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>4. In Diffie-Hellman key exchange, what crosses the wire?</p>
+  <button>The session key, encrypted with the server's public key</button>
+  <button>Nothing — the client invents the key and hopes</button>
+  <button>Public values from which both sides compute the same secret — but not the secret itself</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>5. What's headline improvement of TLS 1.3 over 1.2?</p>
+  <button>Stronger certificates</button>
+  <button>Fewer round trips: 1-RTT handshake (0-RTT on reconnect)</button>
+  <button>It no longer needs TCP</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"What happens during a TLS handshake?"</i> — 45 seconds, cover all three guarantees.</li>
+  <li><i>"Why do we need certificate authorities?"</i></li>
+</ol>
+
+<details>
+  <summary>Model answers (peek only after trying)</summary>
+  <p><b>TLS handshake:</b> "After TCP connects, the client sends ClientHello with supported TLS
+  versions and ciphers. The server picks one and sends its certificate — its public key signed by
+  a CA. The client verifies the chain up to a trusted root, checks hostname and expiry. Then they
+  do a Diffie-Hellman key exchange to agree on a symmetric session key without ever sending it.
+  Finished messages confirm nothing was tampered with, and from there all traffic is encrypted
+  with the fast shared key."</p>
+  <p><b>Why CAs:</b> "Two strangers on an open network have no way to know each other's keys are
+  genuine — an attacker can hand you their own key and claim it's google.com's. CAs break that
+  circle: my browser already trusts ~150 root CAs, so a certificate those roots vouch for is proof
+  the key belongs to the domain. Trust gets bootstrapped instead of assumed."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://www.cloudflare.com/learning/ssl/transport-layer-security-tls/">Cloudflare: What is TLS?</a> — encryption/authentication/integrity, TLS vs SSL vs HTTPS.</li>
+  <li><a href="https://hpbn.co/transport-layer-security-tls/">HPBN: Transport Layer Security</a> — handshake mechanics, chain of trust, session resumption.</li>
+  <li><a href="https://github.com/alex/what-happens-when">alex/what-happens-when</a> — "TLS handshake" section.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — asymmetric/symmetric encryption, certificate, CA added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "how does Diffie-Hellman actually work?",
+"what happens when a cert is revoked?", or drill the model answers with me. Next chapter: what
+finally rides inside this encrypted tunnel — the HTTP request and response.</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken answers.' : ' — review what you missed, then do the spoken answers.');
+  }));
+});
+</script>
+</body>
+</html>

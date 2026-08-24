@@ -88,6 +88,18 @@
 
   <dt>RTT <span class="aka">(Round-Trip Time)</span></dt>
   <dd>Time for a packet to go somewhere and come back. Every handshake costs at least one RTT.</dd>
+
+  <dt>Asymmetric encryption</dt>
+  <dd>Public/private key pair: encrypt with the public key, only the private key can decrypt. Slow — used only to bootstrap.</dd>
+
+  <dt>Symmetric encryption</dt>
+  <dd>Both sides share one secret key. Fast — carries all the actual TLS traffic.</dd>
+
+  <dt>Certificate</dt>
+  <dd>Signed document binding a domain name to a server's public key. Proves "this key really is google.com's".</dd>
+
+  <dt>CA <span class="aka">(Certificate Authority)</span></dt>
+  <dd>Trusted third party that signs certificates. Browsers ship with ~150 root CAs they already trust.</dd>
 </dl>
 </body>
 </html>
