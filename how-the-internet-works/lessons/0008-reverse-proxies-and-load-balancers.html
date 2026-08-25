@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 8 — The server side: reverse proxies, load balancers, and one domain, many machines</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem;line-height:1.6}
+  h1{font-size:1.5rem;line-height:1.3}
+  h2{font-size:1.1rem;margin-top:2.2rem;border-left:4px solid #2563eb;padding-left:.6rem}
+  .meta{color:#6b7280;font-size:.85rem}
+  .step{display:flex;gap:.8rem;margin:1rem 0;align-items:flex-start}
+  .num{flex:0 0 1.8rem;height:1.8rem;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-top:.15rem}
+  .step b{display:block}
+  .step p{margin:.15rem 0 0;color:#374151}
+  code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+  th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .wire{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  .wire .c{color:#7dd3fc}.wire .s{color:#fca5a5}
+  .q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .q p{margin:0 0 .6rem;font-weight:600}
+  .q button{display:block;width:100%;text-align:left;margin:.35rem 0;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
+  .q button:hover{border-color:#2563eb}
+  .q button.correct{background:#dcfce7;border-color:#15803d}
+  .q button.wrong{background:#fee2e2;border-color:#b91c1c}
+  .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
+  .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  #score{font-weight:700;margin-top:1rem}
+  details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
+  summary{cursor:pointer;font-weight:600}
+  .srcs a{color:#2563eb}
+  .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
+  @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
+</style>
+</head>
+<body>
+
+<p class="meta">Lesson 0008 · How the Internet Works · ~15 min · builds on lesson 0007</p>
+<h1>The server side: reverse proxies, load balancers, and one domain, many machines</h1>
+<p>Every chapter so far drew the server as one box that answers. But a real site gets millions of
+visits: no single machine has the CPU, memory, or connections for that — and even the world's
+biggest server would still be <b>one box that can die</b>, taking the site with it. The interview
+core of this chapter: <i>"how does one domain name serve millions of users at once?"</i></p>
+
+<h2>Why one server is never enough</h2>
+<p>You can scale <b>vertically</b> — buy a bigger machine. It works until the ceiling: there's always
+a biggest machine, and it's still a single point of failure. So real systems scale
+<b>horizontally</b>: many ordinary servers, any of which can answer. That immediately creates a new
+problem — <i>who decides which of the fifty servers gets your request?</i></p>
+
+<h2>The reverse proxy: one front door</h2>
+<p>A <b>reverse proxy</b> is a server that sits in front of your web servers and intercepts every
+client request, forwarding it to the right backend and returning its response. Clients only ever
+see the proxy — the origin servers stay hidden behind it. It's called <i>reverse</i> to contrast
+with the <b>forward proxy</b> (VPN, corporate web filter), which sits in front of
+<i>clients</i> and hides <i>them</i> from servers:</p>
+<div class="wire">
+<span class="c">forward proxy:  clients ─→ proxy ─→ internet      (hides the CLIENTS)</span><br>
+<span class="s">reverse proxy:  internet ─→ proxy ─→ app servers  (hides the SERVERS)</span>
+</div>
+<p>Because everything passes through it, the reverse proxy is the natural place to bolt on shared
+concerns:</p>
+<ul>
+  <li><b>Hide the origins</b> — attackers never learn the real server IPs, making targeted DDoS much harder.</li>
+  <li><b>TLS termination</b> — the proxy handles the expensive encrypt/decrypt work and the certificates; app servers speak plain HTTP to it.</li>
+  <li><b>Caching and compression</b> — lessons 0007's levers, applied once at the edge for everyone.</li>
+  <li><b>Load balancing</b> — the big one, next.</li>
+</ul>
+
+<h2>Load balancing: spreading the requests</h2>
+<p>A <b>load balancer</b> is a reverse proxy whose job is spreading traffic across a pool of
+interchangeable servers. For each request it picks a server using an algorithm:</p>
+<table>
+<tr><th>Algorithm</th><th>Idea</th><th>When it matters</th></tr>
+<tr><td><b>Round robin</b></td><td>Next request goes to the next server in the list.</td><td>The default — dead simple, even spread.</td></tr>
+<tr><td><b>Least connections</b></td><td>Send to whichever server is currently least busy.</td><td>Requests with uneven cost (long-lived connections).</td></tr>
+<tr><td><b>Hash-based</b></td><td>Hash the client IP (or URL) so the same client lands on the same server.</td><td>"Sticky sessions" — when a server holds per-client state.</td></tr>
+</table>
+<p>The balancer also <b>health-checks</b> the pool constantly. A server that stops answering correctly
+is pulled out of rotation automatically — traffic flows around it to the healthy ones and the site
+stays up. That's <b>failover</b>, and it's the real reason for horizontal scaling: losing one machine
+becomes a non-event instead of an outage.</p>
+
+<h2>The statelessness catch interviews probe</h2>
+<p>Load balancing exposes a design assumption: <i>any</i> server might get your next request. If your
+shopping cart lives in server A's memory and your next click lands on server B, the cart is gone.
+Two fixes:</p>
+<ul>
+  <li><b>Sticky sessions</b> — hash-based routing pins you to server A. Works, but fragile: if A dies your session dies, and load spreads unevenly.</li>
+  <li><b>Shared session store</b> — keep state in Redis/PostgreSQL/a cookie, not in server memory, so any server can serve any request. This is the answer that scales, and why interviewers say "stateless services scale horizontally."</li>
+</ul>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="1">
+  <p>1. Why does a big site run many servers instead of one enormous machine?</p>
+  <button>Hardware that big can't run a web server</button>
+  <button>One machine is a single point of failure with a hard ceiling; many machines give headroom and survive failures</button>
+  <button>DNS requires at least three servers per domain</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>2. A <i>reverse</i> proxy sits in front of...?</p>
+  <button>The clients, like a VPN does</button>
+  <button>The DNS resolvers</button>
+  <button>The web servers — intercepting client requests before they reach an origin</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>3. The load balancer's health check on server 2 starts failing. What happens?</p>
+  <button>Nothing until an operator removes it from a config file</button>
+  <button>It's pulled from rotation automatically; the healthy servers absorb its share</button>
+  <button>The site goes down — that's server 2's job</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>4. Why is TLS often terminated at the reverse proxy rather than at each app server?</p>
+  <button>HTTPS is not allowed inside data centers</button>
+  <button>So the proxy can cache the encrypted responses</button>
+  <button>Crypto work and certificate management live in one layer, freeing app servers to run the application</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>5. A user's cart lives in server A's memory, and the balancer routes their next click to server B. What's the scalable fix?</p>
+  <button>Move session state to a shared store (Redis/DB) so any server can serve any request</button>
+  <button>Disable health checks so server A never leaves rotation</button>
+  <button>Give server A a bigger machine</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"How does one domain name serve millions of users at the same time?"</i> — 45 seconds.</li>
+  <li><i>"Forward proxy vs reverse proxy — and name two jobs a reverse proxy does for you."</i></li>
+</ol>
+
+<details>
+  <summary>Model answers (peek only after trying)</summary>
+  <p><b>One domain, millions of users:</b> "The domain resolves to a public entry point — a reverse
+  proxy acting as a load balancer — not to any single server. It spreads incoming requests across a
+  pool of identical app servers using something like round robin or least-connections. It
+  health-checks every server and automatically stops sending traffic to one that fails, so losing a
+  machine is a non-event. Scaling up means adding more servers behind the balancer. For that to
+  work the servers have to be stateless — session state lives in a shared store, not in server
+  memory, so any server can take any request."</p>
+  <p><b>Proxies:</b> "A forward proxy sits in front of clients and hides them — a VPN or a
+  corporate web filter. A reverse proxy sits in front of servers and hides them — clients never
+  talk to the origins directly. Two jobs it does for you: TLS termination, so certificates and
+  crypto live in one layer and app servers speak plain HTTP to it; and load balancing, spreading
+  requests across the pool. It also commonly hides origin IPs for security and caches responses at
+  the edge."</p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/">Cloudflare: What is a reverse proxy?</a> — forward vs reverse, and the benefit list (verified 2026-08-25).</li>
+  <li><a href="https://www.cloudflare.com/learning/performance/what-is-load-balancing/">Cloudflare: What is load balancing?</a> — algorithms, health checks, failover (verified 2026-08-25).</li>
+  <li><a href="https://www.nginx.com/resources/glossary/load-balancing/">F5/NGINX: What Is a Load Balancer?</a> — the algorithm zoo, session persistence, L4 vs L7 (verified 2026-08-25).</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — reverse proxy, forward proxy, load balancer, round robin, health check, failover added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "L4 vs L7 load balancing?", "what is
+consistent hashing?", or drill the model answers with me. Next chapter: putting it all together —
+the fluent 60-second answer to "what happens when you type google.com and press Enter".</div>
+
+<script>
+let answered = 0, right = 0;
+document.querySelectorAll('.q').forEach(q => {
+  const want = +q.dataset.answer, fb = q.querySelector('.fb');
+  q.querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => {
+    if (q.dataset.done) return;
+    q.dataset.done = 1; answered++;
+    if (i === want) { b.classList.add('correct'); fb.textContent = 'Correct.'; fb.className = 'fb ok'; right++; }
+    else {
+      b.classList.add('wrong');
+      q.querySelectorAll('button')[want].classList.add('correct');
+      fb.textContent = 'Not quite — correct answer highlighted. Re-read that section above.';
+      fb.className = 'fb no';
+    }
+    if (answered === document.querySelectorAll('.q').length)
+      document.getElementById('score').textContent =
+        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken answers.' : ' — review what you missed, then do the spoken answers.');
+  }));
+});
+</script>
+</body>
+</html>

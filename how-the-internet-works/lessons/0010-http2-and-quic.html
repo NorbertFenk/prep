@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 10 — HTTP/2 and QUIC: how the journey got faster</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+
+<h1>HTTP/2 and QUIC: how the journey got faster</h1>
+<p class="meta">Lesson 0010 · How the Internet Works · ~15 min · builds on lessons 0003–0007</p>
+
+<p>Your 60-second answer describes the classic journey. Strong interviewers follow it with: <i>"nice — now, how has that journey been optimized?"</i> Two answers, at two different layers: <b>HTTP/2</b> fixed the application layer, and when it hit a wall, <b>QUIC</b> rebuilt the transport.</p>
+
+<h2>What HTTP/1.1 got wrong</h2>
+<div class="step"><div class="num">1</div><div><b>One response at a time per connection</b>
+<p>A connection could deliver only one response before the next request queued. Browsers coped by opening up to <b>six parallel connections</b> per site — meaning six TCP handshakes and six TLS handshakes, all expensive.</p></div></div>
+<div class="step"><div class="num">2</div><div><b>Head-of-line blocking (the HTTP kind)</b>
+<p>On any single connection, one slow response held up every request behind it — first in line blocks the queue.</p></div></div>
+<div class="step"><div class="num">3</div><div><b>Crippling header repetition</b>
+<p>Every request re-sent full plain-text headers — typically 500–800 bytes, more with cookies (<a href="https://hpbn.co/http1x/">hpbn.co</a>). Ten assets = the same cookie ten times.</p></div></div>
+
+<h2>HTTP/2 (2015): one pipe, many streams</h2>
+<p>The core move is a <b>binary framing layer</b>: each HTTP message is split into small binary <b>frames</b>, each tagged with a <b>stream ID</b>. Frames from many requests/responses interleave on <b>one TCP connection</b>, then reassemble at the far end. Methods, status codes, and headers are unchanged — only the wire encoding changed (<a href="https://hpbn.co/http2/">hpbn.co ch. 12</a>).</p>
+
+<div class="wire">
+<span class="c">HTTP/1.1:</span> conn1 [A......]  conn2 [B.....]  ...up to 6 conns, 12 handshakes<br>
+<span class="c">HTTP/2&nbsp;&nbsp;:</span> one conn [s1|s3|s1|s2|s3|s1] — frames interleave, tags reassemble them
+</div>
+
+<ul>
+<li><b>Multiplexing</b> kills response queuing — requests dispatch the moment they're discovered.</li>
+<li><b>HPACK</b> compresses headers: repeated fields become tiny table indexes.</li>
+<li><b>Prioritization</b> tells the server CSS should beat that hero image.</li>
+</ul>
+
+<details><summary>The catch interviewers probe: did HTTP/2 kill head-of-line blocking?</summary>
+<p>Only the <i>HTTP-level</i> kind. All streams share one ordered TCP byte stream — so <b>one lost packet stalls every stream</b> while TCP retransmits. On lossy links this can hurt HTTP/2 more than six loss-isolated HTTP/1.1 connections (<a href="https://hpbn.co/http2/#packet-loss-high-rtt-links-and-http2-performance">hpbn.co</a>). Removing one bottleneck revealed the next one: TCP itself.</p></details>
+
+<h2>QUIC → HTTP/3: fixing the transport itself</h2>
+<p>You can't patch TCP: it lives in operating-system kernels and middleboxes that have ossified around it. So QUIC rebuilds a reliable, secure transport <b>on top of UDP</b>, in userspace, where browsers and servers can actually ship updates (<a href="https://www.cloudflare.com/learning/performance/what-is-http3/">Cloudflare</a>):</p>
+<ul>
+<li><b>No cross-stream blocking:</b> streams are independent — a lost packet stalls only its own stream.</li>
+<li><b>Fused handshake:</b> transport + TLS 1.3 crypto in one round trip; returning visitors get <b>0-RTT</b> — data flies in the very first packet burst.</li>
+<li><b>Encrypted by default,</b> including most header metadata — there is no plaintext QUIC.</li>
+<li><b>Connection migration:</b> identified by a connection ID, not your IP:port pair — switch Wi-Fi → cellular mid-download and the stream survives.</li>
+</ul>
+<p>Browsers discover HTTP/3 via the <code>Alt-Svc</code> header and fall back to HTTP/2 gracefully. Check yours right now at <a href="https://cloudflare-quic.com/">cloudflare-quic.com</a>.</p>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="0">
+  <p>1. What does multiplexing eliminate in HTTP/2?</p>
+  <button>Response queuing, where one slow reply delays all others behind it</button>
+  <button>The TLS handshake, because binary frames are encrypted by design</button>
+  <button>DNS lookups, because frames carry the hostname inside each stream</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>2. One lost packet stalls <b>every</b> stream in HTTP/2. Why?</p>
+  <button>HPACK tables must resynchronize after any loss is detected</button>
+  <button>TCP retransmits before delivering anything past the missing segment</button>
+  <button>Servers pause all streams until congestion windows fully reopen</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>3. Why was QUIC built on UDP instead of upgrading TCP itself?</p>
+  <button>UDP is faster because it skips sequencing and acknowledgments entirely</button>
+  <button>TCP lives in kernels and middleboxes, making upgrades nearly impossible</button>
+  <button>QUIC needs unreliable delivery, which only UDP can genuinely provide</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>4. What does 0-RTT give a client revisiting a QUIC server?</p>
+  <button>It sends request data inside its first flight of packets</button>
+  <button>It skips certificate verification using keys cached from last visit</button>
+  <button>It reuses the previous TCP connection without any handshake overhead</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>5. Your phone hops from Wi-Fi to cellular mid-download and QUIC barely notices. Why?</p>
+  <button>Connections are identified by an ID, not by IP-port pairs</button>
+  <button>Cellular towers mirror Wi-Fi packets through the same base stations</button>
+  <button>UDP automatic rebinding renews the route whenever addresses change</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"What problems did HTTP/2 solve over HTTP/1.1 — and what remained?"</i> — 45 seconds, no notes.</li>
+  <li><i>"Why is HTTP/3 built on UDP, and what does that buy users?"</i> — 45 seconds.</li>
+  <li>Stuck? Reread the framing paragraph, not the model answers, and retry in an hour.</li>
+</ol>
+
+<details><summary>Model answers (peek only after trying)</summary>
+<p><b>HTTP/2 vs 1.1:</b> <i>"HTTP/1.1 allowed one response per connection, so browsers ran six parallel connections with six sets of TCP and TLS handshakes, and still suffered queuing. HTTP/2 added a binary framing layer that splits messages into stream-tagged frames multiplexed over one connection, compressed redundant headers with HPACK, and added prioritization. But it kept TCP underneath — so one lost packet still stalls all streams. It fixed head-of-line blocking at the HTTP layer, not the transport layer."</i></p>
+<p><b>Why UDP:</b> <i>"TCP can't evolve — it's frozen into kernels and middleboxes everywhere. QUIC reimplements reliable streams over UDP in userspace, so improvements ship with the browser. That buys independent streams with no cross-stream blocking, a single fused handshake — or zero round trips on repeat visits — mandatory encryption, and connection IDs that survive network switches like Wi-Fi to cellular."</i></p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://hpbn.co/http2/"><b>Primary:</b> High Performance Browser Networking, ch. 12: HTTP/2</a> — framing, multiplexing, HPACK, and the honest packet-loss tradeoff section (verified 2026-08-25).</li>
+  <li><a href="https://www.cloudflare.com/learning/performance/what-is-http3/">Cloudflare: What is HTTP/3?</a> — QUIC on UDP, fused handshakes, 0-RTT, connection migration (verified 2026-08-25).</li>
+  <li><a href="https://www.cloudflare.com/learning/performance/http2-vs-http1.1/">Cloudflare: HTTP/2 vs HTTP/1.1</a> — the prioritization and multiplexing basics (verified 2026-08-25).</li>
+  <li><a href="https://cloudflare-quic.com/">cloudflare-quic.com</a> — see which protocol your own browser actually negotiates.</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — multiplexing, stream, head-of-line blocking, HPACK, QUIC, 0-RTT, connection ID added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — drill both spoken answers with graded feedback, ask "why did server push die?", or demand surprise follow-ups. Next chapter: CDNs — how google.com is effectively a thousand places at once.</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

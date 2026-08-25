@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 9 — Putting it all together: the fluent 60-second answer</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+
+<h1>Putting it all together: the fluent 60-second answer</h1>
+<p class="meta">Lesson 0009 · How the Internet Works · ~20 min · builds on lessons 0001–0008</p>
+
+<p>Eight chapters ago you typed a URL and watched a fog. Today that fog is your answer to <b>the</b> interview question: <i>"What happens when you type google.com and press Enter?"</i> You already know every step. This chapter compresses them into one fluent minute — and armor for the follow-ups that come after it.</p>
+
+<h2>Warm-up: no notes</h2>
+<p>Answer each from memory before opening. Lessons 7–8 are fresh, so they go first — this is you verifying yourself, which beats any quiz.</p>
+
+<details><summary>1. Name two independent levers that make a page load faster.</summary>
+<p>Caching (<code>Cache-Control</code>/<code>ETag</code>), compression (gzip/Brotli), minification, and cutting render-blocking resources off the critical path. Any two count.</p></details>
+
+<details><summary>2. Fresh cache hit vs revalidation — what's the network cost of each?</summary>
+<p>Fresh hit: zero network, bytes come straight from disk/memory. Revalidation: one round trip where the server answers <code>304 Not Modified</code> (no body) if nothing changed.</p></details>
+
+<details><summary>3. What breaks if session state lives in one web server's memory behind a load balancer?</summary>
+<p>The next request can land on a different server → user appears logged out, cart empties. Fixes: sticky sessions, or keep state in a shared store (Redis/database/signed cookie).</p></details>
+
+<details><summary>4. Recite the DNS lookup chain, browser cache to final answer.</summary>
+<p>Browser cache → OS cache → recursive resolver → root server ("ask .com") → TLD server ("ask google's authoritative NS") → authoritative server returns the A record.</p></details>
+
+<h2>The 60-second frame</h2>
+<p>Don't memorize a monologue — memorize a <b>frame</b>. Interviewers interrupt and jump around; a script shatters under that, a frame restarts from any beat. Five beats:</p>
+
+<div class="wire">
+<span class="c">Find</span>    DNS: caches → resolver → root → TLD → authoritative → IP<br>
+<span class="c">Connect</span>  TCP: SYN → SYN-ACK → ACK, sequence numbers agreed<br>
+<span class="c">Secure</span>   TLS: certificate verified against trusted CAs → symmetric keys<br>
+<span class="c">Ask</span>      HTTP: GET / → load balancer → healthy origin → 200 OK + HTML<br>
+<span class="c">Draw</span>     parse HTML → fetch CSS/JS (cached?) → render tree → layout → paint
+</div>
+
+<p>Mnemonic: <b>Find, Connect, Secure, Ask, Draw.</b> Spoken pace is roughly 130–150 words per minute, so sixty seconds fits all five beats with room for one clause of detail each. Detail lives in the <a href="../reference/glossary.html">glossary</a>, not in the frame.</p>
+
+<h2>Follow-up armor</h2>
+<p>These three probes are on your mission's success list. Each has a two-sentence answer:</p>
+<table>
+<tr><th>If they ask…</th><th>Say…</th></tr>
+<tr><td><i>"Why TLS <b>after</b> TCP?"</i></td><td>TLS doesn't move bytes itself — its encrypted records ride inside TCP's reliable, ordered stream. No transport underneath means nowhere to put the handshake.</td></tr>
+<tr><td><i>"What port? Why?"</i></td><td>443 for HTTPS, 80 for plain HTTP, 53 for DNS. Ports say <i>which service</i> on the machine gets the segment — well-known numbers are convention, not magic.</td></tr>
+<tr><td><i>"What if a packet is dropped?"</i></td><td>TCP notices the gap in cumulative ACKs (or triple duplicate ACKs) and retransmits from its send buffer. The app sees a delay, never corruption; only a total failure becomes a timeout.</td></tr>
+</table>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="0">
+  <p>1. What does <code>Cache-Control: max-age=600</code> instruct the browser to do?</p>
+  <button>Reuse the stored response for ten minutes without asking</button>
+  <button>Reconfirm the stored response with the server every ten minutes</button>
+  <button>Erase the stored response after ten minutes have passed</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>2. Health checks just flagged one backend as down. Where do its requests go?</p>
+  <button>They queue until the failed backend reports healthy again</button>
+  <button>The balancer reroutes them to the remaining healthy backends</button>
+  <button>Clients receive 502 errors until a human restarts the box</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="2">
+  <p>3. Put the journey in order.</p>
+  <button>DNS lookup → TLS handshake → TCP handshake → HTTP request</button>
+  <button>TCP handshake → DNS lookup → TLS handshake → HTTP request</button>
+  <button>DNS lookup → TCP handshake → TLS handshake → HTTP request</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>4. Why must the TLS handshake happen <b>after</b> TCP is established?</p>
+  <button>TLS records need TCP's reliable ordered stream to travel inside</button>
+  <button>TLS certificates are only valid once port 443 is confirmed open</button>
+  <button>Browsers refuse to encrypt data before the handshake completes</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>5. Mid-download, one packet of the HTML response disappears. The browser…</p>
+  <button>Shows an error, because the HTML arrived structurally incomplete</button>
+  <button>Notices gaps and waits while TCP retransmits the lost packet</button>
+  <button>Aborts and immediately retries the entire request from scratch</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li>Set a 60-second timer. Deliver the whole journey aloud, no notes, hitting all five beats. Record it on your phone and listen back — hesitations are louder than you think.</li>
+  <li><b>Follow-up roulette:</b> fire the three armored questions at yourself in random order, ≤20 seconds each. Better: ask me to drill you with surprise follow-ups.</li>
+  <li>Stuck mid-answer? Re-read the five-beat frame above — not the model answer — and retry in an hour. The struggle is the point; that's what makes it stick.</li>
+</ol>
+
+<details><summary>Model answer (peek only after trying)</summary>
+<p><i>"You type google.com and hit Enter. First the browser needs an IP: it checks local caches, then asks a recursive resolver, which walks root, TLD, and authoritative servers until it returns an address. With the IP, the browser opens a TCP connection — SYN, SYN-ACK, ACK — agreeing sequence numbers. Then TLS wraps that pipe: the server presents a certificate, the browser verifies it against trusted CAs, and both derive symmetric session keys. Now the browser sends an HTTP GET through that encrypted channel; a load balancer fronts Google's fleet and routes my request to a healthy server, which answers 200 OK with HTML. Finally the browser parses the HTML, fetches CSS and JavaScript — served from cache where possible — builds the render tree, computes layout, and paints pixels. Caches at every layer make my next visit almost instant."</i></p>
+<p>~140 words ≈ 58 seconds at speaking pace. It's a skeleton, not scripture — swap clauses for whatever the interviewer asks next.</p></details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://github.com/alex/what-happens-when"><b>Primary:</b> alex/what-happens-when</a> — the canonical map of this exact question; skim its DNS and TLS sections once more before interviews (verified 2026-08-22).</li>
+  <li><a href="https://hpbn.co">High Performance Browser Networking</a> — the TCP, TLS, and HTTP chapters behind beats Connect/Secure/Ask (verified 2026-08-22).</li>
+  <li><a href="https://www.cloudflare.com/learning/">Cloudflare Learning Center</a> — clean explainers for any beat that wobbles under questioning (verified 2026-08-22).</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — your pre-interview skim; every beat's terms live here.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — rehearse the 60-second answer with me and get graded feedback, demand surprise follow-ups, or ask "so how did the journey get <i>faster</i>?" Next chapter: HTTP/2 and QUIC — multiplexing, one connection, fewer handshakes.</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

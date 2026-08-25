@@ -151,6 +151,57 @@
 
   <dt>TTFB <span class="aka">(Time To First Byte)</span></dt>
   <dd>Time from sending the request to receiving the first byte: network round trip plus the server's own processing.</dd>
+
+  <dt>Reverse proxy</dt>
+  <dd>Server that sits in front of web servers and forwards client requests to them — clients never touch the origins directly. Adds TLS termination, caching, hiding of origin IPs.</dd>
+
+  <dt>Forward proxy</dt>
+  <dd>Proxy that sits in front of <i>clients</i> (VPN, corporate filter) and hides them from servers. A reverse proxy does the mirror-image job for servers.</dd>
+
+  <dt>Load balancer</dt>
+  <dd>Reverse proxy that spreads traffic across a pool of interchangeable servers using an algorithm, and stops sending traffic to servers that fail health checks.</dd>
+
+  <dt>Round robin</dt>
+  <dd>Simplest load-balancing algorithm: each new request goes to the next server in the list.</dd>
+
+  <dt>Health check</dt>
+  <dd>Periodic probe the load balancer runs against each server; failing servers are pulled from rotation until they recover.</dd>
+
+  <dt>Failover</dt>
+  <dd>Automatic rerouting of traffic away from a failed server to healthy ones — the reason losing one machine isn't an outage.</dd>
+
+  <dt>Multiplexing <span class="aka">(HTTP/2)</span></dt>
+  <dd>Many request/response exchanges interleaved as frames over one TCP connection; frame tags say which stream each belongs to.</dd>
+
+  <dt>Stream</dt>
+  <dd>One independent request/response exchange inside a connection, tracked by a stream ID — the unit HTTP/2 schedules and prioritizes.</dd>
+
+  <dt>Head-of-line blocking</dt>
+  <dd>One stalled item delaying everything behind it. HTTP/2 fixed the HTTP-layer kind; QUIC fixed the TCP-layer kind with independent streams.</dd>
+
+  <dt>HPACK</dt>
+  <dd>HTTP/2 header compression: Huffman coding plus static/dynamic lookup tables turn repeated headers into tiny indexes.</dd>
+
+  <dt>QUIC</dt>
+  <dd>UDP-based transport beneath HTTP/3: reliable streams, built-in TLS 1.3, no cross-stream blocking, encrypted by default, migrates between networks.</dd>
+
+  <dt>0-RTT</dt>
+  <dd>Resumed QUIC sessions send request data in the very first flight of packets, using cached session keys — zero waiting round trips.</dd>
+
+  <dt>Connection ID <span class="aka">(connection migration)</span></dt>
+  <dd>QUIC names connections by ID rather than IP:port, so a device changing networks keeps its downloads alive.</dd>
+
+  <dt>Latency</dt>
+  <dd>Time a round trip takes; set mostly by distance and light speed in fiber (~200 km/ms) — the thing CDNs exist to shrink.</dd>
+
+  <dt>Origin server</dt>
+  <dd>Where content genuinely lives; users behind a CDN normally never touch it directly.</dd>
+
+  <dt>Edge <span class="aka">(PoP)</span></dt>
+  <dd>Data center near users holding cached copies — a reverse proxy plus a cache, deployed worldwide.</dd>
+
+  <dt>Anycast</dt>
+  <dd>One IP announced from many sites; routing delivers to the nearest, and failure or overload reroutes to the next closest.</dd>
 </dl>
 </body>
 </html>

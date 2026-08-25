@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 11 — CDNs: how google.com is a thousand places at once</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+
+<h1>CDNs: how google.com is a thousand places at once</h1>
+<p class="meta">Lesson 0011 · How the Internet Works · ~15 min · builds on lessons 0002, 0007, 0008</p>
+
+<p>Your 60-second answer ends at <i>a</i> server. Sharp interviewers ask: <i>"which one? Google has thousands."</i> The answer is a <b>CDN</b> — and it interleaves three chapters you already own: DNS (lesson 2), caching (lesson 7), load balancing (lesson 8).</p>
+
+<h2>Why distance costs milliseconds</h2>
+<p>Packets move through fiber at roughly 200 km per millisecond — fast, but finite. Every beat of your journey pays for it: TCP's handshake, TLS's round trips, the request itself. Sit 10,000 km from the server and even a flawless site stacks dozens of cross-ocean round trips per page. <b>The fix isn't faster packets — it's shorter wires.</b> Put copies of the content near the user.</p>
+
+<h2>Anatomy: one origin, many edges</h2>
+<ul>
+<li><b>Origin server:</b> where the content actually lives. Users normally never touch it.</li>
+<li><b>Edge servers</b> (deployed in <b>points of presence</b>, often at internet exchange points): cache copies of assets worldwide (<a href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/">Cloudflare</a>).</li>
+<li><b>Cache miss?</b> That edge pulls from the origin once, keeps the copy, serves every neighbor after. Freshness obeys the same <code>Cache-Control</code> rules from lesson 7 — stale entries get revalidated before reuse.</li>
+</ul>
+
+<div class="wire">
+<span class="c">Find</span>    DNS: shop.com → CNAME → CDN's DNS → <span class="c">nearby edge IP</span> (not the origin)<br>
+<span class="c">Connect</span>  TCP+TLS to that edge — short RTT makes both handshakes cheap<br>
+<span class="c">Ask</span>      GET /logo.png → edge <span class="c">HIT</span>: served locally · <span class="s">MISS</span>: pull origin, store, serve
+</div>
+
+<p>Beyond speed: edges offload origin bandwidth, absorb traffic spikes, and soak up DDoS attacks before they reach home (<a href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/">Cloudflare</a>). Sound familiar? An edge is a <b>reverse proxy plus a cache</b> — lesson 8's front door, replicated worldwide — and inside each data center, load balancers and health checks run exactly as you learned there.</p>
+
+<h2>Getting routed to the right edge</h2>
+<div class="step"><div class="num">1</div><div><b>Anycast:</b> one IP address announced from many data centers at once. Internet routing itself delivers each packet to the topologically nearest site; if a center drowns or dies, traffic reroutes to the next closest automatically (<a href="https://www.cloudflare.com/learning/cdn/glossary/anycast-network/">Cloudflare</a>).</div></div>
+<div class="step"><div class="num">2</div><div><b>DNS-based routing:</b> the site's authoritative DNS hands out a pointer into the CDN's zone; the CDN's nameservers then answer with an IP chosen by where the resolver is asking from. Lesson 2's chain picks the door; anycast or geography decides which one opens.</div></div>
+
+<h2>Upgrade your 60-second answer</h2>
+<p>One clause transforms it from textbook to senior: after the DNS beat, add <i>"— which resolves me to a <b>nearby CDN edge</b>, not some distant origin, so every later round trip stays cheap."</i> Bonus point: mention TLS terminates <i>at the edge</i>, echoing your reverse-proxy knowledge.</p>
+
+<h2>Check yourself</h2>
+
+<div class="q" data-answer="0">
+  <p>1. Why does serving from farther away make every request slower?</p>
+  <button>Packets travel near light speed, so distance becomes real delay</button>
+  <button>Routers discard packets whose routes exceed a maximum hop count</button>
+  <button>Long connections exceed TCP window sizes and stall until reset</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>2. How does anycast reach different data centers under a single IP?</p>
+  <button>Internet routing tables deliver packets to the topologically nearest site</button>
+  <button>A central dispatcher measures load and rewrites destination addresses live</button>
+  <button>Each browser probes all sites and connects to whichever replies fastest</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>3. A site uses a CDN. What does its authoritative DNS typically return?</p>
+  <button>The origin server's address, kept hidden behind the CDN</button>
+  <button>A pointer into the CDN's zone listing nearby edge IPs</button>
+  <button>Multiple A records, one per continent, ordered by distance</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="1">
+  <p>4. An edge holds a stored copy now past its max-age. It must…</p>
+  <button>Serve it immediately, because stale content is always acceptable</button>
+  <button>Revalidate with the origin and use it only if unmodified</button>
+  <button>Delete it and refuse requests until a fresh copy arrives</button>
+  <div class="fb"></div>
+</div>
+
+<div class="q" data-answer="0">
+  <p>5. Many requests hit one CDN data center simultaneously. What happens?</p>
+  <button>A load balancer spreads them, health checks route around failures</button>
+  <button>Each request queues until the single origin finishes the earlier one</button>
+  <button>Requests are duplicated to every data center for redundant processing</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>The real skill: say it out loud</h2>
+<ol>
+  <li><i>"Where does a CDN sit in your 60-second answer, and what changes?"</i> — 45 seconds, no notes.</li>
+  <li><i>"Why does a global CDN make a site both faster <b>and</b> harder to take down?"</i> — 45 seconds.</li>
+  <li>Stuck? Reread the wire diagram, not the model answers, and retry in an hour.</li>
+</ol>
+
+<details><summary>Model answers (peek only after trying)</summary>
+<p><b>Where it sits:</b> <i>"Right after DNS. The lookup doesn't return the origin — it returns a nearby CDN edge, via anycast routing or DNS-based geographic answers. My TCP and TLS handshakes then complete against that close edge, so they're cheap, and cached assets are served right there. On a miss, the edge pulls from the origin once and keeps the copy. Inside each data center it's the same story as before: a reverse proxy fronting a pool behind a load balancer."</i></p>
+<p><b>Faster and tougher:</b> <i>"Faster because responses come from an edge kilometers away instead of an origin continents away — every round trip shrinks. Harder to kill because no single machine or data center matters much: anycast reroutes traffic to the next-nearest site during failures, caches absorb repeat demand without touching the origin, and DDoS floods get dispersed across hundreds of sites instead of concentrating on one target."</i></p>
+</details>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/"><b>Primary:</b> Cloudflare: What is a CDN?</a> — definition, latency math, IXPs, the four benefit categories (verified 2026-08-25).</li>
+  <li><a href="https://www.cloudflare.com/learning/cdn/cdn-load-balance-reliability/">Cloudflare: CDN reliability and load balancing</a> — PoP internals, intelligent failover, anycast under attack (verified 2026-08-25).</li>
+  <li><a href="https://www.cloudflare.com/learning/cdn/glossary/anycast-network/">Cloudflare: What is an anycast network?</a> — the one-IP-many-sites mechanism (verified 2026-08-25).</li>
+</ul>
+<p>Reference: <a href="../reference/glossary.html">Glossary</a> — origin server, edge/PoP, anycast, latency added.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — drill both spoken answers with graded feedback, ask "what happens on a cache miss storm?", or demand surprise follow-ups. Next chapter: the gauntlet — random timed follow-ups across the whole journey, your graduation test.</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
