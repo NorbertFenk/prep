@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go modules and variables</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Modules and variables</h1>
+  <p class="lede">A module gives a Go project an identity; a variable gives a program a value to use.</p>
+
+  <h2>Start a module</h2>
+  <pre><code>mkdir hello-go
+cd hello-go
+go mod init example.com/hello-go</code></pre>
+  <p>This creates <code>go.mod</code>, which records the module path and Go version, then can record dependencies as the project grows.</p>
+
+  <h2>Declare and use a value</h2>
+  <pre><code>name := "Ada"
+fmt.Println("Hello,", name)</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>name := "Ada"</code></td><td>Declare <code>name</code> and initialize it; Go infers its type.</td></tr>
+    <tr><td><code>fmt.Println("Hello,", name)</code></td><td>Print fixed text and the current value of <code>name</code>.</td></tr>
+  </table>
+  <p><code>:=</code> is for declaring a new variable inside a function. Use <code>var</code> when you need a different declaration shape.</p>
+
+  <p><a href="../lessons/0002-module-and-variable.html">Study lesson 2</a> · <a href="../lessons/0001-first-go-program.html">Review lesson 1</a></p>
+</main></body>
+</html>

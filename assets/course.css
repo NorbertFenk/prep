@@ -20,6 +20,7 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   .q button.wrong{background:#fee2e2;border-color:#b91c1c}
   .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
   .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
+  .feedback{min-height:1.2em}.feedback.ok{color:#15803d}.feedback.no{color:#b91c1c}
   #score{font-weight:700;margin-top:1rem}
   details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
   summary{cursor:pointer;font-weight:600}

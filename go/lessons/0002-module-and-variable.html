@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 2: Modules and variables</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 2</p>
+  <h1>Give your program a value</h1>
+  <p class="lede">In about ten minutes, you will put a Go program in a module and make its output depend on a variable.</p>
+  <p class="meta">Builds on <a href="0001-first-go-program.html">lesson 1</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q">
+    <p>Without looking back: what function does an executable Go program call first?</p>
+    <input id="recall" type="text" autocomplete="off" spellcheck="false" aria-describedby="recall-feedback">
+    <button type="button" onclick="checkRecall()">Check</button>
+    <p id="recall-feedback" class="fb" aria-live="polite"></p>
+  </div>
+
+  <h2>2. Create a module</h2>
+  <p>In a terminal, make a fresh project directory and initialize it:</p>
+  <pre><code>mkdir hello-go
+cd hello-go
+go mod init example.com/hello-go</code></pre>
+  <p>The command creates <code>go.mod</code>. It gives this project a module path and records the Go version and future dependencies.</p>
+
+  <h2>3. Add a variable</h2>
+  <p>Create <code>main.go</code> with this program:</p>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    name := "Ada"
+    fmt.Println("Hello,", name)
+}</code></pre>
+  <p><code>name := "Ada"</code> declares and initializes <code>name</code>. Go infers that the value is a string. The next line prints both the fixed greeting and the current value.</p>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>Hello, Ada</code>. Change <code>Ada</code> to your own name, run it again, and observe the changed output.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q">
+    <p>Which command creates the project file that identifies a Go module?</p>
+    <input id="module" type="text" autocomplete="off" spellcheck="false" aria-describedby="module-feedback">
+    <button type="button" onclick="checkModule()">Check</button>
+    <p id="module-feedback" class="fb" aria-live="polite"></p>
+  </div>
+  <div class="q">
+    <p>What does <code>name := "Ada"</code> do?</p>
+    <input id="variable" type="text" autocomplete="off" spellcheck="false" aria-describedby="variable-feedback">
+    <button type="button" onclick="checkVariable()">Check</button>
+    <p id="variable-feedback" class="fb" aria-live="polite"></p>
+  </div>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/doc/tutorial/create-module" rel="noreferrer">Create a Go module tutorial</a>, then keep the <a href="../reference/modules-and-variables.html">modules and variables reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>go mod init</code>, <code>:=</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0001-first-go-program.html">Lesson 1</a></li>
+  </ul>
+  <footer>Lesson 2 of the Go course. Make one value change, run, and observe.</footer>
+  <script>
+    function feedback(id, ok, yes, no) {
+      const node = document.querySelector(id);
+      node.textContent = ok ? yes : no;
+      node.className = ok ? 'fb ok' : 'fb no';
+    }
+    function checkRecall() {
+      const answer = document.querySelector('#recall').value.trim().toLowerCase();
+      feedback('#recall-feedback', /^(?:func\s+)?main(?:\s*\(\s*\))?$/.test(answer), 'Correct: func main().', 'Not quite. An executable starts with func main().');
+    }
+    function checkModule() {
+      const answer = document.querySelector('#module').value.trim().toLowerCase();
+      feedback('#module-feedback', answer === 'go mod init', 'Correct: go mod init creates go.mod.', 'Not quite. The command starts with go mod init.');
+    }
+    function checkVariable() {
+      const answer = document.querySelector('#variable').value.trim().toLowerCase();
+      const ok = /declare/.test(answer) && /initial/.test(answer);
+      feedback('#variable-feedback', ok, 'Correct: it declares and initializes name.', 'Not quite. It declares name and gives it an initial value.');
+    }
+  </script>
+</main></body>
+</html>

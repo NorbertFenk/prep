@@ -27,9 +27,14 @@ func main() {
 
   <h2>3. Retrieve</h2>
   <div class="card">
-    <p><strong>Without looking back:</strong> which function does Go call first in an executable program?</p>
-    <button type="button" onclick="checkAnswer()">Check answer</button>
-    <p id="feedback" class="feedback" aria-live="polite"></p>
+    <form onsubmit="checkAnswer(event)">
+      <label for="answer"><strong>Without looking back:</strong> which function does Go call first in an executable program?</label>
+      <div>
+        <input id="answer" name="answer" type="text" autocomplete="off" spellcheck="false" aria-describedby="feedback" required>
+        <button type="submit">Check answer</button>
+      </div>
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+    </form>
   </div>
 
   <h2>Next</h2>
@@ -41,12 +46,15 @@ func main() {
   </ul>
   <footer>Lesson 1 of the Go course. Keep the win small: write, run, change, run.</footer>
   <script>
-    function checkAnswer() {
-      const answer = window.prompt('What function does Go call first?');
+    function checkAnswer(event) {
+      event.preventDefault();
+      const answer = document.querySelector('#answer').value.trim().toLowerCase();
       const feedback = document.querySelector('#feedback');
-      feedback.textContent = answer && answer.trim() === 'main'
-        ? 'Correct: main.'
-        : 'Not quite. The answer is main.';
+      const correct = /^(?:func\s+)?main(?:\s*\(\s*\))?$/.test(answer);
+      feedback.textContent = correct
+        ? 'Correct: execution begins in func main().'
+        : 'Not quite. Go starts by calling func main(). Try again without looking back.';
+      feedback.className = correct ? 'feedback ok' : 'feedback no';
     }
   </script>
 </main></body>

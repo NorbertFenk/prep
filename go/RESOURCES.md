@@ -9,6 +9,13 @@
 - Use: Follow the tour sections on basics, packages, and functions alongside
   the lessons.
 
+### Create a Go module
+
+- URL: https://go.dev/doc/tutorial/create-module
+- Trust: Official Go project tutorial.
+- Use: Learn how `go mod init` creates `go.mod` and how `:=` declares and
+  initializes a variable.
+
 ## Reference
 
 ### Go Documentation
