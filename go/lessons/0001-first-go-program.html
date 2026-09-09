@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 1: Your first Go program</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 1</p>
+  <h1>Make Go run</h1>
+  <p class="lede">In ten minutes, you will recognize the four pieces of a Go program and run one yourself.</p>
+
+  <h2>1. The shape</h2>
+  <p>Go starts at <code>main</code> inside <code>package main</code>. Imports name code you want to use. Here, <code>fmt.Println</code> writes text followed by a newline.</p>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, Go")
+}</code></pre>
+  <p>Save it as <code>main.go</code>. If Go is installed, run <code>go run main.go</code>. You should see <code>Hello, Go</code>.</p>
+
+  <h2>2. Change one thing</h2>
+  <p class="prompt">Replace the message with a sentence about what you want to build in Go. Run it again. The goal is not originality; it is proving that you can edit, run, and observe a program.</p>
+
+  <h2>3. Retrieve</h2>
+  <div class="card">
+    <p><strong>Without looking back:</strong> which function does Go call first in an executable program?</p>
+    <button type="button" onclick="checkAnswer()">Check answer</button>
+    <p id="feedback" class="feedback" aria-live="polite"></p>
+  </div>
+
+  <h2>Next</h2>
+  <p>Read the <a href="https://go.dev/tour/welcome/1" rel="noreferrer">official Tour introduction</a>, then revisit the <a href="../reference/go-program-anatomy.html">program anatomy reference</a>.</p>
+  <p>Ask me any follow-up question, especially if installation, syntax, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+  </ul>
+  <footer>Lesson 1 of the Go course. Keep the win small: write, run, change, run.</footer>
+  <script>
+    function checkAnswer() {
+      const answer = window.prompt('What function does Go call first?');
+      const feedback = document.querySelector('#feedback');
+      feedback.textContent = answer && answer.trim() === 'main'
+        ? 'Correct: main.'
+        : 'Not quite. The answer is main.';
+    }
+  </script>
+</main></body>
+</html>

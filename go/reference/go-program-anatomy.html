@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go program anatomy</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Program anatomy</h1>
+  <p class="lede">The smallest useful Go program has a package, an entry point, and an action.</p>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, Go")
+}</code></pre>
+  <div class="card">
+    <p><strong>package main</strong> makes an executable program.</p>
+    <p><strong>import "fmt"</strong> makes the standard formatting package available.</p>
+    <p><strong>func main()</strong> is where execution begins.</p>
+    <p><strong>fmt.Println</strong> prints a line to standard output.</p>
+  </div>
+  <p><a href="../lessons/0001-first-go-program.html">Study lesson 1</a></p>
+</main></body>
+</html>
