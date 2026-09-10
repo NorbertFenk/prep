@@ -26,16 +26,14 @@ func main() {
   <p class="prompt">Replace the message with a sentence about what you want to build in Go. Run it again. The goal is not originality; it is proving that you can edit, run, and observe a program.</p>
 
   <h2>3. Retrieve</h2>
-  <div class="card">
-    <form onsubmit="checkAnswer(event)">
-      <label for="answer"><strong>Without looking back:</strong> which function does Go call first in an executable program?</label>
-      <div>
-        <input id="answer" name="answer" type="text" autocomplete="off" spellcheck="false" aria-describedby="feedback" required>
-        <button type="submit">Check answer</button>
-      </div>
-      <p id="feedback" class="feedback" aria-live="polite"></p>
-    </form>
+  <div class="q" data-answer="1">
+    <p>Without looking back: which function is the entry point of an executable Go program?</p>
+    <button type="button">func start()</button>
+    <button type="button">func main()</button>
+    <button type="button">func init()</button>
+    <div class="fb" aria-live="polite"></div>
   </div>
+  <p id="score"></p>
 
   <h2>Next</h2>
   <p>Read the <a href="https://go.dev/tour/welcome/1" rel="noreferrer">official Tour introduction</a>, then revisit the <a href="../reference/go-program-anatomy.html">program anatomy reference</a>.</p>
@@ -45,17 +43,6 @@ func main() {
     <li><a href="../RESOURCES.md">Resources</a></li>
   </ul>
   <footer>Lesson 1 of the Go course. Keep the win small: write, run, change, run.</footer>
-  <script>
-    function checkAnswer(event) {
-      event.preventDefault();
-      const answer = document.querySelector('#answer').value.trim().toLowerCase();
-      const feedback = document.querySelector('#feedback');
-      const correct = /^(?:func\s+)?main(?:\s*\(\s*\))?$/.test(answer);
-      feedback.textContent = correct
-        ? 'Correct: execution begins in func main().'
-        : 'Not quite. Go starts by calling func main(). Try again without looking back.';
-      feedback.className = correct ? 'feedback ok' : 'feedback no';
-    }
-  </script>
+  <script src="../../assets/quiz.js"></script>
 </main></body>
 </html>

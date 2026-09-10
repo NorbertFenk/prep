@@ -13,11 +13,12 @@
   <p class="meta">Builds on <a href="0001-first-go-program.html">lesson 1</a> · one small project</p>
 
   <h2>1. Quick recall</h2>
-  <div class="q">
-    <p>Without looking back: what function does an executable Go program call first?</p>
-    <input id="recall" type="text" autocomplete="off" spellcheck="false" aria-describedby="recall-feedback">
-    <button type="button" onclick="checkRecall()">Check</button>
-    <p id="recall-feedback" class="fb" aria-live="polite"></p>
+  <div class="q" data-answer="0">
+    <p>Without looking back: which function is the entry point of an executable Go program?</p>
+    <button type="button">func main()</button>
+    <button type="button">func init()</button>
+    <button type="button">func start()</button>
+    <div class="fb" aria-live="polite"></div>
   </div>
 
   <h2>2. Create a module</h2>
@@ -42,18 +43,21 @@ func main() {
   <p>You should see <code>Hello, Ada</code>. Change <code>Ada</code> to your own name, run it again, and observe the changed output.</p>
 
   <h2>4. Retrieve</h2>
-  <div class="q">
-    <p>Which command creates the project file that identifies a Go module?</p>
-    <input id="module" type="text" autocomplete="off" spellcheck="false" aria-describedby="module-feedback">
-    <button type="button" onclick="checkModule()">Check</button>
-    <p id="module-feedback" class="fb" aria-live="polite"></p>
+  <div class="q" data-answer="1">
+    <p>Which command creates <code>go.mod</code>, the file that identifies a Go module?</p>
+    <button type="button">go build init</button>
+    <button type="button">go mod init</button>
+    <button type="button">go new module</button>
+    <div class="fb" aria-live="polite"></div>
   </div>
-  <div class="q">
+  <div class="q" data-answer="2">
     <p>What does <code>name := "Ada"</code> do?</p>
-    <input id="variable" type="text" autocomplete="off" spellcheck="false" aria-describedby="variable-feedback">
-    <button type="button" onclick="checkVariable()">Check</button>
-    <p id="variable-feedback" class="fb" aria-live="polite"></p>
+    <button type="button">Prints the value of name</button>
+    <button type="button">Compares name with "Ada"</button>
+    <button type="button">Declares and initializes name</button>
+    <div class="fb" aria-live="polite"></div>
   </div>
+  <p id="score"></p>
 
   <h2>Next</h2>
   <p>Read the official <a href="https://go.dev/doc/tutorial/create-module" rel="noreferrer">Create a Go module tutorial</a>, then keep the <a href="../reference/modules-and-variables.html">modules and variables reference</a> nearby.</p>
@@ -64,25 +68,6 @@ func main() {
     <li><a href="0001-first-go-program.html">Lesson 1</a></li>
   </ul>
   <footer>Lesson 2 of the Go course. Make one value change, run, and observe.</footer>
-  <script>
-    function feedback(id, ok, yes, no) {
-      const node = document.querySelector(id);
-      node.textContent = ok ? yes : no;
-      node.className = ok ? 'fb ok' : 'fb no';
-    }
-    function checkRecall() {
-      const answer = document.querySelector('#recall').value.trim().toLowerCase();
-      feedback('#recall-feedback', /^(?:func\s+)?main(?:\s*\(\s*\))?$/.test(answer), 'Correct: func main().', 'Not quite. An executable starts with func main().');
-    }
-    function checkModule() {
-      const answer = document.querySelector('#module').value.trim().toLowerCase();
-      feedback('#module-feedback', answer === 'go mod init', 'Correct: go mod init creates go.mod.', 'Not quite. The command starts with go mod init.');
-    }
-    function checkVariable() {
-      const answer = document.querySelector('#variable').value.trim().toLowerCase();
-      const ok = /declare/.test(answer) && /initial/.test(answer);
-      feedback('#variable-feedback', ok, 'Correct: it declares and initializes name.', 'Not quite. It declares name and gives it an initial value.');
-    }
-  </script>
+  <script src="../../assets/quiz.js"></script>
 </main></body>
 </html>

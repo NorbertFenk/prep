@@ -13,6 +13,6 @@ document.querySelectorAll('.q').forEach(q => {
     }
     if (answered === document.querySelectorAll('.q').length)
       document.getElementById('score').textContent =
-        `Score: ${right}/${answered}` + (right === answered ? ' — now do both spoken drills.' : ' — review what you missed, then do the spoken drills.');
+        `Score: ${right}/${answered}` + (right === answered ? ' — all correct. Explain each answer out loud to lock it in.' : ' — review what you missed above, then answer again from memory.');
   }));
 });
