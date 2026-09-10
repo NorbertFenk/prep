@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go slices</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Slices and range</h1>
+  <p class="lede">A slice is a growable list of elements of one type; <code>range</code> walks it.</p>
+
+  <h2>Build and grow</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>names := []string{"Ada", "Grace"}</code></td><td>Slice literal: element type in brackets, values in braces.</td></tr>
+    <tr><td><code>names = append(names, "Alan")</code></td><td>Adds an element and returns the longer slice — always assign the result.</td></tr>
+    <tr><td><code>len(names)</code></td><td>Number of elements.</td></tr>
+    <tr><td><code>names[0]</code></td><td>First element; indexes start at 0.</td></tr>
+  </table>
+
+  <h2>Loop with range</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>for i, name := range names</code></td><td>Two values per step: index <code>i</code> and element <code>name</code>.</td></tr>
+    <tr><td><code>for _, name := range names</code></td><td>Element only; <code>_</code> discards the index.</td></tr>
+    <tr><td><code>for i := range names</code></td><td>Index only.</td></tr>
+  </table>
+  <p>Prefer slices over arrays: arrays have a fixed size baked into their type (<code>[3]string</code>), slices do not.</p>
+
+  <p><a href="../lessons/0005-slices-and-range.html">Study lesson 5</a> · <a href="functions.html">Functions</a> · <a href="structs.html">Structs</a></p>
+</main></body>
+</html>

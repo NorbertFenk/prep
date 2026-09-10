@@ -6,8 +6,10 @@
 
 - URL: https://go.dev/tour/
 - Trust: Official Go project tutorial.
-- Use: Follow the tour sections on basics, packages, and functions alongside
-  the lessons.
+- Use: Follow the tour sections on basics, packages, functions
+  (https://go.dev/tour/basics/4), flow control
+  (https://go.dev/tour/flowcontrol/1), and more types — slices, range,
+  structs (https://go.dev/tour/moretypes/1) — alongside the lessons.
 
 ### Create a Go module
 

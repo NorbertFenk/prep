@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 5: Slices and range</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 5</p>
+  <h1>Work with a list of values</h1>
+  <p class="lede">In about ten minutes, you will store several values in one slice and loop over them with <code>range</code> — the way almost every real Go program handles collections.</p>
+  <p class="meta">Builds on <a href="0004-your-first-function.html">lesson 4</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="2">
+    <p>Without looking back: in <code>name := "Ada"</code>, what does Go figure out for you?</p>
+    <button type="button">The variable's name</button>
+    <button type="button">The variable's value</button>
+    <button type="button">The variable's type</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. A slice holds many values</h2>
+  <p>A slice is a list that can grow. <code>[]string{"Ada", "Grace"}</code> is a slice literal — the element type in brackets, the values in braces. <code>append</code> adds an element and gives you the longer slice back, so you assign the result:</p>
+  <pre><code>names := []string{"Ada", "Grace"}
+names = append(names, "Alan")</code></pre>
+  <p><code>range</code> walks a slice, handing you two values per step: the index and the element. When you don't need the index, discard it with <code>_</code>:</p>
+  <pre><code>for _, name := range names {
+    fmt.Println(name)
+}</code></pre>
+
+  <h2>3. Greet the list</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with this — it reuses the <code>greet</code> function you were asked to write in lesson 4:</p>
+  <pre><code>package main
+
+import "fmt"
+
+func greet(name string) string {
+    return "Hello, " + name
+}
+
+func main() {
+    names := []string{"Ada", "Grace", "Alan"}
+    names = append(names, "Edsger")
+    for _, name := range names {
+        fmt.Println(greet(name))
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see four greetings. Now replace <code>"Edsger"</code> with your own name, run it again, and check your greeting appears last.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What does <code>[]string{"Ada", "Grace"}</code> create?</p>
+    <button type="button">A slice of strings</button>
+    <button type="button">A list of integers</button>
+    <button type="button">A pair of functions</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>In <code>for i, name := range names</code>, what is <code>name</code>?</p>
+    <button type="button">The slice's length</button>
+    <button type="button">The current element</button>
+    <button type="button">The index's position</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>Why must you write <code>names = append(names, "Alan")</code>?</p>
+    <button type="button">append compares two slices</button>
+    <button type="button">append prints the new element</button>
+    <button type="button">append returns the new slice</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/moretypes/7" rel="noreferrer">Tour of Go: Slices</a> (and <a href="https://go.dev/tour/moretypes/16" rel="noreferrer">Range</a>), then keep the <a href="../reference/slices.html">slices reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>range</code>, <code>_</code>, <code>append</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0004-your-first-function.html">Lesson 4</a></li>
+    <li><a href="0006-structs.html">Lesson 6</a></li>
+  </ul>
+  <footer>Lesson 5 of the Go course. One list, one loop, one function reused.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

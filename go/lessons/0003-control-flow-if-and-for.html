@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 3: Decisions and repetition</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 3</p>
+  <h1>Make it decide and repeat</h1>
+  <p class="lede">In about ten minutes, you will give your program a loop and a decision — the two pieces that turn a script into something useful.</p>
+  <p class="meta">Builds on <a href="0002-module-and-variable.html">lesson 2</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="0">
+    <p>Without looking back: which file identifies a directory as a Go module?</p>
+    <button type="button">go.mod</button>
+    <button type="button">go.sum</button>
+    <button type="button">main.go</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. The only loop you need</h2>
+  <p>Go has one looping keyword: <code>for</code>. Its three parts are initializer, condition, and post statement — no parentheses anywhere:</p>
+  <pre><code>for n := 1; n &lt;= 5; n++ {
+    fmt.Println(n)
+}</code></pre>
+  <p><code>if</code> looks the same way: condition, then braces. <code>else</code> is optional.</p>
+  <pre><code>if n%2 == 0 {
+    fmt.Println("even")
+} else {
+    fmt.Println("odd")
+}</code></pre>
+  <p><code>%</code> is the remainder operator: <code>n%2</code> is <code>0</code> exactly when <code>n</code> divides evenly by two.</p>
+
+  <h2>3. Put them together</h2>
+  <p>In your <code>hello-go</code> module from lesson 2, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    for n := 1; n &lt;= 5; n++ {
+        if n%2 == 0 {
+            fmt.Println(n, "is even")
+        } else {
+            fmt.Println(n, "is odd")
+        }
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see five lines alternating odd and even. Now change the loop to count to ten, run it again, and check the output matches what you expect.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="1">
+    <p>Which keyword is Go's only looping construct?</p>
+    <button type="button">while</button>
+    <button type="button">for</button>
+    <button type="button">repeat</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does the condition <code>n%2 == 0</code> check?</p>
+    <button type="button">n is greater than two</button>
+    <button type="button">n is exactly equal two</button>
+    <button type="button">n divides evenly by two</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="0">
+    <p>What goes around a Go <code>if</code> condition?</p>
+    <button type="button">Nothing, no parentheses</button>
+    <button type="button">Parentheses, always required</button>
+    <button type="button">Brackets, like an array</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/flowcontrol/1" rel="noreferrer">Tour of Go: Flow control</a>, then keep the <a href="../reference/control-flow.html">control flow reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if the three-part <code>for</code>, <code>%</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0002-module-and-variable.html">Lesson 2</a></li>
+    <li><a href="0004-your-first-function.html">Lesson 4</a></li>
+  </ul>
+  <footer>Lesson 3 of the Go course. One loop, one decision, one changed run.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

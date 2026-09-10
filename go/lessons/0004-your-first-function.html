@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 4: Your first function</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 4</p>
+  <h1>Give your code a name</h1>
+  <p class="lede">In about ten minutes, you will move logic out of <code>main</code> into your own function — the step that makes programs reusable instead of one long script.</p>
+  <p class="meta">Builds on <a href="0003-control-flow-if-and-for.html">lesson 3</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: how many times does <code>for n := 1; n &lt;= 5; n++</code> run its body?</p>
+    <button type="button">Four times</button>
+    <button type="button">Five times</button>
+    <button type="button">Six times</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. Anatomy of a function</h2>
+  <pre><code>func parity(n int) string {
+    if n%2 == 0 {
+        return "even"
+    }
+    return "odd"
+}</code></pre>
+  <p>Read the signature left to right: keyword <code>func</code>, name <code>parity</code>, parameter <code>n</code> of type <code>int</code>, and a result of type <code>string</code>. Unlike <code>:=</code>, parameters always name their type explicitly. <code>return</code> hands a value back to the caller and ends the function — the <code>if</code> needs no <code>else</code> here.</p>
+
+  <h2>3. Refactor lesson 3</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import "fmt"
+
+func parity(n int) string {
+    if n%2 == 0 {
+        return "even"
+    }
+    return "odd"
+}
+
+func main() {
+    for n := 1; n &lt;= 5; n++ {
+        fmt.Println(n, "is", parity(n))
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>The output is identical to lesson 3 — that is the point. Same behavior, but the decision now lives in one named, testable place. Add a <code>greet(name string) string</code> function that returns <code>"Hello, " + name</code>, call it from <code>main</code>, and run again.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>In <code>func parity(n int) string</code>, what is <code>int</code>?</p>
+    <button type="button">The parameter's type</button>
+    <button type="button">The function's result</button>
+    <button type="button">The function's name</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does <code>return "even"</code> do?</p>
+    <button type="button">Prints the value on screen</button>
+    <button type="button">Declares a variable in main</button>
+    <button type="button">Sends the value to caller</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>After <code>return "even"</code> runs, what happens to the rest of <code>parity</code>?</p>
+    <button type="button">It runs anyway afterwards</button>
+    <button type="button">It is skipped, function ends</button>
+    <button type="button">It causes a compile error</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/basics/4" rel="noreferrer">Tour of Go: Functions</a>, then keep the <a href="../reference/functions.html">functions reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if parameter types, <code>return</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0003-control-flow-if-and-for.html">Lesson 3</a></li>
+    <li><a href="0005-slices-and-range.html">Lesson 5</a></li>
+  </ul>
+  <footer>Lesson 4 of the Go course. Same output, better shape: name your logic.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 6: Structs</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 6</p>
+  <h1>Group values into a type</h1>
+  <p class="lede">In about ten minutes, you will define your own type with <code>struct</code> and keep a slice of them — the shape most real Go data lives in.</p>
+  <p class="meta">Builds on <a href="0005-slices-and-range.html">lesson 5</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="0">
+    <p>Without looking back: what does <code>_</code> do in <code>for _, name := range names</code>?</p>
+    <button type="button">Discards the index value</button>
+    <button type="button">Reverses the loop's order</button>
+    <button type="button">Marks the loop as endless</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. A struct bundles fields</h2>
+  <p>When values belong together — a name and an age — put them in one type:</p>
+  <pre><code>type person struct {
+    name string
+    age  int
+}</code></pre>
+  <p>This declares a new type named <code>person</code> with two fields. Build one with a literal naming each field, and read a field with a dot:</p>
+  <pre><code>p := person{name: "Ada", age: 36}
+fmt.Println(p.name)</code></pre>
+
+  <h2>3. A slice of structs</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with this — lesson 5's slice, upgraded so each element carries two values:</p>
+  <pre><code>package main
+
+import "fmt"
+
+type person struct {
+    name string
+    age  int
+}
+
+func main() {
+    people := []person{
+        {name: "Ada", age: 36},
+        {name: "Alan", age: 41},
+    }
+    for _, p := range people {
+        fmt.Println(p.name, "is", p.age)
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see two lines. Inside the slice literal, <code>person</code> may be left out of each element — the slice's type is already known. Now add yourself as a third <code>person</code>, run it again, and check the output.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="1">
+    <p>What does <code>type person struct { ... }</code> do?</p>
+    <button type="button">Defines a new function</button>
+    <button type="button">Defines a new named type</button>
+    <button type="button">Defines a new named package</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>How do you read the name field of a variable <code>p</code> of type <code>person</code>?</p>
+    <button type="button">name(p)</button>
+    <button type="button">p-&gt;name</button>
+    <button type="button">p.name</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="0">
+    <p>What is <code>people</code> in <code>[]person{{name: "Ada", age: 36}}</code>?</p>
+    <button type="button">A slice of person values</button>
+    <button type="button">A slice of string values</button>
+    <button type="button">A struct of person slices</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/moretypes/2" rel="noreferrer">Tour of Go: Structs</a> (and <a href="https://go.dev/tour/moretypes/3" rel="noreferrer">Struct literals</a>), then keep the <a href="../reference/structs.html">structs reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if field types, literals, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0005-slices-and-range.html">Lesson 5</a></li>
+  </ul>
+  <footer>Lesson 6 of the Go course. Two values became one thing; a list of them became data.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

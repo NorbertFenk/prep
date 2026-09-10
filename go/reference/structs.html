@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go structs</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Structs</h1>
+  <p class="lede">A struct bundles named fields into one new type — the way related values travel together.</p>
+
+  <h2>Declare, build, read</h2>
+  <pre><code>type person struct {
+    name string
+    age  int
+}
+
+p := person{name: "Ada", age: 36}
+fmt.Println(p.name, p.age)</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>type person struct { ... }</code></td><td>Declares a new named type with the listed fields.</td></tr>
+    <tr><td><code>person{name: "Ada", age: 36}</code></td><td>Literal naming each field; unlisted fields get their zero value (<code>0</code>, <code>""</code>).</td></tr>
+    <tr><td><code>p.name</code></td><td>Read a field with a dot; <code>p.age = 37</code> writes one.</td></tr>
+  </table>
+
+  <h2>Structs in slices</h2>
+  <pre><code>people := []person{
+    {name: "Ada", age: 36},
+    {name: "Alan", age: 41},
+}
+for _, p := range people {
+    fmt.Println(p.name, "is", p.age)
+}</code></pre>
+  <p>Inside a slice literal, the element type may be left out of each entry — <code>people</code> already says it is <code>person</code>.</p>
+
+  <p><a href="../lessons/0006-structs.html">Study lesson 6</a> · <a href="slices.html">Slices</a> · <a href="control-flow.html">Control flow</a></p>
+</main></body>
+</html>

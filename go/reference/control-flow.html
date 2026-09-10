@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go control flow</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Control flow: if and for</h1>
+  <p class="lede">Go has one loop keyword and one decision keyword. Neither condition takes parentheses.</p>
+
+  <h2>Loops</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>for n := 1; n &lt;= 5; n++ { ... }</code></td><td>Three-part loop: initializer, condition, post statement. Body runs while the condition is true.</td></tr>
+    <tr><td><code>for n &lt; 10 { ... }</code></td><td>Condition-only loop (Go's "while").</td></tr>
+    <tr><td><code>for { ... }</code></td><td>Endless loop; leave it with <code>break</code> or <code>return</code>.</td></tr>
+  </table>
+
+  <h2>Decisions</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>if n%2 == 0 { ... }</code></td><td>Run the body when the condition is true. No parentheses around the condition; braces are required.</td></tr>
+    <tr><td><code>} else { ... }</code></td><td>Optional alternative branch, on the same line as the closing brace.</td></tr>
+    <tr><td><code>n % 2</code></td><td>Remainder of <code>n</code> divided by 2; <code>0</code> means even.</td></tr>
+    <tr><td><code>==</code> vs <code>=</code></td><td><code>==</code> compares, <code>=</code> assigns. Conditions use <code>==</code>.</td></tr>
+  </table>
+  <p>There is no <code>while</code>, <code>do</code>, or <code>repeat</code> in Go — every loop is a <code>for</code>.</p>
+
+  <p><a href="../lessons/0003-control-flow-if-and-for.html">Study lesson 3</a> · <a href="modules-and-variables.html">Modules and variables</a> · <a href="functions.html">Functions</a></p>
+</main></body>
+</html>

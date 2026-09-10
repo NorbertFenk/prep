@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go functions</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Functions</h1>
+  <p class="lede">A function names a piece of logic, takes typed parameters, and hands back a typed result.</p>
+
+  <h2>Anatomy</h2>
+  <pre><code>func parity(n int) string {
+    if n%2 == 0 {
+        return "even"
+    }
+    return "odd"
+}</code></pre>
+  <table>
+    <tr><th>Part</th><th>Meaning</th></tr>
+    <tr><td><code>func</code></td><td>Keyword that starts every function declaration.</td></tr>
+    <tr><td><code>parity</code></td><td>Name; call it as <code>parity(4)</code>.</td></tr>
+    <tr><td><code>(n int)</code></td><td>Parameter list — parameters always state their type explicitly, unlike <code>:=</code>.</td></tr>
+    <tr><td><code>string</code></td><td>Result type; omitted when the function returns nothing.</td></tr>
+    <tr><td><code>return "even"</code></td><td>Sends a value to the caller and ends the function immediately.</td></tr>
+  </table>
+
+  <h2>Shapes worth knowing</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>func log(msg string)</code></td><td>No result — called for its effect.</td></tr>
+    <tr><td><code>func divmod(a, b int) (int, int)</code></td><td>Two parameters sharing a type; two results returned together.</td></tr>
+    <tr><td><code>q, r := divmod(7, 3)</code></td><td>Caller receives multiple results into multiple variables.</td></tr>
+  </table>
+
+  <p><a href="../lessons/0004-your-first-function.html">Study lesson 4</a> · <a href="control-flow.html">Control flow</a> · <a href="go-program-anatomy.html">Program anatomy</a></p>
+</main></body>
+</html>
