@@ -7,6 +7,8 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   .step b{display:block}
   .step p{margin:.15rem 0 0;color:#374151}
   code{background:#f3f4f6;padding:.1em .35em;border-radius:4px;font-size:.9em}
+  pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.9rem 1.1rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.7;margin:1rem 0;overflow-x:auto}
+  pre code{background:none;padding:0;border-radius:0;font-size:inherit;color:inherit}
   table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
   th,td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;vertical-align:top}
   th{background:#f8fafc}
