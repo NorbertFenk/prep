@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 11: Errors</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 11</p>
+  <h1>Fail on purpose, fail politely</h1>
+  <p class="lede">In about ten minutes, you will return an <code>error</code> from a function and handle it the way nearly every line of real Go does: <code>if err != nil</code>.</p>
+  <p class="meta">Builds on <a href="0010-interfaces.html">lesson 10</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: which method must a type have to satisfy <code>fmt.Stringer</code>?</p>
+    <button type="button">Print() string</button>
+    <button type="button">String() string</button>
+    <button type="button">Error() string</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. error is just an interface</h2>
+  <p>Go has no exceptions. A function that can fail returns its failure as a value — the last result, of type <code>error</code>. And <code>error</code> is exactly what lesson 10 taught: an interface, with one method, <code>Error() string</code>. When all is well, the error is <code>nil</code>:</p>
+  <pre><code>func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, errors.New("cannot divide by zero")
+    }
+    return a / b, nil
+}</code></pre>
+  <p>The caller's job is one reflex, repeated everywhere in Go: check the error before using the result.</p>
+  <pre><code>result, err := divide(10, 0)
+if err != nil {
+    fmt.Println("error:", err)
+    return
+}
+fmt.Println(result)</code></pre>
+  <p>An <code>if</code> can also declare variables of its own — <code>if result, err := divide(10, 2); err != nil</code> keeps <code>result</code> and <code>err</code> alive only inside that <code>if</code>.</p>
+
+  <h2>3. A function that can fail</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, errors.New("cannot divide by zero")
+    }
+    return a / b, nil
+}
+
+func main() {
+    if result, err := divide(10, 2); err != nil {
+        fmt.Println("error:", err)
+    } else {
+        fmt.Println("10 / 2 =", result)
+    }
+
+    result, err := divide(10, 0)
+    if err != nil {
+        fmt.Println("error:", err)
+        return
+    }
+    fmt.Println("10 / 0 =", result)
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>10 / 2 = 5</code>, then <code>error: cannot divide by zero</code> — and <em>not</em> a crash. Note the parenthesized import block: that is how two or more imports are written. Now change the message in <code>errors.New</code>, run again, and watch the caller print your new text without knowing anything changed.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What kind of thing is Go's <code>error</code> type?</p>
+    <button type="button">An interface with one method</button>
+    <button type="button">A struct with one field</button>
+    <button type="button">A keyword built into Go</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does a function return as its error when all went well?</p>
+    <button type="button">Zero</button>
+    <button type="button">True</button>
+    <button type="button">nil</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>What is the caller's reflex after calling a function that returns an error?</p>
+    <button type="button">Print the result first</button>
+    <button type="button">Check if err != nil</button>
+    <button type="button">Recover from the panic</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/methods/19" rel="noreferrer">Tour of Go: Errors</a>, then keep the <a href="../reference/errors.html">errors reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>errors.New</code>, the if-with-declaration, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0010-interfaces.html">Lesson 10</a></li>
+    <li><a href="0012-reading-files.html">Lesson 12</a></li>
+  </ul>
+  <footer>Lesson 11 of the Go course. Errors are values — boring, checkable, and yours.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

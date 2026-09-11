@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go interfaces</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Interfaces</h1>
+  <p class="lede">An interface names behavior; any type with those methods satisfies it — implicitly, no declaration needed.</p>
+
+  <h2>Declare and satisfy</h2>
+  <pre><code>type greeter interface {
+    greet() string
+}
+
+func (p person) greet() string { return "Hello, " + p.name }
+// person is now a greeter — nothing else to write.</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>type greeter interface { ... }</code></td><td>Declares a method set; usually one or two short methods.</td></tr>
+    <tr><td><code>func announce(g greeter)</code></td><td>Accepts any type satisfying the interface — now and later.</td></tr>
+    <tr><td><code>var g greeter</code></td><td>Zero value is <code>nil</code>; calling a method on it panics.</td></tr>
+  </table>
+
+  <h2>Interfaces from the standard library</h2>
+  <table>
+    <tr><th>Interface</th><th>Method set</th><th>What it unlocks</th></tr>
+    <tr><td><a href="https://pkg.go.dev/fmt#Stringer" rel="noreferrer"><code>fmt.Stringer</code></a></td><td><code>String() string</code></td><td><code>fmt.Println</code> prints your text instead of <code>{Ada 36}</code>.</td></tr>
+    <tr><td><a href="https://pkg.go.dev/builtin#error" rel="noreferrer"><code>error</code></a></td><td><code>Error() string</code></td><td>The standard way to report failure (a later lesson).</td></tr>
+    <tr><td><code>any</code> / <code>interface{}</code></td><td>no methods</td><td>Every type satisfies it — accept anything; check before use.</td></tr>
+  </table>
+
+  <h2>Go's conventions</h2>
+  <p>Interfaces are small — one method is the classic (<code>Stringer</code>, <code>Reader</code>, <code>Writer</code>). Define them where they are <em>used</em>, not where the types live. Lowercase method names (like <code>greet</code>) only satisfy interfaces within the same package; exported interfaces list exported methods.</p>
+
+  <p><a href="../lessons/0010-interfaces.html">Study lesson 10</a> · <a href="pointers.html">Pointers</a> · <a href="methods.html">Methods</a></p>
+</main></body>
+</html>

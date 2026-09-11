@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 10: Interfaces</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 10</p>
+  <h1>One function, many types</h1>
+  <p class="lede">In about ten minutes, you will write an interface, satisfy it without declaring that you did, and make <code>fmt.Println</code> print your struct however you like.</p>
+  <p class="meta">Builds on <a href="0009-pointers.html">lesson 9</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: what does <code>&amp;age</code> give you?</p>
+    <button type="button">A copy of age's value</button>
+    <button type="button">The address of age itself</button>
+    <button type="button">The current value of age</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. An interface is a list of methods</h2>
+  <p>An interface names behavior, not data. Any type that has the listed methods satisfies it — automatically, with no <code>implements</code> keyword anywhere:</p>
+  <pre><code>type greeter interface {
+    greet() string
+}</code></pre>
+  <p>Lesson 8's <code>person</code> already has <code>greet() string</code>, so <code>person</code> <em>is</em> a <code>greeter</code>. A function taking <code>greeter</code> now accepts <code>person</code> — and any future type that grows a <code>greet</code> method, without editing the function.</p>
+  <p>The standard library plays the same game. <a href="https://pkg.go.dev/fmt#Stringer" rel="noreferrer"><code>fmt.Stringer</code></a> is just <code>String() string</code>: give your type that method and <code>fmt.Println</code> calls it on its own. Without it, a person prints as the raw fields <code>{Ada 36}</code>.</p>
+
+  <h2>3. Teach fmt about your type</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import "fmt"
+
+type person struct {
+    name string
+    age  int
+}
+
+func (p person) String() string {
+    return fmt.Sprint(p.name, " (", p.age, ")")
+}
+
+func (p person) greet() string {
+    return "Hello, " + p.name
+}
+
+type greeter interface {
+    greet() string
+}
+
+func announce(g greeter) {
+    fmt.Println("Please say:", g.greet())
+}
+
+func main() {
+    ada := person{name: "Ada", age: 36}
+    fmt.Println(ada)
+    announce(ada)
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>Ada (36)</code> — the <code>String</code> method at work — then <code>Please say: Hello, Ada</code>. Now define a second type <code>robot</code> with an <code>id int</code> field and its own <code>greet</code>, pass one to <code>announce</code>, and run again: the same function, a different type, zero changes to <code>announce</code>.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What must a type do to satisfy an interface?</p>
+    <button type="button">Have the interface's methods</button>
+    <button type="button">Name the interface explicitly</button>
+    <button type="button">Import the interface's package</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>Why does <code>fmt.Println(ada)</code> print <code>Ada (36)</code> instead of <code>{Ada 36}</code>?</p>
+    <button type="button">fmt reads the struct's fields</button>
+    <button type="button">fmt always prints custom text</button>
+    <button type="button">fmt calls ada.String() itself</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>What does <code>announce(g greeter)</code> accept?</p>
+    <button type="button">Only variables named person</button>
+    <button type="button">Any type having greet method</button>
+    <button type="button">Any type at all, no methods</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/methods/9" rel="noreferrer">Tour of Go: Interfaces</a> (and <a href="https://go.dev/tour/methods/10" rel="noreferrer">implicit satisfaction</a>), then keep the <a href="../reference/interfaces.html">interfaces reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if implicit satisfaction, <code>Stringer</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0009-pointers.html">Lesson 9</a></li>
+    <li><a href="0011-errors.html">Lesson 11</a></li>
+  </ul>
+  <footer>Lesson 10 of the Go course. Interfaces ask what a type can do, never what it is.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

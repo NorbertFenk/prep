@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CLI flags in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>CLI flags</h1>
+  <p class="lede">The standard <code>flag</code> package binds command-line flags to variables — define, parse, dereference.</p>
+
+  <h2>Define and parse</h2>
+  <pre><code>name := flag.String("name", "world", "who to greet")
+count := flag.Int("count", 1, "how many times")
+shout := flag.Bool("shout", false, "greet loudly")
+flag.Parse()
+fmt.Println(*name, *count, *shout)</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>flag.String/Int/Bool(...)</code></td><td>Define a flag: name, default, help text; returns a <em>pointer</em> — use <code>*name</code> to read the value.</td></tr>
+    <tr><td><code>flag.StringVar(&amp;target, ...)</code></td><td>Binds to an existing variable instead; no pointer dance.</td></tr>
+    <tr><td><code>flag.Parse()</code></td><td>Reads the command line; must run before values are real.</td></tr>
+    <tr><td><code>flag.Args()</code></td><td>Leftover non-flag arguments, as a <code>[]string</code>.</td></tr>
+    <tr><td><code>-h</code> / <code>--help</code></td><td>Prints every flag with its default and help text, automatically.</td></tr>
+  </table>
+
+  <h2>Usage notes</h2>
+  <p>Flags come before positional arguments: <code>tool -name Ada file.txt</code> — <code>file.txt</code> lands in <code>flag.Args()</code>. Bool flags are true when present alone (<code>-shout</code>) and need <code>-shout=false</code> to stay false explicitly. An unknown flag exits with a usage message. One dash or two, Go accepts both (<code>-name</code>, <code>--name</code>).</p>
+  <p>Below <code>flag</code> sits <code>os.Args</code> — the raw argument slice, <code>os.Args[0]</code> being the program name. Use <code>flag</code> unless you need something it cannot express.</p>
+
+  <p><a href="../lessons/0016-cli-flags.html">Study lesson 16</a> · <a href="reading-files.html">Reading files</a> · <a href="pointers.html">Pointers</a></p>
+</main></body>
+</html>

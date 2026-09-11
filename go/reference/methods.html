@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go methods</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Methods</h1>
+  <p class="lede">A method is a function attached to a type via a receiver — data and behavior in one place.</p>
+
+  <h2>Anatomy</h2>
+  <pre><code>func (p person) greet() string {
+    return "Hello, " + p.name
+}
+
+ada := person{name: "Ada"}
+fmt.Println(ada.greet())</code></pre>
+  <table>
+    <tr><th>Part</th><th>Meaning</th></tr>
+    <tr><td><code>(p person)</code></td><td>Receiver: the type the method attaches to, and the name it is known by inside the body.</td></tr>
+    <tr><td><code>ada.greet()</code></td><td>Call on a value of the receiver's type; no manual passing of <code>ada</code>.</td></tr>
+    <tr><td><code>p.name</code></td><td>The receiver's field, read with a dot.</td></tr>
+  </table>
+
+  <h2>Function vs method</h2>
+  <table>
+    <tr><th>Shape</th><th>Meaning</th></tr>
+    <tr><td><code>func greet(name string) string</code></td><td>Plain function; data arrives as a parameter.</td></tr>
+    <tr><td><code>func (p person) greet() string</code></td><td>Method; data arrives as the receiver.</td></tr>
+  </table>
+
+  <h2>Value vs pointer receivers</h2>
+  <p><code>(p person)</code> copies the value — the method cannot change the original. <code>(p *person)</code> receives a pointer, so <code>p.age = 37</code> sticks. Use pointer receivers for anything that mutates or is large; pick one style per type.</p>
+
+  <p><a href="../lessons/0008-methods.html">Study lesson 8</a> · <a href="maps.html">Maps</a> · <a href="functions.html">Functions</a></p>
+</main></body>
+</html>

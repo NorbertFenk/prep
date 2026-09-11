@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go pointers</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Pointers</h1>
+  <p class="lede">A pointer holds the address of a value — pass one and changes reach the original.</p>
+
+  <h2>The two operators</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>&amp;x</code></td><td>Address of <code>x</code> — produces a pointer.</td></tr>
+    <tr><td><code>*p</code></td><td>Follow pointer <code>p</code> to the value it points at (read or write).</td></tr>
+    <tr><td><code>p := &amp;n</code></td><td><code>p</code> has type <code>*int</code> if <code>n</code> is an <code>int</code>.</td></tr>
+    <tr><td><code>var p *int</code></td><td>Zero value is <code>nil</code> — points at nothing; writing through it panics.</td></tr>
+  </table>
+
+  <h2>Pointer receivers</h2>
+  <table>
+    <tr><th>Shape</th><th>Meaning</th></tr>
+    <tr><td><code>func (p person) String() string</code></td><td>Value receiver: works on a copy; cannot change the original.</td></tr>
+    <tr><td><code>func (p *person) birthday()</code></td><td>Pointer receiver: changes stick on the caller's value.</td></tr>
+    <tr><td><code>p.age++</code></td><td>No <code>(*p).age</code> needed — Go applies the dot through pointers.</td></tr>
+    <tr><td><code>ada.birthday()</code></td><td>No <code>(&amp;ada)</code> needed — Go takes the address automatically.</td></tr>
+  </table>
+  <p>Rules of thumb: mutate → pointer receiver; large struct → pointer receiver (skips the copy); otherwise either — but pick one style per type, since a type's method set should stay consistent.</p>
+  <p>Go has no pointer arithmetic: you can follow a pointer, but not walk it like C.</p>
+
+  <p><a href="../lessons/0009-pointers.html">Study lesson 9</a> · <a href="methods.html">Methods</a> · <a href="interfaces.html">Interfaces</a></p>
+</main></body>
+</html>

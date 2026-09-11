@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go errors</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Errors</h1>
+  <p class="lede">Go has no exceptions: failures are values of type <code>error</code>, returned last and checked first.</p>
+
+  <h2>The shape</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>func f() (T, error)</code></td><td>Convention: real result first, error last.</td></tr>
+    <tr><td><code>errors.New("text")</code></td><td>Creates an error whose <code>Error()</code> returns <code>text</code> (import <code>errors</code>).</td></tr>
+    <tr><td><code>fmt.Errorf("bad id %d", n)</code></td><td>Same, with formatting (import <code>fmt</code>).</td></tr>
+    <tr><td><code>return v, nil</code></td><td>Success: the error is <code>nil</code>.</td></tr>
+    <tr><td><code>if err != nil { ... }</code></td><td>The universal check, immediately after the call.</td></tr>
+    <tr><td><code>if v, err := f(); err != nil</code></td><td>If with a declaration: <code>v</code> and <code>err</code> live only inside the if.</td></tr>
+  </table>
+
+  <h2>error is an interface</h2>
+  <pre><code>type error interface {
+    Error() string
+}</code></pre>
+  <p>Any type with an <code>Error() string</code> method is an error — the same implicit satisfaction as every interface. Custom types carry structured detail:</p>
+  <pre><code>type NotFoundError struct{ Name string }
+func (e NotFoundError) Error() string { return e.Name + " not found" }</code></pre>
+
+  <h2>Wrapping and inspecting</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>fmt.Errorf("read config: %w", err)</code></td><td>Wraps <code>err</code> with context; <code>%w</code> keeps the original reachable.</td></tr>
+    <tr><td><code>errors.Is(err, os.ErrNotExist)</code></td><td>True when <code>err</code> is (or wraps) that specific error.</td></tr>
+    <tr><td><code>errors.As(err, &amp;target)</code></td><td>Extracts a wrapped error of a specific type.</td></tr>
+  </table>
+  <p><code>panic</code> is for unrecoverable programmer errors only — ordinary failure is always an <code>error</code> value.</p>
+
+  <p><a href="../lessons/0011-errors.html">Study lesson 11</a> · <a href="interfaces.html">Interfaces</a> · <a href="reading-files.html">Reading files</a></p>
+</main></body>
+</html>

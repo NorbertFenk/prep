@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go channels</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Channels</h1>
+  <p class="lede">A channel is a typed pipe between goroutines: sends and receives synchronize by themselves.</p>
+
+  <h2>The arrows</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>ch := make(chan string)</code></td><td>Creates an unbuffered channel of strings.</td></tr>
+    <tr><td><code>ch &lt;- v</code></td><td>Send: <code>v</code> flows into <code>ch</code>; blocks until a receiver is ready.</td></tr>
+    <tr><td><code>v := &lt;-ch</code></td><td>Receive: takes a value out; blocks until a sender offers one.</td></tr>
+    <tr><td><code>make(chan int, 4)</code></td><td>Buffered: sends proceed until 4 values sit unread.</td></tr>
+    <tr><td><code>close(ch)</code></td><td>No more sends; receivers then drain the buffer and get zero values.</td></tr>
+    <tr><td><code>v, ok := &lt;-ch</code></td><td><code>ok</code> is false once the channel is closed and empty.</td></tr>
+    <tr><td><code>for v := range ch</code></td><td>Receives until the channel is closed.</td></tr>
+  </table>
+  <p>Mnemonic: the arrow <code>&lt;-</code> always points in the direction the value travels.</p>
+
+  <h2>Blocking rules</h2>
+  <p>Unbuffered send meets receive — a hand-off, both sides synchronize. Receive from a channel nobody sends to blocks forever; if no goroutine could ever send, the runtime panics with <code>all goroutines are asleep - deadlock!</code>. Sending on a closed channel panics.</p>
+
+  <h2>Direction and choice</h2>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>func f(ch chan&lt;- string)</code></td><td>Parameter may only send into the channel.</td></tr>
+    <tr><td><code>func f(ch &lt;-chan string)</code></td><td>Parameter may only receive from it.</td></tr>
+  </table>
+  <p>Collecting a known number of results? Receive that many times — each receive proves one send. Producing until done? Close the channel and <code>range</code> over it.</p>
+
+  <p><a href="../lessons/0014-channels.html">Study lesson 14</a> · <a href="goroutines.html">Goroutines</a> · <a href="../reference/errors.html">Errors</a></p>
+</main></body>
+</html>

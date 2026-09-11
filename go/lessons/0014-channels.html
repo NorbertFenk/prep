@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 14: Channels</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 14</p>
+  <h1>Hand data between goroutines</h1>
+  <p class="lede">In about ten minutes, you will collect results from goroutines through a channel — Go's version of "don't share memory; communicate."</p>
+  <p class="meta">Builds on <a href="0013-goroutines.html">lesson 13</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: what does <code>wg.Wait()</code> do?</p>
+    <button type="button">Stops every running goroutine</button>
+    <button type="button">Blocks until the counter is zero</button>
+    <button type="button">Waits for exactly one second</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. A channel is a typed pipe</h2>
+  <p>A WaitGroup says <em>when</em> goroutines are done; a channel carries <em>what</em> they produced. Make one with <code>make</code>, send with <code>ch &lt;- value</code>, receive with <code>&lt;-ch</code> — the arrow points the way the data flows:</p>
+  <pre><code>ch := make(chan string)
+ch &lt;- "hello"   // send into the channel
+fmt.Println(&lt;-ch) // receive out of it</code></pre>
+  <p>An unbuffered channel is a hand-off: a send waits until some receiver takes the value, and a receive waits until some sender offers one. That waiting is the synchronization — receive three values and you know three goroutines sent, no WaitGroup needed.</p>
+
+  <h2>3. Collect three greetings</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func greet(name string, ch chan string) {
+    time.Sleep(time.Duration(len(name)) * 100 * time.Millisecond)
+    ch &lt;- "Hello, " + name
+}
+
+func main() {
+    names := []string{"Ada", "Grace", "Alan"}
+    ch := make(chan string)
+    for _, name := range names {
+        go greet(name, ch)
+    }
+    for i := 0; i &lt; len(names); i++ {
+        fmt.Println(&lt;-ch)
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see three greetings, shortest name first — each goroutine sends as soon as its sleep ends, and <code>main</code> prints whatever arrives next. Run it a few times, then add <code>"Edsger"</code> to the names and check you get four lines: the receive loop must match the number of sends, or <code>main</code> waits forever (or exits too early). No WaitGroup in sight — the three receives did its job.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What does <code>&lt;-ch</code> do?</p>
+    <button type="button">Receives a value from ch</button>
+    <button type="button">Sends a value into ch</button>
+    <button type="button">Closes the channel ch</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What happens if you receive from a channel nobody ever sends to?</p>
+    <button type="button">You get the zero value back</button>
+    <button type="button">The program panics at once</button>
+    <button type="button">The receive blocks forever</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>On an unbuffered channel, when does a send finish?</p>
+    <button type="button">Immediately, always, no waiting</button>
+    <button type="button">When a receiver takes the value</button>
+    <button type="button">When the sending goroutine ends</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/concurrency/2" rel="noreferrer">Tour of Go: Channels</a> (and <a href="https://go.dev/tour/concurrency/3" rel="noreferrer">Buffered channels</a>), then keep the <a href="../reference/channels.html">channels reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if blocking sends, arrow direction, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0013-goroutines.html">Lesson 13</a></li>
+    <li><a href="0015-testing.html">Lesson 15</a></li>
+  </ul>
+  <footer>Lesson 14 of the Go course. Channels: the arrow shows which way the data flows.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

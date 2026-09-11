@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 20: Closing and choosing</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 20</p>
+  <h1>Finish the conversation</h1>
+  <p class="lede">In about ten minutes, you will close a channel so <code>range</code> can end on its own, and give a program a second thing to wait for with <code>select</code>.</p>
+  <p class="meta">Builds on <a href="0019-json-api.html">lesson 19</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: on an unbuffered channel, when does a send finish?</p>
+    <button type="button">Immediately, without any waiting</button>
+    <button type="button">When a receiver takes the value</button>
+    <button type="button">When the sender's goroutine ends</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. The sender closes</h2>
+  <p>Lesson 14 counted receives by hand because it knew how many were coming. When only the sender knows when it is done, it says so: <code>close(ch)</code>. Receivers can then loop with <code>for msg := range ch</code>, which ends by itself once the channel is closed and drained. The sender closes — a receiver cannot know if more values are coming, and closing twice, or sending on a closed channel, panics.</p>
+
+  <h2>3. Stream until done</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func greetAll(names []string, ch chan string) {
+    for _, name := range names {
+        time.Sleep(time.Duration(len(name)) * 100 * time.Millisecond)
+        ch &lt;- "Hello, " + name
+    }
+    close(ch)
+}
+
+func main() {
+    names := []string{"Ada", "Grace", "Alan"}
+    ch := make(chan string)
+    go greetAll(names, ch)
+    for msg := range ch {
+        fmt.Println(msg)
+    }
+    fmt.Println("all done")
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see the three greetings, then <code>all done</code> — no counting loop, no WaitGroup. The <code>range</code> ended because the sender closed. Try commenting out <code>close(ch)</code> and rerunning: <code>main</code> waits forever at the end of the range and the runtime kills it with <code>fatal error: all goroutines are asleep - deadlock!</code> — Go noticed nobody can ever make progress again. Restore the <code>close</code>.</p>
+
+  <h2>4. Wait for whichever comes first</h2>
+  <p><code>select</code> waits on several channel operations and runs whichever becomes ready first — the tool for timeouts. Replace <code>main.go</code>'s <code>main</code> with:</p>
+  <pre><code>func main() {
+    ch := make(chan string)
+    go func() {
+        time.Sleep(200 * time.Millisecond)
+        ch &lt;- "Hello, Ada"
+    }()
+    select {
+    case msg := &lt;-ch:
+        fmt.Println(msg)
+    case &lt;-time.After(50 * time.Millisecond):
+        fmt.Println("too slow, moving on")
+    }
+}</code></pre>
+  <p>(The <code>go func() { ... }()</code> shape defines an anonymous function and starts it as a goroutine in one step.) Run it: the greeting needs 200ms but the timeout fires at 50ms, so you get <code>too slow, moving on</code> — deterministically. Now raise <code>50</code> to <code>300</code> and rerun: the greeting wins the race. That is the whole idea — first case ready, first case run.</p>
+
+  <h2>5. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>Who should close a channel?</p>
+    <button type="button">The sender side of it</button>
+    <button type="button">The receiver side of it</button>
+    <button type="button">The last goroutine alive</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>When does <code>for msg := range ch</code> end?</p>
+    <button type="button">When it has seen every value</button>
+    <button type="button">When a sender calls select on it</button>
+    <button type="button">When ch is closed and drained</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>What does <code>select</code> do?</p>
+    <button type="button">Runs every case in order, one by one</button>
+    <button type="button">Runs whichever case is ready first</button>
+    <button type="button">Runs the case that takes longest</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/concurrency/4" rel="noreferrer">Tour of Go: Range and Close</a> and <a href="https://go.dev/tour/concurrency/5" rel="noreferrer">Select</a>, then keep the <a href="../reference/concurrency-patterns.html">concurrency patterns reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if close panics, deadlock, or <code>select</code> cases are unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0019-json-api.html">Lesson 19</a></li>
+    <li><a href="0021-the-gauntlet.html">Lesson 21: the gauntlet</a></li>
+  </ul>
+  <footer>Lesson 20 of the Go course. Close when done; select when waiting on more than one thing.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

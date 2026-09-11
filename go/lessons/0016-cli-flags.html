@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 16: CLI flags</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 16</p>
+  <h1>A program you can argue with</h1>
+  <p class="lede">In about ten minutes, you will build a real command-line tool that takes flags — the capstone of everything since lesson 1.</p>
+  <p class="meta">Builds on <a href="0015-testing.html">lesson 15</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: which command runs your package's tests?</p>
+    <button type="button">go run tests</button>
+    <button type="button">go test .</button>
+    <button type="button">go check .</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. flag turns arguments into variables</h2>
+  <p>The standard <code>flag</code> package binds a command-line flag to a variable. <code>flag.String</code> takes the flag's name, its default, and a help text — and returns a <em>pointer</em> to a string (lesson 9 pays off):</p>
+  <pre><code>name := flag.String("name", "world", "who to greet")
+flag.Parse()
+fmt.Println(*name) // the value, through the pointer</code></pre>
+  <p><code>flag.Parse()</code> reads the actual command line; before it runs, the variables hold only defaults. After it, <code>*name</code> holds whatever <code>-name</code> said. The help texts are not decoration: <code>-h</code> prints them automatically, formatted.</p>
+
+  <h2>3. Build greet, the tool</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "flag"
+    "fmt"
+    "strings"
+)
+
+func main() {
+    name := flag.String("name", "world", "who to greet")
+    shout := flag.Bool("shout", false, "greet loudly")
+    flag.Parse()
+
+    greeting := "Hello, " + *name
+    if *shout {
+        greeting = strings.ToUpper(greeting)
+    }
+    fmt.Println(greeting)
+}</code></pre>
+  <pre><code>go run .
+go run . -name Ada
+go run . -name Ada -shout
+go run . -h</code></pre>
+  <p>Four runs, four behaviors — from the same binary: <code>Hello, world</code>, <code>Hello, Ada</code>, <code>HELLO, ADA</code>, and the auto-generated usage text. Notice a bool flag needs no value: <code>-shout</code> alone sets it true. Now combine lessons: add a <code>-file</code> flag (a string) that, when non-empty, reads that file with <code>os.ReadFile</code> like lesson 12 and greets every line instead of <code>*name</code>. Handle the error the lesson-11 way.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What does <code>flag.String("name", "world", ...)</code> return?</p>
+    <button type="button">A pointer to a string</button>
+    <button type="button">A plain string value</button>
+    <button type="button">An error if it is missing</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does <code>flag.Parse()</code> do?</p>
+    <button type="button">Prints the usage message</button>
+    <button type="button">Declares the flag variables</button>
+    <button type="button">Reads the command line now</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>Why does the program write <code>*name</code> and not <code>name</code>?</p>
+    <button type="button">name holds the flag's text</button>
+    <button type="button">*name follows to the value</button>
+    <button type="button">*name copies the pointer</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://pkg.go.dev/flag" rel="noreferrer">flag package documentation</a> and skim <a href="https://gobyexample.com/command-line-flags" rel="noreferrer">Go by Example: Command-line flags</a>, then keep the <a href="../reference/cli-flags.html">CLI flags reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if pointer dereferencing, <code>Parse</code>, or your <code>-file</code> exercise is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0015-testing.html">Lesson 15</a></li>
+    <li><a href="0017-packages.html">Lesson 17</a></li>
+  </ul>
+  <footer>Lesson 16 of the Go course. From Hello, Go to a tool with flags in sixteen lessons.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

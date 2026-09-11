@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 9: Pointers</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 9</p>
+  <h1>Change the thing itself</h1>
+  <p class="lede">In about ten minutes, you will use pointers — <code>&amp;</code> and <code>*</code> — to let a method actually change a struct, not just a copy of it.</p>
+  <p class="meta">Builds on <a href="0008-methods.html">lesson 8</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="0">
+    <p>Without looking back: can a method with receiver <code>(p person)</code> change the original struct?</p>
+    <button type="button">No, it gets a copy</button>
+    <button type="button">Yes, it always modifies</button>
+    <button type="button">Only if it returns something</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. Addresses, not copies</h2>
+  <p>Every value lives at a memory address. <code>&amp;x</code> gives you the address of <code>x</code>; <code>*p</code> follows a pointer <code>p</code> back to the value it points at:</p>
+  <pre><code>age := 36
+pointer := &amp;age   // pointer is *int — "address of an int"
+*pointer = 37     // write through the pointer
+fmt.Println(age)  // 37 — age itself changed</code></pre>
+  <p>A value receiver gets a copy, so changes die with it. A pointer receiver — <code>(p *person)</code> — gets the address, so changes stick:</p>
+  <pre><code>func (p *person) birthday() {
+    p.age++
+}</code></pre>
+  <p>Note what you do <em>not</em> write: no <code>(*p).age</code> inside, and no <code>(&amp;ada).birthday()</code> at the call. Go applies the dot and takes the address for you automatically.</p>
+
+  <h2>3. Make a change that lasts</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import "fmt"
+
+type person struct {
+    name string
+    age  int
+}
+
+func (p *person) birthday() {
+    p.age++
+}
+
+func main() {
+    age := 36
+    pointer := &amp;age
+    *pointer = 37
+    fmt.Println(age)
+
+    ada := person{name: "Ada", age: 36}
+    ada.birthday()
+    fmt.Println(ada.name, "is", ada.age)
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>37</code>, then <code>Ada is 37</code>. Try changing the receiver to <code>(p person)</code>, run again, and watch the second line stay at 36 — the copy took the birthday, not Ada. Change it back. Then call <code>ada.birthday()</code> twice and check the age.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="1">
+    <p>What does <code>&amp;age</code> produce?</p>
+    <button type="button">The value stored in age</button>
+    <button type="button">The address where age lives</button>
+    <button type="button">A fresh copy of age's value</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does <code>*pointer = 37</code> do?</p>
+    <button type="button">Compares pointer with 37</button>
+    <button type="button">Points pointer at value 37</button>
+    <button type="button">Writes 37 through the pointer</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="0">
+    <p>Why does <code>ada.birthday()</code> work without writing <code>(&amp;ada).birthday()</code>?</p>
+    <button type="button">Go takes the address automatically</button>
+    <button type="button">Go copies the struct automatically</button>
+    <button type="button">Go ignores the receiver completely</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/moretypes/1" rel="noreferrer">Tour of Go: Pointers</a> (and <a href="https://go.dev/tour/methods/4" rel="noreferrer">Pointer receivers</a>), then keep the <a href="../reference/pointers.html">pointers reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>&amp;</code> vs <code>*</code>, receiver choice, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0008-methods.html">Lesson 8</a></li>
+    <li><a href="0010-interfaces.html">Lesson 10</a></li>
+  </ul>
+  <footer>Lesson 9 of the Go course. Copies forget; pointers remember.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

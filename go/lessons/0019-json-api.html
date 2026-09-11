@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 19: A JSON API</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 19</p>
+  <h1>Speak the web's language</h1>
+  <p class="lede">In about ten minutes, your server will answer with JSON — the format every API speaks — and you will see exactly which struct fields it is allowed to see.</p>
+  <p class="meta">Builds on <a href="0018-http-server.html">lesson 18</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="0">
+    <p>Without looking back: what is the handler's <code>w</code> parameter for?</p>
+    <button type="button">Writing the response into it</button>
+    <button type="button">Reading the request from it</button>
+    <button type="button">Logging any errors into it</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. encoding/json sees exported fields only</h2>
+  <p>The standard library converts structs to JSON with <code>encoding/json</code> — and lesson 17's rule follows you here: only <strong>capitalized</strong> fields make it into the output. Lowercase fields are silently skipped, which surprises everyone exactly once.</p>
+  <p>A <em>struct tag</em> — text in backticks after a field — controls the JSON name:</p>
+  <pre><code>type person struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}</code></pre>
+  <p>Now the JSON says <code>"name"</code>, web-style lowercase, while the Go field stays <code>Name</code>, Go-style capital. And encoding needs no file or socket of its own: <code>json.NewEncoder(w).Encode(v)</code> writes <code>v</code>'s JSON straight into anything that accepts writes — including lesson 18's <code>w</code>.</p>
+
+  <h2>3. Serve JSON</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+type person struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}
+
+func people(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode([]person{
+        {Name: "Ada", Age: 36},
+        {Name: "Alan", Age: 41},
+    })
+}
+
+func main() {
+    http.HandleFunc("/people", people)
+    fmt.Println("listening on :8090")
+    if err := http.ListenAndServe(":8090", nil); err != nil {
+        fmt.Println("error:", err)
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>In a second terminal:</p>
+  <pre><code>curl http://localhost:8090/people</code></pre>
+  <p>You should see <code>[{"name":"Ada","age":36},{"name":"Alan","age":41}]</code>. Now run the experiment that teaches the rule forever: change the tags to nothing at all — <code>Name string</code> and <code>Age int</code>, backticks deleted — restart, curl again, and watch the keys become <code>"Name"</code> and <code>"Age"</code>. Then lowercase the fields (<code>name string</code>) and watch them vanish: <code>[{},{}]</code>. Restore the tags.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="1">
+    <p>Which struct fields does <code>encoding/json</code> include?</p>
+    <button type="button">Every field inside the struct</button>
+    <button type="button">Only exported, capital fields</button>
+    <button type="button">Only fields carrying a tag</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does the tag <code>`json:"name"`</code> do?</p>
+    <button type="button">Skips the field in the JSON</button>
+    <button type="button">Makes the field unexported now</button>
+    <button type="button">Renames the field in the JSON</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="0">
+    <p>What does <code>json.NewEncoder(w).Encode(v)</code> do?</p>
+    <button type="button">Writes v's JSON into w</button>
+    <button type="button">Reads JSON out of w</button>
+    <button type="button">Checks that v is valid JSON</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://pkg.go.dev/encoding/json" rel="noreferrer"><code>encoding/json</code> documentation</a> and skim <a href="https://gobyexample.com/json" rel="noreferrer">Go by Example: JSON</a>, then keep the <a href="../reference/json.html">JSON reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if struct tags, capitalization, or decoding JSON back into structs is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0018-http-server.html">Lesson 18</a></li>
+    <li><a href="0020-concurrency-patterns.html">Lesson 20</a></li>
+  </ul>
+  <footer>Lesson 19 of the Go course. Structs in, JSON out — capitalization is the gatekeeper.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

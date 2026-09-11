@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go goroutines</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Goroutines and WaitGroups</h1>
+  <p class="lede">A goroutine is a function running concurrently; a WaitGroup tracks when the ones you started have finished.</p>
+
+  <h2>Start and wait</h2>
+  <pre><code>var wg sync.WaitGroup
+for _, name := range names {
+    wg.Add(1)
+    go greet(name, &amp;wg)
+}
+wg.Wait()</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>go f(x)</code></td><td>Runs <code>f(x)</code> in a new goroutine; the caller continues immediately.</td></tr>
+    <tr><td><code>go func() { ... }()</code></td><td>Same, with an anonymous function defined and called on the spot.</td></tr>
+    <tr><td><code>wg.Add(1)</code></td><td>Raises the pending counter — before starting the goroutine.</td></tr>
+    <tr><td><code>defer wg.Done()</code></td><td>Lowers the counter when the function exits, however it exits.</td></tr>
+    <tr><td><code>wg.Wait()</code></td><td>Blocks until the counter reaches zero.</td></tr>
+  </table>
+
+  <h2>defer</h2>
+  <p><code>defer f()</code> schedules <code>f</code> to run when the surrounding function returns — the idiom for cleanup (<code>Done()</code>, closing files, unlocking mutexes). Stacked defers run last-in, first-out.</p>
+
+  <h2>Gotchas</h2>
+  <p><code>main</code> returning ends the whole program — unfinished goroutines are abandoned, silently. Always <code>Wait()</code> (or receive their results) before exiting. Pass shared state by pointer (<code>&amp;wg</code>) so goroutines touch the original. When goroutines write to shared data instead of a channel, guard it with a <a href="https://go.dev/tour/concurrency/9" rel="noreferrer"><code>sync.Mutex</code></a>.</p>
+
+  <p><a href="../lessons/0013-goroutines.html">Study lesson 13</a> · <a href="channels.html">Channels</a> · <a href="pointers.html">Pointers</a></p>
+</main></body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 17: Your own packages</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 17</p>
+  <h1>Split code that grows</h1>
+  <p class="lede">In about ten minutes, you will move code into a package of your own and import it — the shape every real Go project has.</p>
+  <p class="meta">Builds on <a href="0016-cli-flags.html">lesson 16</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="2">
+    <p>Without looking back: after <code>flag.Parse()</code>, what does <code>*name</code> hold?</p>
+    <button type="button">The flag's name as text</button>
+    <button type="button">The flag's help message</button>
+    <button type="button">The flag's value, or default</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. Directories are packages</h2>
+  <p>Inside a module, every directory is a package. Its import path is the module path plus the directory: in module <code>example.com/hello-go</code>, the directory <code>greet/</code> is imported as <code>"example.com/hello-go/greet"</code>. Every file in a directory starts with the same <code>package</code> line.</p>
+  <p>One rule guards the borders: a name is visible outside its package only if it starts with a <strong>capital letter</strong>. <code>Hello</code> is exported; <code>decorate</code> is private to its package. There is no <code>export</code> keyword — case is the whole mechanism.</p>
+
+  <h2>3. Move greet out of main</h2>
+  <p>In your <code>hello-go</code> module, create the directory <code>greet</code> and inside it <code>greet/greet.go</code>:</p>
+  <pre><code>package greet
+
+func Hello(name string) string {
+    return decorate("Hello, " + name)
+}
+
+func decorate(s string) string {
+    return "&gt;&gt; " + s + " &lt;&lt;"
+}</code></pre>
+  <p>Then replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "fmt"
+
+    "example.com/hello-go/greet"
+)
+
+func main() {
+    fmt.Println(greet.Hello("Ada"))
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>&gt;&gt; Hello, Ada &lt;&lt;</code>. Note the call shape: <code>greet.Hello</code> — package name, dot, exported name, exactly like <code>fmt.Println</code>; you have been using other people's packages since lesson 1. Now try calling <code>greet.decorate("x")</code> from <code>main</code> and read the compiler's complaint: lowercase names do not cross package borders. Delete the call.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What makes a name usable from outside its package?</p>
+    <button type="button">Starting it with a capital letter</button>
+    <button type="button">Declaring it in the main file</button>
+    <button type="button">Writing export before its declaration</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>In module <code>example.com/hello-go</code>, what is the import path of directory <code>greet/</code>?</p>
+    <button type="button">greet</button>
+    <button type="button">example.com/hello-go/greet</button>
+    <button type="button">./greet</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What happens when <code>main</code> calls <code>greet.decorate</code>?</p>
+    <button type="button">It runs like a normal call</button>
+    <button type="button">It returns the zero value</button>
+    <button type="button">The compiler rejects the program</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/basics/3" rel="noreferrer">Tour of Go: Exported names</a> and the <a href="https://go.dev/doc/tutorial/create-module" rel="noreferrer">Create a Go module tutorial</a>'s package sections, then keep the <a href="../reference/packages.html">packages reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if import paths, capitalization, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0016-cli-flags.html">Lesson 16</a></li>
+    <li><a href="0018-http-server.html">Lesson 18</a></li>
+  </ul>
+  <footer>Lesson 17 of the Go course. One directory, one package, one capital letter.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

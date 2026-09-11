@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 21 — The gauntlet: your graduation test</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<h1>The gauntlet: your graduation test</h1>
+<p class="meta">Lesson 0021 · Go · ~25 min · the finale — everything, under pressure</p>
+
+<p>Quizzes measure recognition; interviews measure <b>retrieval under pressure</b>. This gauntlet simulates the real thing: timed questions in random order, graded by the only judge present — you, honestly. Answer <b>aloud</b>, standing if you can, and grade each answer the moment it ends: <b>Solid</b> (correct, fluent, no long gaps) · <b>Shaky</b> (got there, but stumbled) · <b>Froze</b> (timer beat you). No notes, no pausing.</p>
+
+<h2>Round 1 — the 60-second shape</h2>
+<p>Your mission's first criterion, cold: the anatomy of a Go program.</p>
+
+<div class="gauntlet">
+  <div class="gcard on" data-time="60" data-cat="Anatomy" data-href="0001-first-go-program.html">
+    <div class="gcat">Anatomy · lesson 1</div>
+    <p>From <code>go run .</code> to printed output — walk the whole journey: module, package, imports, entry point. Sixty seconds, go.</p>
+  </div>
+  <div class="gtime"><div class="gbar"></div></div>
+  <div class="gbtns">
+    <button data-grade="solid">Solid</button><button data-grade="shaky">Shaky</button><button data-grade="froze">Froze</button>
+  </div>
+  <p class="gres"></p>
+</div>
+
+<h2>Round 2 — follow-up roulette</h2>
+<p>Twenty questions from every lesson, shuffled. 25 seconds each. This is where interviews are won.</p>
+
+<div class="gauntlet">
+  <div class="gcard" data-time="25" data-cat="Basics" data-href="0001-first-go-program.html"><div class="gcat">Basics · lesson 1</div><p>Why does an executable need both <code>package main</code> and <code>func main()</code>?</p></div>
+  <div class="gcard" data-time="25" data-cat="Variables" data-href="0002-module-and-variable.html"><div class="gcat">Variables · lesson 2</div><p>What does <code>:=</code> do that <code>=</code> doesn't? When must you use <code>var</code>?</p></div>
+  <div class="gcard" data-time="25" data-cat="Control flow" data-href="0003-control-flow-if-and-for.html"><div class="gcat">Control flow · lesson 3</div><p>Go has no <code>while</code> keyword — so how do you write a while loop?</p></div>
+  <div class="gcard" data-time="25" data-cat="Slices" data-href="0005-slices-and-range.html"><div class="gcat">Slices · lesson 5</div><p>Why must you write <code>names = append(names, x)</code> instead of just <code>append(names, x)</code>?</p></div>
+  <div class="gcard" data-time="25" data-cat="Maps" data-href="0007-maps.html"><div class="gcat">Maps · lesson 7</div><p>A lookup returns <code>0</code> — how do you tell "stored zero" from "key absent"?</p></div>
+  <div class="gcard" data-time="25" data-cat="Methods" data-href="0008-methods.html"><div class="gcat">Methods · lesson 8</div><p>What is the only real difference between a method and a function?</p></div>
+  <div class="gcard" data-time="25" data-cat="Pointers" data-href="0009-pointers.html"><div class="gcat">Pointers · lesson 9</div><p>What does <code>&amp;x</code> produce, and what does <code>*p</code> do with it?</p></div>
+  <div class="gcard" data-time="25" data-cat="Interfaces" data-href="0010-interfaces.html"><div class="gcat">Interfaces · lesson 10</div><p>How does a type declare that it implements an interface in Go? Trick question — explain.</p></div>
+  <div class="gcard" data-time="25" data-cat="Errors" data-href="0011-errors.html"><div class="gcat">Errors · lesson 11</div><p>Go has no exceptions. What is an <code>error</code>, exactly, and what's the caller's reflex?</p></div>
+  <div class="gcard" data-time="25" data-cat="Files" data-href="0012-reading-files.html"><div class="gcat">Files · lesson 12</div><p>What two things does <code>os.ReadFile</code> return — and which do you touch first?</p></div>
+  <div class="gcard" data-time="25" data-cat="Goroutines" data-href="0013-goroutines.html"><div class="gcat">Goroutines · lesson 13</div><p><code>main</code> returns while three goroutines are mid-flight. What happens to them?</p></div>
+  <div class="gcard" data-time="25" data-cat="Goroutines" data-href="0013-goroutines.html"><div class="gcat">Goroutines · lesson 13</div><p>Why <code>defer wg.Done()</code> instead of calling it as the last line?</p></div>
+  <div class="gcard" data-time="25" data-cat="Channels" data-href="0014-channels.html"><div class="gcat">Channels · lesson 14</div><p>What happens when you receive from a channel nobody will ever send to?</p></div>
+  <div class="gcard" data-time="25" data-cat="Testing" data-href="0015-testing.html"><div class="gcat">Testing · lesson 15</div><p>Name the three conventions <code>go test</code> relies on to find and run your tests.</p></div>
+  <div class="gcard" data-time="25" data-cat="CLI" data-href="0016-cli-flags.html"><div class="gcat">CLI · lesson 16</div><p>Why does <code>flag.String</code> hand you a pointer rather than a string?</p></div>
+  <div class="gcard" data-time="25" data-cat="Packages" data-href="0017-packages.html"><div class="gcat">Packages · lesson 17</div><p>How do you make a function usable from another package — and hide one?</p></div>
+  <div class="gcard" data-time="25" data-cat="HTTP" data-href="0018-http-server.html"><div class="gcat">HTTP · lesson 18</div><p>A handler gets two parameters. Which do you read from, which do you write to?</p></div>
+  <div class="gcard" data-time="25" data-cat="JSON" data-href="0019-json-api.html"><div class="gcat">Curveball · lesson 19</div><p>Your API returned <code>[{},{}]</code> — but the structs have fields and the code compiles clean. What happened?</p></div>
+  <div class="gcard" data-time="25" data-cat="Concurrency" data-href="0020-concurrency-patterns.html"><div class="gcat">Curveball · lessons 14+20</div><p>Three goroutines will each send once; <code>main</code> receives twice and returns. What becomes of the third sender?</p></div>
+  <div class="gcard" data-time="60" data-cat="Anatomy" data-href="0001-first-go-program.html"><div class="gcat">Finale · all lessons</div><p>The whole journey again, cold: <code>go run .</code> to output — module, package, imports, <code>main</code>. Sixty seconds.</p></div>
+  <div class="gtime"><div class="gbar"></div></div>
+  <div class="gbtns">
+    <button data-grade="solid">Solid</button><button data-grade="shaky">Shaky</button><button data-grade="froze">Froze</button>
+  </div>
+  <p class="gres"></p>
+</div>
+
+<h2>Graduation criteria</h2>
+<ul>
+  <li>Round 1 and the Round-2 finale: <b>solid</b>, both times.</li>
+  <li>Round 2 overall: <b>≥80% solid, zero freezes</b>.</li>
+  <li>Any miss links its lesson below the result — review, then rerun tomorrow. Spacing beats cramming; the second clean run is what makes it stick.</li>
+</ul>
+
+<h2>After graduation: take it to real humans</h2>
+<p>I'm your practice partner, but wisdom needs live fire:</p>
+<ul class="srcs">
+  <li><a href="https://www.reddit.com/r/golang/">r/golang</a> — the busiest Go community; ask, lurk, see what practitioners argue about.</li>
+  <li><a href="https://invite.slack.golangbridge.org/">Gophers Slack</a> — the official-ish Go community Slack; #newbies is for exactly you.</li>
+  <li><a href="https://forum.golangbridge.com/">Go Forum</a> — long-form questions answered by people who write Go for a living.</li>
+</ul>
+<p>Or ask me to play interviewer anytime — I can raise difficulty, interrupt mid-answer like real interviewers do, and grade against these same criteria.</p>
+
+<h2>Sources (pre-interview skim)</h2>
+<ul class="srcs">
+  <li><a href="https://go.dev/doc/effective_go"><b>Primary:</b> Effective Go</a> — the idioms behind everything in this course; read it once end to end.</li>
+  <li><a href="https://go.dev/tour/">A Tour of Go</a> — the full official tour, now that you've done the lessons it maps onto.</li>
+  <li><a href="https://gobyexample.com/">Go by Example</a> — runnable snippet for any topic you meet next.</li>
+  <li>The <a href="../../index.html">reference shelf</a> — sixteen one-page cheats; if a term here feels foggy, that's your weak lesson.</li>
+</ul>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — I'll play hostile interviewer, explain anything that tripped you, or set a lighter rematch deck. Course complete either way: twenty-one lessons, one fluent Go programmer, mission met.</div>
+
+<script src="../../assets/gauntlet.js"></script>
+</body>
+</html>

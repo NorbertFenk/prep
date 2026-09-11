@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTTP servers in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>HTTP server</h1>
+  <p class="lede"><code>net/http</code>: register a handler per path, block on ListenAndServe. No framework needed.</p>
+
+  <h2>The whole server</h2>
+  <pre><code>func hello(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, "Hello,", r.URL.Path)
+}
+
+func main() {
+    http.HandleFunc("/", hello)
+    if err := http.ListenAndServe(":8090", nil); err != nil {
+        fmt.Println("error:", err)
+    }
+}</code></pre>
+  <table>
+    <tr><th>Part</th><th>Meaning</th></tr>
+    <tr><td><code>w http.ResponseWriter</code></td><td>Write the response here: <code>fmt.Fprintln(w, ...)</code>, <code>w.Write(bytes)</code>.</td></tr>
+    <tr><td><code>r *http.Request</code></td><td>The request: <code>r.URL.Path</code>, <code>r.Method</code>, <code>r.Header</code>, <code>r.FormValue("q")</code>.</td></tr>
+    <tr><td><code>http.HandleFunc(path, fn)</code></td><td>Routes every path under <code>path</code> to <code>fn</code>; <code>"/"</code> catches all.</td></tr>
+    <tr><td><code>http.ListenAndServe(addr, nil)</code></td><td>Binds the port and blocks, serving forever; returns only on error (e.g. port taken). <code>nil</code> = use the default router <code>HandleFunc</code> registered with.</td></tr>
+    <tr><td><code>w.Header().Set("Content-Type", ...)</code></td><td>Set headers <em>before</em> the first write.</td></tr>
+    <tr><td><code>http.Error(w, "nope", 404)</code></td><td>Send a status code and plain-text body.</td></tr>
+  </table>
+
+  <h2>Facts worth knowing</h2>
+  <p>Each request is served in its own goroutine — concurrency is free, but shared state across handlers needs a <a href="https://go.dev/tour/concurrency/9" rel="noreferrer">mutex</a> or channels. Status defaults to 200 on first write; set another with <code>w.WriteHeader(404)</code> before writing the body. Stop a dev server with Ctrl-C. Test it with <code>curl http://localhost:8090/path</code>.</p>
+
+  <p><a href="../lessons/0018-http-server.html">Study lesson 18</a> · <a href="json.html">JSON</a> · <a href="goroutines.html">Goroutines</a></p>
+</main></body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Concurrency patterns in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Closing and choosing</h1>
+  <p class="lede">Two patterns that finish what goroutines and channels start: close + range, and select.</p>
+
+  <h2>Close and range — "stream until done"</h2>
+  <pre><code>func greetAll(names []string, ch chan string) {
+    for _, name := range names {
+        ch &lt;- "Hello, " + name
+    }
+    close(ch)          // the sender closes
+}
+
+go greetAll(names, ch)
+for msg := range ch {  // ends when ch closes and drains
+    fmt.Println(msg)
+}</code></pre>
+  <table>
+    <tr><th>Rule</th><th>Why</th></tr>
+    <tr><td>Only the sender closes</td><td>Only it knows no more values are coming; receivers can't tell "quiet" from "done".</td></tr>
+    <tr><td>Never close twice, never send on closed</td><td>Both panic.</td></tr>
+    <tr><td>Close is optional</td><td>Garbage collection reclaims unclosed channels; close only when a receiver must know (range, comma-ok).</td></tr>
+    <tr><td><code>v, ok := &lt;-ch</code></td><td><code>ok</code> false → channel closed and empty.</td></tr>
+  </table>
+
+  <h2>Select — "whichever is ready first"</h2>
+  <pre><code>select {
+case msg := &lt;-ch:
+    fmt.Println(msg)
+case &lt;-time.After(50 * time.Millisecond):
+    fmt.Println("too slow, moving on")
+}</code></pre>
+  <table>
+    <tr><th>Behavior</th><th>Detail</th></tr>
+    <tr><td>Blocks until a case is ready</td><td>Then runs exactly that one case.</td></tr>
+    <tr><td>Several ready at once</td><td>Picks uniformly at random — no priority.</td></tr>
+    <tr><td><code>time.After(d)</code></td><td>A channel that receives once after <code>d</code> — the standard timeout idiom.</td></tr>
+    <tr><td><code>default:</code></td><td>Runs immediately if nothing else is ready — makes select non-blocking.</td></tr>
+  </table>
+
+  <h2>Deadlock</h2>
+  <p>When no goroutine can ever make progress — every one blocked on a channel — the runtime kills the program with <code>fatal error: all goroutines are asleep - deadlock!</code>. Common causes: forgot to <code>close</code> before a <code>range</code>; more receives than sends; unbuffered send with no receiver.</p>
+
+  <p><a href="../lessons/0020-concurrency-patterns.html">Study lesson 20</a> · <a href="channels.html">Channels</a> · <a href="goroutines.html">Goroutines</a></p>
+</main></body>
+</html>

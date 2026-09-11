@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 18: An HTTP server</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 18</p>
+  <h1>Your first service</h1>
+  <p class="lede">In about ten minutes, you will have a web server running on your machine — a dozen lines of standard library, no frameworks, no dependencies.</p>
+  <p class="meta">Builds on <a href="0017-packages.html">lesson 17</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: what makes <code>greet.Hello</code> callable from <code>package main</code>?</p>
+    <button type="button">Its position inside greet.go</button>
+    <button type="button">Its capital first letter</button>
+    <button type="button">Its import inside main.go</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. net/http does the hard part</h2>
+  <p>Go's standard library ships a production-grade HTTP server. You supply a <em>handler</em>: a function taking two parameters — <code>w http.ResponseWriter</code>, where you write the response, and <code>r *http.Request</code>, everything about the request (a pointer, lesson 9). <code>http.HandleFunc</code> routes a path to your handler; <code>http.ListenAndServe</code> starts listening — and, like every good Go function, returns an error (lesson 11).</p>
+
+  <h2>3. Run it</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func hello(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, "Hello,", r.URL.Path)
+}
+
+func main() {
+    http.HandleFunc("/", hello)
+    fmt.Println("listening on :8090")
+    if err := http.ListenAndServe(":8090", nil); err != nil {
+        fmt.Println("error:", err)
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>The program prints <code>listening on :8090</code> and then <em>blocks</em> — serving forever, one goroutine per request behind the scenes. Open a browser at <code>http://localhost:8090/anything</code>, or in a second terminal:</p>
+  <pre><code>curl http://localhost:8090/ada</code></pre>
+  <p>You should see <code>Hello, /ada</code> — the handler echoed the path you asked for. <code>fmt.Fprintln(w, ...)</code> writes into the response instead of the terminal, because <code>w</code> is where responses go. When you are done, stop the server with Ctrl-C: nothing ends a blocking <code>ListenAndServe</code> but killing it (or an error, like a second server grabbing port 8090 — try running it twice and read the error you get).</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What does <code>http.HandleFunc("/", hello)</code> do?</p>
+    <button type="button">Routes requests to hello</button>
+    <button type="button">Sends one request to hello</button>
+    <button type="button">Starts the server immediately</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What is <code>w http.ResponseWriter</code> for?</p>
+    <button type="button">Reading the request's details</button>
+    <button type="button">Storing the URL of the request</button>
+    <button type="button">Writing the response's contents</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>What does <code>http.ListenAndServe(":8090", nil)</code> do?</p>
+    <button type="button">Serves one request, then returns</button>
+    <button type="button">Blocks, serving requests forever</button>
+    <button type="button">Compiles all the handler functions</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://pkg.go.dev/net/http" rel="noreferrer"><code>net/http</code> package documentation</a> (the overview example is this lesson), then keep the <a href="../reference/http-server.html">HTTP server reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if handlers, blocking, or ports are unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0017-packages.html">Lesson 17</a></li>
+    <li><a href="0019-json-api.html">Lesson 19</a></li>
+  </ul>
+  <footer>Lesson 18 of the Go course. Twelve lines from program to service.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

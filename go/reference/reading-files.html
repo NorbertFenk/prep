@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reading files in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Reading files</h1>
+  <p class="lede">Small files: one call, one check. <code>os.ReadFile</code> returns bytes and an error.</p>
+
+  <h2>The whole-file pattern</h2>
+  <pre><code>data, err := os.ReadFile("names.txt")
+if err != nil {
+    fmt.Println("error:", err)
+    return
+}
+names := strings.Split(strings.TrimSpace(string(data)), "\n")</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>os.ReadFile(path)</code></td><td>Reads the whole file; returns <code>([]byte, error)</code>. Missing file → non-nil error, no crash.</td></tr>
+    <tr><td><code>string(data)</code></td><td>Converts raw bytes to text.</td></tr>
+    <tr><td><code>strings.TrimSpace(s)</code></td><td>Cuts leading/trailing whitespace — including the final newline most files end with.</td></tr>
+    <tr><td><code>strings.Split(s, "\n")</code></td><td>Cuts text into a slice of lines.</td></tr>
+  </table>
+
+  <h2>Importing several packages</h2>
+  <pre><code>import (
+    "fmt"
+    "os"
+    "strings"
+)</code></pre>
+  <p>One import may be written bare (<code>import "fmt"</code>); two or more use the parenthesized block, conventionally in alphabetical order.</p>
+
+  <h2>Paths and next steps</h2>
+  <p>Relative paths resolve against the directory the program <em>runs in</em>, not where its source lives — run <code>go run .</code> from the module directory. For large files, stream instead of loading: <code>bufio.Scanner</code> over <code>os.Open</code> (see <a href="https://gobyexample.com/reading-files" rel="noreferrer">Go by Example</a>).</p>
+
+  <p><a href="../lessons/0012-reading-files.html">Study lesson 12</a> · <a href="errors.html">Errors</a> · <a href="slices.html">Slices</a></p>
+</main></body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Testing</h1>
+  <p class="lede">Built in: files ending <code>_test.go</code>, functions <code>TestXxx(t *testing.T)</code>, command <code>go test</code>.</p>
+
+  <h2>A minimal test</h2>
+  <pre><code>package main
+
+import "testing"
+
+func TestDivide(t *testing.T) {
+    got, err := divide(10, 2)
+    if err != nil {
+        t.Fatal(err)
+    }
+    if got != 5 {
+        t.Errorf("divide(10, 2) = %d, want 5", got)
+    }
+}</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>t.Errorf(format, ...)</code></td><td>Log a failure; the test continues and is marked failed.</td></tr>
+    <tr><td><code>t.Fatalf(format, ...)</code></td><td>Log a failure and stop this test now.</td></tr>
+    <tr><td><code>t.Skip("reason")</code></td><td>Mark the test skipped.</td></tr>
+  </table>
+
+  <h2>Running tests</h2>
+  <table>
+    <tr><th>Command</th><th>Meaning</th></tr>
+    <tr><td><code>go test .</code></td><td>Run all tests in the current package.</td></tr>
+    <tr><td><code>go test ./...</code></td><td>Run tests in every package of the module.</td></tr>
+    <tr><td><code>go test -v .</code></td><td>Verbose: name each test and its result.</td></tr>
+    <tr><td><code>go test -run ByZero .</code></td><td>Only tests whose name matches the pattern.</td></tr>
+  </table>
+
+  <h2>Table-driven tests</h2>
+  <p>The Go idiom for many cases of one function — a slice of anonymous structs, looped with <code>t.Run</code>:</p>
+  <pre><code>tests := []struct {
+    a, b int
+    want int
+}{
+    {10, 2, 5},
+    {9, 3, 3},
+}
+for _, tt := range tests {
+    t.Run(fmt.Sprint(tt.a, "/", tt.b), func(t *testing.T) {
+        if got, _ := divide(tt.a, tt.b); got != tt.want {
+            t.Errorf("got %d, want %d", got, tt.want)
+        }
+    })
+}</code></pre>
+  <p>Conventions: test file lives beside the code (<code>divide_test.go</code>), same package; name tests for the behavior (<code>TestDivideByZero</code>); a passing test suite prints just <code>PASS</code> plus timing.</p>
+
+  <p><a href="../lessons/0015-testing.html">Study lesson 15</a> · <a href="errors.html">Errors</a> · <a href="cli-flags.html">CLI flags</a></p>
+</main></body>
+</html>

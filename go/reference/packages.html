@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Packages in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>Your own packages</h1>
+  <p class="lede">One directory = one package. Import path = module path + directory. Capital = exported.</p>
+
+  <h2>Layout</h2>
+  <pre><code>hello-go/
+├── go.mod          module example.com/hello-go
+├── main.go         package main   → imports "example.com/hello-go/greet"
+└── greet/
+    └── greet.go    package greet</code></pre>
+  <table>
+    <tr><th>Rule</th><th>Meaning</th></tr>
+    <tr><td>Every file starts with <code>package X</code></td><td>All files in one directory share the same package name.</td></tr>
+    <tr><td>Import path = module path + directory</td><td><code>example.com/hello-go/greet</code> for the <code>greet/</code> directory.</td></tr>
+    <tr><td>Call as <code>pkg.Name</code></td><td>Package name (not path) prefixes every exported name — <code>greet.Hello(...)</code>, like <code>fmt.Println</code>.</td></tr>
+  </table>
+
+  <h2>Exporting</h2>
+  <table>
+    <tr><th>Name</th><th>Visible</th></tr>
+    <tr><td><code>Hello</code>, <code>Person</code>, <code>MaxRetries</code></td><td>Everywhere the package is imported — capital first letter.</td></tr>
+    <tr><td><code>decorate</code>, <code>person</code>, <code>maxRetries</code></td><td>Only inside its own package — lowercase first letter.</td></tr>
+  </table>
+  <p>There is no <code>export</code> keyword and no per-file visibility: case is the entire mechanism, and it applies to types, fields (see <a href="json.html">JSON</a>), functions, and variables alike.</p>
+
+  <h2>Conventions</h2>
+  <p>Package names are short, lowercase, singular: <code>greet</code>, not <code>greetUtils</code>. <code>package main</code> is the executable; every other package is a library. The <code>main</code> package may span several files in one directory — <code>go run .</code> compiles them together; <code>go run main.go</code> compiles only that file and will miss the others.</p>
+
+  <p><a href="../lessons/0017-packages.html">Study lesson 17</a> · <a href="go-program-anatomy.html">Program anatomy</a> · <a href="modules-and-variables.html">Modules</a></p>
+</main></body>
+</html>

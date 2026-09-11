@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 8: Methods</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 8</p>
+  <h1>Functions that know their data</h1>
+  <p class="lede">In about ten minutes, you will turn a plain function into a method on your own type — the step that makes structs behave, not just hold data.</p>
+  <p class="meta">Builds on <a href="0007-maps.html">lesson 7</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="2">
+    <p>Without looking back: what does reading a key that is not in a map return?</p>
+    <button type="button">A compile-time error</button>
+    <button type="button">The map's last value</button>
+    <button type="button">The value type's zero</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. A method has a receiver</h2>
+  <p>A method is a function with a special parameter — the <em>receiver</em> — written between <code>func</code> and the name. It attaches the function to a type:</p>
+  <pre><code>func (p person) greet() string {
+    return "Hello, " + p.name
+}</code></pre>
+  <p><code>(p person)</code> is the receiver: every call gets its own copy of a <code>person</code> in <code>p</code>, and the body reads its fields with a dot. You call it on a value of that type: <code>ada.greet()</code>. Same logic as lesson 4's <code>greet(name)</code> — but now the data and the behavior live together, and there is no parameter to pass by hand.</p>
+
+  <h2>3. Give lesson 6's people behavior</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import "fmt"
+
+type person struct {
+    name string
+    age  int
+}
+
+func (p person) greet() string {
+    return "Hello, " + p.name
+}
+
+func (p person) decade() string {
+    return fmt.Sprint(p.name, " is in their ", p.age/10*10, "s")
+}
+
+func main() {
+    people := []person{
+        {name: "Ada", age: 36},
+        {name: "Alan", age: 41},
+    }
+    for _, p := range people {
+        fmt.Println(p.greet(), "-", p.decade())
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>Hello, Ada - Ada is in their 30s</code> and Alan's equivalent. <code>p.age/10*10</code> is integer division then multiplication — it rounds down to the decade, because <code>int</code> arithmetic drops fractions. Now add a method <code>initial() string</code> returning the first letter of the name via <code>p.name[0:1]</code>, call it, and run again.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>In <code>func (p person) greet() string</code>, what is <code>(p person)</code>?</p>
+    <button type="button">The method's receiver</button>
+    <button type="button">The method's parameter</button>
+    <button type="button">The method's result type</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>If <code>ada</code> is a <code>person</code>, how do you call <code>greet</code>?</p>
+    <button type="button">greet(ada)</button>
+    <button type="button">ada.greet()</button>
+    <button type="button">person.greet(ada)</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>Inside <code>greet</code>, what does <code>p.name</code> refer to?</p>
+    <button type="button">The package's name value</button>
+    <button type="button">The method's name parameter</button>
+    <button type="button">The receiver's name field</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/methods/1" rel="noreferrer">Tour of Go: Methods</a>, then keep the <a href="../reference/methods.html">methods reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if receivers, <code>p.age/10*10</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0007-maps.html">Lesson 7</a></li>
+    <li><a href="0009-pointers.html">Lesson 9</a></li>
+  </ul>
+  <footer>Lesson 8 of the Go course. Data and behavior, finally living together.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

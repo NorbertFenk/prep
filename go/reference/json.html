@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSON in Go</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go quick reference</p>
+  <h1>JSON</h1>
+  <p class="lede"><code>encoding/json</code> converts structs ⇄ JSON. Exported fields only; tags control names.</p>
+
+  <h2>Struct to JSON (encode)</h2>
+  <pre><code>type person struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}
+
+json.NewEncoder(w).Encode(p)  // writes into any writer — HTTP response, file, buffer
+b, err := json.Marshal(p)     // or get a []byte</code></pre>
+  <table>
+    <tr><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><code>`json:"name"`</code></td><td>Tag: field appears as <code>"name"</code> in the JSON.</td></tr>
+    <tr><td><code>`json:"-"`</code></td><td>Field is never included.</td></tr>
+    <tr><td><code>`json:"age,omitempty"`</code></td><td>Omit the field when it holds the zero value.</td></tr>
+    <tr><td>No tag</td><td>JSON key is the field name verbatim: <code>"Name"</code>.</td></tr>
+    <tr><td>Lowercase field</td><td>Invisible to <code>encoding/json</code> — silently skipped.</td></tr>
+  </table>
+
+  <h2>JSON to struct (decode)</h2>
+  <pre><code>var p person
+err := json.NewDecoder(r.Body).Decode(&amp;p)  // from an HTTP request
+err = json.Unmarshal(data, &amp;p)             // from a []byte</code></pre>
+  <p>Decoding fills exported fields whose names (or tags) match the JSON keys, case-insensitively; unknown keys are ignored, missing ones keep their zero value. Always decode into a pointer — <code>&amp;p</code> — so the changes land in your variable.</p>
+
+  <h2>In an HTTP handler</h2>
+  <pre><code>w.Header().Set("Content-Type", "application/json")
+json.NewEncoder(w).Encode(people)</code></pre>
+  <p>Go's JSON keys match tags exactly — set them lowercase, the way the web expects (<code>"name"</code>, not <code>"Name"</code>).</p>
+
+  <p><a href="../lessons/0019-json-api.html">Study lesson 19</a> · <a href="http-server.html">HTTP server</a> · <a href="structs.html">Structs</a></p>
+</main></body>
+</html>

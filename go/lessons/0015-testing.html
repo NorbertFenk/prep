@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 15: Testing</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 15</p>
+  <h1>Prove it works, automatically</h1>
+  <p class="lede">In about ten minutes, you will write a real Go test for lesson 11's <code>divide</code> and watch <code>go test</code> catch a bug you plant on purpose.</p>
+  <p class="meta">Builds on <a href="0014-channels.html">lesson 14</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="0">
+    <p>Without looking back: what does <code>ch &lt;- v</code> do?</p>
+    <button type="button">Sends v into the channel</button>
+    <button type="button">Takes v out of the channel</button>
+    <button type="button">Declares v as a channel</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. Testing is built in</h2>
+  <p>No framework to install. Go's <code>go test</code> command runs every function named <code>TestXxx</code> (capital T) that takes <code>t *testing.T</code>, in every file whose name ends in <code>_test.go</code>. Inside, you call the code under test and report failure through <code>t</code>:</p>
+  <pre><code>if got != 5 {
+    t.Errorf("divide(10, 2) = %d, want 5", got)
+}</code></pre>
+  <p><code>Errorf</code> logs the failure and keeps going; <code>Fatal</code> logs and stops the test — use it when continuing makes no sense, like an unexpected error.</p>
+
+  <h2>3. Test lesson 11's divide</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, errors.New("cannot divide by zero")
+    }
+    return a / b, nil
+}
+
+func main() {
+    result, err := divide(10, 2)
+    if err != nil {
+        fmt.Println("error:", err)
+        return
+    }
+    fmt.Println(result)
+}</code></pre>
+  <p>Then create <code>divide_test.go</code> next to it:</p>
+  <pre><code>package main
+
+import "testing"
+
+func TestDivide(t *testing.T) {
+    got, err := divide(10, 2)
+    if err != nil {
+        t.Fatal(err)
+    }
+    if got != 5 {
+        t.Errorf("divide(10, 2) = %d, want 5", got)
+    }
+}
+
+func TestDivideByZero(t *testing.T) {
+    _, err := divide(10, 0)
+    if err == nil {
+        t.Error("expected an error, got nil")
+    }
+}</code></pre>
+  <pre><code>go test .</code></pre>
+  <p>You should see <code>PASS</code>. Add <code>-v</code> (<code>go test -v .</code>) to see each test named. Now plant a bug: change <code>return a / b, nil</code> to <code>return a/b + 1, nil</code>, run the tests, and watch <code>TestDivide</code> fail with your exact message — while <code>TestDivideByZero</code> still passes, because it tests a different path. Revert the bug.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="1">
+    <p>Which files does <code>go test</code> look at?</p>
+    <button type="button">Files ending with test.go</button>
+    <button type="button">Files ending with _test.go</button>
+    <button type="button">Files named exactly tests.go</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>Which signature makes a function a test?</p>
+    <button type="button">func TestDivide(t testing.T)</button>
+    <button type="button">func testDivide(t *testing.T)</button>
+    <button type="button">func TestDivide(t *testing.T)</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="0">
+    <p>What is the difference between <code>t.Errorf</code> and <code>t.Fatal</code>?</p>
+    <button type="button">Fatal stops the test entirely</button>
+    <button type="button">Fatal prints a louder message</button>
+    <button type="button">Fatal marks the test as passing</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/doc/tutorial/add-a-test" rel="noreferrer">Add a test tutorial</a>, then keep the <a href="../reference/testing.html">testing reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>*testing.T</code>, table tests, or a test failure is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0014-channels.html">Lesson 14</a></li>
+    <li><a href="0016-cli-flags.html">Lesson 16</a></li>
+  </ul>
+  <footer>Lesson 15 of the Go course. A bug you can't miss beats a bug you hope is gone.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 12: Reading files</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 12</p>
+  <h1>Your first useful program</h1>
+  <p class="lede">In about fifteen minutes, you will read a real file from disk, handle the failure case properly, and process what you read — everything from lessons 1–11 in one program.</p>
+  <p class="meta">Builds on <a href="0011-errors.html">lesson 11</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="2">
+    <p>Without looking back: what does a function conventionally return as its last result when it can fail?</p>
+    <button type="button">A boolean flag</button>
+    <button type="button">A status code</button>
+    <button type="button">An error value</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. Files fail, so files return errors</h2>
+  <p><a href="https://pkg.go.dev/os#ReadFile" rel="noreferrer"><code>os.ReadFile</code></a> reads a whole file in one call. The file might not exist, so it follows lesson 11's shape exactly — data first, error last:</p>
+  <pre><code>data, err := os.ReadFile("names.txt")</code></pre>
+  <p><code>data</code> is a <code>[]byte</code> — the file's raw contents. <code>string(data)</code> converts it to text, and <a href="https://pkg.go.dev/strings#Split" rel="noreferrer"><code>strings.Split</code></a> cuts that text into a slice at every separator you name.</p>
+
+  <h2>3. Greet a file full of names</h2>
+  <p>In your <code>hello-go</code> module, create <code>names.txt</code> next to <code>main.go</code>:</p>
+  <pre><code>Ada
+Grace
+Alan</code></pre>
+  <p>Then replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "fmt"
+    "os"
+    "strings"
+)
+
+func main() {
+    data, err := os.ReadFile("names.txt")
+    if err != nil {
+        fmt.Println("error:", err)
+        return
+    }
+    names := strings.Split(strings.TrimSpace(string(data)), "\n")
+    for _, name := range names {
+        fmt.Println("Hello,", name)
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see three greetings. Then break it on purpose: rename <code>names.txt</code> and run again. You get <code>error: open names.txt: no such file or directory</code> and a clean stop — the <code>return</code> keeps the program from touching <code>data</code> that was never read. Rename the file back.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What does <code>os.ReadFile</code> return?</p>
+    <button type="button">Bytes and an error</button>
+    <button type="button">Text and an error</button>
+    <button type="button">Lines and a count</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>Why <code>return</code> right after printing the error?</p>
+    <button type="button">To close the file again</button>
+    <button type="button">To stop before using data</button>
+    <button type="button">To retry reading the file</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does <code>string(data)</code> do?</p>
+    <button type="button">Prints the bytes to screen</button>
+    <button type="button">Counts the bytes in data</button>
+    <button type="button">Converts the bytes to text</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://pkg.go.dev/os#ReadFile" rel="noreferrer"><code>os.ReadFile</code> documentation</a>, skim <a href="https://gobyexample.com/reading-files" rel="noreferrer">Go by Example: Reading files</a>, then keep the <a href="../reference/reading-files.html">reading files reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>[]byte</code> vs <code>string</code>, the error path, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0011-errors.html">Lesson 11</a></li>
+    <li><a href="0013-goroutines.html">Lesson 13</a></li>
+  </ul>
+  <footer>Lesson 12 of the Go course. Twelve lessons ago you printed Hello, Go. Now your programs read the world.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 13: Goroutines</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 13</p>
+  <h1>Do things at the same time</h1>
+  <p class="lede">In about ten minutes, you will run functions concurrently with the <code>go</code> keyword and wait for all of them with a <code>WaitGroup</code> — Go's headline feature.</p>
+  <p class="meta">Builds on <a href="0012-reading-files.html">lesson 12</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: a relative path like <code>"names.txt"</code> resolves against which directory?</p>
+    <button type="button">The source file's directory</button>
+    <button type="button">The directory you run from</button>
+    <button type="button">The module's root directory</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. go starts a goroutine</h2>
+  <p>Put <code>go</code> in front of a function call and it runs concurrently — a <em>goroutine</em> — while the caller keeps going. Goroutines are cheap; Go programs routinely run thousands.</p>
+  <p>That creates one problem: when <code>main</code> returns, the program exits, goroutines or not. <a href="https://pkg.go.dev/sync#WaitGroup" rel="noreferrer"><code>sync.WaitGroup</code></a> is the fix — a counter of pending work: <code>Add(1)</code> before starting each goroutine, <code>Done()</code> when it finishes, <code>Wait()</code> blocks until the counter hits zero.</p>
+  <p>Two details from earlier lessons show up: the WaitGroup is passed as a pointer (<code>&amp;wg</code>) so <code>Done()</code> decrements the original, not a copy. And <code>Done()</code> is <a href="https://go.dev/tour/flowcontrol/12" rel="noreferrer">deferred</a> — <code>defer</code> schedules a call for when the function exits, however it exits.</p>
+
+  <h2>3. Greet four people at once</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with:</p>
+  <pre><code>package main
+
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+func greet(name string, wg *sync.WaitGroup) {
+    defer wg.Done()
+    time.Sleep(time.Duration(len(name)) * 100 * time.Millisecond)
+    fmt.Println("Hello,", name)
+}
+
+func main() {
+    names := []string{"Ada", "Grace", "Alan", "Edsger"}
+    var wg sync.WaitGroup
+    for _, name := range names {
+        wg.Add(1)
+        go greet(name, &amp;wg)
+    }
+    wg.Wait()
+    fmt.Println("all done")
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>Each goroutine sleeps 100ms per letter of its name, then greets. They all start together, so they finish in order of name length — <code>Ada</code>, <code>Alan</code>, <code>Grace</code>, <code>Edsger</code> — <em>not</em> the order they were started, and the whole program takes about 600ms, the longest sleep. Proof it is concurrent: delete the word <code>go</code>, run again, and watch the greetings come in start order — and take about 1.8 seconds. Put <code>go</code> back.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>What does putting <code>go</code> before a function call do?</p>
+    <button type="button">Runs it as a new goroutine</button>
+    <button type="button">Runs it after main finishes</button>
+    <button type="button">Runs it twice in a row</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>What does <code>wg.Wait()</code> do?</p>
+    <button type="button">Adds one to the counter</button>
+    <button type="button">Stops every running goroutine</button>
+    <button type="button">Blocks until the counter is zero</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>Why does <code>greet</code> take <code>&amp;wg</code>, a pointer to the WaitGroup?</p>
+    <button type="button">Because structs cannot be passed</button>
+    <button type="button">So Done() decrements the original</button>
+    <button type="button">So Done() gets its own fresh copy</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/concurrency/1" rel="noreferrer">Tour of Go: Goroutines</a> and <a href="https://gobyexample.com/waitgroups" rel="noreferrer">Go by Example: WaitGroups</a>, then keep the <a href="../reference/goroutines.html">goroutines reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if <code>defer</code>, <code>Add</code>/<code>Done</code>/<code>Wait</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0012-reading-files.html">Lesson 12</a></li>
+    <li><a href="0014-channels.html">Lesson 14</a></li>
+  </ul>
+  <footer>Lesson 13 of the Go course. Start together, finish when done — in whatever order that is.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>

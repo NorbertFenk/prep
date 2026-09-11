@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 7: Maps</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">Go / Lesson 7</p>
+  <h1>Look things up by key</h1>
+  <p class="lede">In about ten minutes, you will count words with a map — the data structure behind lookups, tallies, and caches in nearly every real Go program.</p>
+  <p class="meta">Builds on <a href="0006-structs.html">lesson 6</a> · one small project</p>
+
+  <h2>1. Quick recall</h2>
+  <div class="q" data-answer="1">
+    <p>Without looking back: in <code>p := person{name: "Ada", age: 36}</code>, what happens to a field you leave out?</p>
+    <button type="button">It causes a compile error</button>
+    <button type="button">It gets its zero value</button>
+    <button type="button">It gets a random value</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+
+  <h2>2. A map connects keys to values</h2>
+  <p>A slice finds things by position; a map finds things by key. In <code>map[string]int</code>, <code>string</code> is the key type and <code>int</code> is the value type:</p>
+  <pre><code>ages := map[string]int{
+    "Ada":  36,
+    "Alan": 41,
+}
+ages["Grace"] = 45
+fmt.Println(ages["Ada"])</code></pre>
+  <p>The trick that makes counting work: reading a missing key returns the value type's zero value — <code>0</code> for <code>int</code> — instead of failing. So <code>counts[word]++</code> turns a missing key into <code>1</code> all by itself.</p>
+
+  <h2>3. Count words</h2>
+  <p>In your <code>hello-go</code> module, replace <code>main.go</code> with this — lesson 5's slice feeds the map:</p>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    words := []string{"go", "run", "go", "build", "go"}
+    counts := map[string]int{}
+    for _, word := range words {
+        counts[word]++
+    }
+    for word, n := range counts {
+        fmt.Println(word, n)
+    }
+}</code></pre>
+  <pre><code>go run .</code></pre>
+  <p>You should see <code>go 3</code>, <code>run 1</code>, <code>build 1</code> — but in a different order on almost every run. Map order is deliberately unpredictable; never depend on it. Add a few more words to the slice and check the counts.</p>
+
+  <h2>4. Retrieve</h2>
+  <div class="q" data-answer="0">
+    <p>In <code>map[string]int</code>, what is <code>string</code>?</p>
+    <button type="button">The key's type</button>
+    <button type="button">The value's type</button>
+    <button type="button">The map's name</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="2">
+    <p>Why does <code>counts[word]++</code> work for a word not in the map yet?</p>
+    <button type="button">Missing keys end the program</button>
+    <button type="button">Missing keys are read as one</button>
+    <button type="button">Missing keys are read as zero</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <div class="q" data-answer="1">
+    <p>In what order does <code>range</code> visit a map's entries?</p>
+    <button type="button">The order they were added</button>
+    <button type="button">An unpredictable, varied order</button>
+    <button type="button">A sorted order, by each key</button>
+    <div class="fb" aria-live="polite"></div>
+  </div>
+  <p id="score"></p>
+
+  <h2>Next</h2>
+  <p>Read the official <a href="https://go.dev/tour/moretypes/19" rel="noreferrer">Tour of Go: Maps</a> (and <a href="https://go.dev/tour/moretypes/22" rel="noreferrer">Mutating maps</a>), then keep the <a href="../reference/maps.html">maps reference</a> nearby.</p>
+  <p class="ask">Ask me any follow-up question, especially if zero values, <code>map[string]int{}</code>, or a compiler error is unclear.</p>
+  <ul class="links">
+    <li><a href="../MISSION.md">Mission</a></li>
+    <li><a href="../RESOURCES.md">Resources</a></li>
+    <li><a href="0006-structs.html">Lesson 6</a></li>
+    <li><a href="0008-methods.html">Lesson 8</a></li>
+  </ul>
+  <footer>Lesson 7 of the Go course. One map, one tally, one pleasantly chaotic print order.</footer>
+  <script src="../../assets/quiz.js"></script>
+</main></body>
+</html>
