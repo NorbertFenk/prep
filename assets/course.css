@@ -22,10 +22,11 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   .q button.wrong{background:#fee2e2;border-color:#b91c1c}
   .fb{font-size:.9rem;margin-top:.4rem;min-height:1.2em}
   .fb.ok{color:#15803d}.fb.no{color:#b91c1c}
-  .feedback{min-height:1.2em}.feedback.ok{color:#15803d}.feedback.no{color:#b91c1c}
   #score{font-weight:700;margin-top:1rem}
   details{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0}
   summary{cursor:pointer;font-weight:600}
+  .card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+  .card p{margin:.35rem 0}
   .srcs a{color:#2563eb}
   .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
   @media print{.q button{border:none}body{max-width:none;font-size:11pt}}
@@ -40,5 +41,5 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   .gbtns{display:flex;gap:.5rem;margin-top:.4rem}
   .gbtns button{flex:1;padding:.55rem .7rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;font-size:.95rem}
   .gbtns button:hover{border-color:#2563eb}
-  #gres{font-weight:600}
-  #gres a{color:#2563eb}
+  .gres{font-weight:600}
+  .gres a{color:#2563eb}
