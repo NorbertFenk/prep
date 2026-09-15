@@ -49,5 +49,6 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   .sres{max-height:30vh;overflow-y:auto}
   .sres a{display:block;margin:.4rem 0;padding:.5rem .7rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;color:inherit}
   .sres a:hover{border-color:#2563eb}
+  .sres a.on{border-color:#2563eb;background:#eff6ff}
   .sres b{display:block;color:#2563eb}
   .sres span{font-size:.85rem;color:#374151}
