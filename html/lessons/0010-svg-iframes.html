@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 10 — Media and embedding beyond the page</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0010 · HTML · ~25 min · prereq: 0005, 0006</p>
+<h1>Media and embedding beyond the page</h1>
+<p>Sometimes the content isn't even a raster image or a video file: it's vector
+art, or an entire other web page. Three elements handle that — one of them is the
+most dangerous element in HTML.</p>
+
+<h2>SVG: markup for graphics</h2>
+<pre><code>&lt;svg width="300" height="200"&gt;
+  &lt;rect width="100%" height="100%" fill="green" /&gt;
+&lt;/svg&gt;</code></pre>
+<p>SVG is XML-based markup describing shapes — <code>&lt;circle&gt;</code>,
+<code>&lt;rect&gt;</code>, <code>&lt;path&gt;</code>. It's vector: resolution
+independent, small for geometric art. Two ways to include it:</p>
+<div class="step"><div class="num">1</div><div>
+  <b>Via <code>&lt;img src="logo.svg"&gt;</code></b>
+  <p>Quick, cacheable, alt text works — but no CSS or JS access to the internals.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Inline in your HTML</b>
+  <p>The shapes become part of your DOM: styleable with CSS, animatable, focusable.
+  Costs an HTTP-request saving but no caching, and bloats every page it's pasted into.</p></div></div>
+
+<h2>&lt;iframe&gt;: a page inside a page</h2>
+<pre><code>&lt;iframe src="https://www.youtube.com/embed/VIDEO_ID"
+        width="100%" height="500"
+        allowfullscreen sandbox&gt;
+&lt;/iframe&gt;</code></pre>
+<p>YouTube embeds, Google Maps, Disqus comments — an iframe embeds an entire
+document, with its own browsing context. That power is the problem: an iframe is a
+classic <b>attack vector</b> — invisible frames stealing clicks (<b>clickjacking</b>),
+embedded pages reading your cookies. The defenses:</p>
+<div class="step"><div class="num">1</div><div>
+  <b><code>sandbox</code> — always</b>
+  <p>With no value, it blocks scripts, forms, popups — everything. Add permissions
+  back one at a time, only as needed. (Never combine <code>allow-scripts</code> with
+  <code>allow-same-origin</code> on same-origin content: the frame could then
+  remove its own sandbox.)</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>HTTPS only</b>
+  <p>Encrypted transport protects the embedded content from tampering, and keeps
+  embedded and parent documents apart.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b>Respect the server's no</b>
+  <p>Sites send <code>X-Frame-Options</code>/<code>Content-Security-Policy</code>
+  headers to forbid being framed — that's why embedding MDN's glossary in an iframe
+  shows a console error instead of the page. Only embed when necessary, with
+  permission.</p></div></div>
+
+<h2>&lt;embed&gt; and &lt;object&gt;</h2>
+<p>Legacy embedding elements from the plugin era (Flash, Java applets) — both dead.
+Their remaining use cases (PDF viewing, external resources) are all better served by
+<code>&lt;iframe&gt;</code> and its security features. Recognize them; don't write them.</p>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. What does SVG give you that JPEG doesn't?</p>
+  <button>Smaller files for photographic images</button>
+  <button>Resolution-independent shapes described as markup</button>
+  <button>Built-in alt text generation</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>2. Inline SVG's advantage over &lt;img src="logo.svg"&gt;?</p>
+  <button>The shapes join your DOM: CSS and JS can reach them</button>
+  <button>It can be cached like any image asset</button>
+  <button>It renders in older browsers</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>3. What does a bare sandbox attribute do?</p>
+  <button>Loads the frame in low-resolution mode</button>
+  <button>Prevents the frame from being scrolled</button>
+  <button>Blocks scripts, forms, and popups: maximum restriction</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>4. Embedding MDN's glossary page in an iframe shows an error because…</p>
+  <button>MDN pages exceed the default iframe height</button>
+  <button>MDN's server sends an X-Frame-Options denial header</button>
+  <button>iframes cannot embed pages with cookies</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>5. Clickjacking is…</p>
+  <button>Tricking users into clicking invisible or disguised frames</button>
+  <button>Serving images from someone else's domain</button>
+  <button>Reading another site's DOM from your script</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>6. Why avoid &lt;embed&gt; and &lt;object&gt; today?</p>
+  <button>They are deprecated by browsers</button>
+  <button>They cannot display PDFs</button>
+  <button>They are plugin-era relics; iframe covers their cases more safely</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/General_embedding_technologies"><b>Primary:</b> MDN — General embedding technologies</a> — iframe security in depth</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Including_vector_graphics_in_HTML">MDN — Including vector graphics in HTML</a></li>
+</ul>
+<p>Reference: <a href="../reference/embedding-security.html">Embedding &amp; security reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what's a browsing context?",
+"how does CSP frame-ancestors differ from X-Frame-Options?", "when is inline SVG
+worth the bloat?" Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML links and paths reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Links &amp; paths</h1>
+  <p class="lede">The <code>&lt;a&gt;</code> anchor: the element that makes the Web a web.</p>
+
+  <h2>Anatomy</h2>
+  <pre><code>&lt;a href="https://www.firefox.com/" title="tooltip on hover"&gt;Download Firefox&lt;/a&gt;</code></pre>
+
+  <h2>Path types</h2>
+  <table>
+    <tr><th>href</th><th>Goes to</th></tr>
+    <tr><td><code>contacts.html</code></td><td>Same directory (optional <code>./</code> prefix).</td></tr>
+    <tr><td><code>projects/index.html</code></td><td>Down into a subdirectory.</td></tr>
+    <tr><td><code>../pdfs/brief.pdf</code></td><td>Up one level, then down (stack: <code>../../</code>).</td></tr>
+    <tr><td><code>/pdfs/brief.pdf</code></td><td>Relative to the site root.</td></tr>
+    <tr><td><code>https://site.com/page</code></td><td>Absolute: another site, full URL required.</td></tr>
+    <tr><td><code>page.html#section</code></td><td>Fragment: the element with <code>id="section"</code>.</td></tr>
+    <tr><td><code>#section</code></td><td>Fragment in the current page.</td></tr>
+    <tr><td><code>mailto:you@example.com?subject=Hi%20there</code></td><td>Email draft; query params prefill <code>subject</code>/<code>cc</code>/<code>body</code>; spaces are <code>%20</code>.</td></tr>
+  </table>
+  <p><b>Internal links → relative paths</b> (survive domain moves). <b>External links → absolute URLs</b> (browser can't find another site from a path).</p>
+
+  <h2>Link text rules</h2>
+  <ul>
+    <li>Say where the link goes: screen readers jump link-to-link out of context; search engines index link text.</li>
+    <li>Never "click here", never "link", never the raw URL.</li>
+    <li>Signpost surprises: "download our factfile (PDF, 4MB)".</li>
+    <li>Same link text → same destination (never two "click here"s going different places).</li>
+    <li><code>download</code> attribute: forces download, optionally suggests a filename.</li>
+  </ul>
+
+  <h2>Suggested downloads</h2>
+  <pre><code>&lt;a href="/large-report.pdf" download&gt;Download the sales report (PDF, 10MB)&lt;/a&gt;</code></pre>
+
+  <p><a href="../lessons/0003-links.html">Lesson 3</a> · <a href="anatomy-cheatsheet.html">Anatomy</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

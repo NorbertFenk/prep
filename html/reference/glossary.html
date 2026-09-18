@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glossary — HTML</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Glossary — HTML</h1>
+  <p class="lede">Terms used across all lessons. One line each — interview-answer length.</p>
+
+  <dl>
+    <dt>HTML <span class="meta">(HyperText Markup Language)</span></dt>
+    <dd>The markup language that structures web pages: a tree of elements, each carrying meaning, not appearance.</dd>
+
+    <dt>Element</dt>
+    <dd>Opening tag + content + closing tag — the complete unit of meaning ("this is a paragraph").</dd>
+
+    <dt>Tag</dt>
+    <dd>The punctuation of an element: the angle-bracket names marking where it starts and ends.</dd>
+
+    <dt>Attribute</dt>
+    <dd><code>name="value"</code> extra information in the opening tag — <code>href</code>, <code>src</code>, <code>alt</code>, <code>id</code>.</dd>
+
+    <dt>Boolean attribute</dt>
+    <dd>An attribute true by presence alone: <code>disabled</code>, <code>required</code>, <code>controls</code>, <code>defer</code>.</dd>
+
+    <dt>Void element</dt>
+    <dd>An element with no content and no closing tag: <code>img</code>, <code>br</code>, <code>meta</code>, <code>link</code>, <code>input</code>. (Not <code>script</code>.)</dd>
+
+    <dt>Doctype</dt>
+    <dd><code>&lt;!doctype html&gt;</code> — historical rulebook pointer, still required, first line of every page.</dd>
+
+    <dt>Semantic markup</dt>
+    <dd>Choosing elements for what content <em>is</em>, not how it should look — consumed by screen readers, search engines, and future maintainers.</dd>
+
+    <dt>Presentational element</dt>
+    <dd>Elements that only say how text looks (<code>font</code>, <code>big</code>); deprecated — style is CSS's job.</dd>
+
+    <dt>Landmark</dt>
+    <dd>A structural region (<code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>) exposed by screen readers as jump targets.</dd>
+
+    <dt>Root element</dt>
+    <dd><code>&lt;html&gt;</code> — wraps everything; carries the page's <code>lang</code>.</dd>
+
+    <dt>Head / metadata</dt>
+    <dd>The invisible part of the document: encoding, title, description, CSS/JS links, icons.</dd>
+
+    <dt>Meta element</dt>
+    <dd><code>&lt;meta&gt;</code> — document metadata as name/content pairs (<code>charset</code>, <code>author</code>, <code>description</code>) or Open Graph properties.</dd>
+
+    <dt>Open Graph</dt>
+    <dd>Meta protocol (<code>og:title</code>, <code>og:image</code>…) that social networks read to render share cards.</dd>
+
+    <dt>Alt text</dt>
+    <dd>The <code>alt</code> attribute: the text stand-in for an image. Content → describe it; decoration → empty (<code>alt=""</code>, never missing); in a link → the destination.</dd>
+
+    <dt>Screen reader</dt>
+    <dd>Assistive technology that reads the page aloud and navigates by headings, landmarks, and form labels — the silent consumer of all your semantics.</dd>
+
+    <dt>Fragment</dt>
+    <dd>A link target inside a page: <code>#id</code> jumps to the element with that id.</dd>
+
+    <dt>Relative / absolute path</dt>
+    <dd>Location relative to the current document (<code>../pdfs/b.pdf</code>) vs a full URL. Internal links: relative — they survive domain moves.</dd>
+
+    <dt>Anchor</dt>
+    <dd>The <code>&lt;a&gt;</code> element with <code>href</code> — the link. No web without it.</dd>
+
+    <dt>Mailto link</dt>
+    <dd><code>href="mailto:…"</code> opens a mail draft; query params prefill subject/cc/body, spaces percent-encoded.</dd>
+
+    <dt>Container / codec</dt>
+    <dd>A media file's wrapper (MP4, WebM) / the algorithm that encoded its tracks (H.264, VP9). Browsers support different sets → multiple <code>&lt;source&gt;</code>s.</dd>
+
+    <dt>WebVTT</dt>
+    <dd>Subtitle/caption file format attached via <code>&lt;track&gt;</code>, with <code>srclang</code> and <code>label</code>.</dd>
+
+    <dt>SVG</dt>
+    <dd>XML markup describing vector shapes — resolution-independent graphics; embed via <code>&lt;img&gt;</code> or inline.</dd>
+
+    <dt>Replaced element</dt>
+    <dd>An element whose content comes from an external resource (<code>img</code>, <code>video</code>), not from its own children.</dd>
+
+    <dt>Table caption</dt>
+    <dd><code>&lt;caption&gt;</code> — the whole table's title, visible to every user.</dd>
+
+    <dt>scope</dt>
+    <dd><code>&lt;th scope="col|row|colgroup|rowgroup"&gt;</code> — declares what a header cell labels, so screen readers can announce cell-by-cell context.</dd>
+
+    <dt>Rowspan / colspan</dt>
+    <dd>Attributes letting a cell span multiple rows/columns — how group headers cover their sections.</dd>
+
+    <dt>Label (form)</dt>
+    <dd><code>&lt;label for&gt;</code> ↔ <code>id</code>: the contract naming a control. Announced by screen readers; clicking the label focuses the control.</dd>
+
+    <dt>Fieldset / legend</dt>
+    <dd><code>&lt;fieldset&gt;</code> groups related controls; <code>&lt;legend&gt;</code> names the group — announced alongside each control inside it.</dd>
+
+    <dt>Client-side validation</dt>
+    <dd>Browser-enforced constraints (<code>required</code>, typed inputs, length bounds) that block submission — UX, not security.</dd>
+
+    <dt>Browsing context</dt>
+    <dd>A browser's independent document environment — each <code>&lt;iframe&gt;</code> creates its own.</dd>
+
+    <dt>Sandbox</dt>
+    <dd><code>&lt;iframe sandbox&gt;</code>: maximum restriction by default (no scripts, forms, popups); add permissions back one at a time.</dd>
+
+    <dt>Clickjacking</dt>
+    <dd>Attack where invisible frames capture clicks; defended by sandboxing and <code>X-Frame-Options</code>/<code>CSP</code> headers.</dd>
+
+    <dt>X-Frame-Options</dt>
+    <dd>Response header a server sends to forbid being framed by other sites — why some pages refuse to embed.</dd>
+
+    <dt>Permissive parsing</dt>
+    <dd>Browsers never show HTML syntax errors — they silently repair bad markup per fixed rules. You get a page, but not necessarily yours.</dd>
+
+    <dt>DOM <span class="meta">(Document Object Model)</span></dt>
+    <dd>The parsed tree of the page — what the browser builds (from possibly repaired markup) and what CSS and JavaScript act on.</dd>
+
+    <dt>Validator</dt>
+    <dd>The W3C Markup Validation Service — the tool that reports what permissive parsing hides. Green banner or it doesn't ship.</dd>
+
+    <dt>Character reference</dt>
+    <dd>Escape codes for syntax characters: <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;amp;</code>, <code>&amp;quot;</code>, <code>&amp;apos;</code>.</dd>
+
+    <dt>Viewport meta</dt>
+    <dd><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> — tells mobile browsers to render at device width.</dd>
+
+    <dt>Defer</dt>
+    <dd><code>&lt;script defer&gt;</code> — download now, run after the HTML finishes parsing: JS never grabs a missing element.</dd>
+
+    <dt>Favicon</dt>
+    <dd>The tab/bookmark icon, via <code>&lt;link rel="icon"&gt;</code> or an auto-found <code>/favicon.ico</code>.</dd>
+  </dl>
+
+  <p><a href="../lessons/0013-the-gauntlet.html">Gauntlet</a> · <a href="anatomy-cheatsheet.html">Anatomy</a> · <a href="forms.html">Forms</a> · <a href="tables.html">Tables</a></p>
+</main></body>
+</html>

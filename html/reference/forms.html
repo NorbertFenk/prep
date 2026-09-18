@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML forms reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Forms</h1>
+  <p class="lede">How the user speaks back: controls, labels, and validation — all semantics.</p>
+
+  <h2>Anatomy</h2>
+  <pre><code>&lt;form action="/submit" method="get"&gt;
+  &lt;label for="name"&gt;Name (required):&lt;/label&gt;
+  &lt;input type="text" name="name" id="name" required /&gt;
+  &lt;button&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+  <table>
+    <tr><th>Attribute</th><th>For</th></tr>
+    <tr><td><code>action</code> · <code>method</code></td><td>Where submission goes · how (<code>get</code> puts data in the URL as query params).</td></tr>
+    <tr><td><code>type</code></td><td>Picks the control (see below).</td></tr>
+    <tr><td><code>name</code></td><td>Names the data item submitted — <code>name=Bob</code>. Radios in a set share it.</td></tr>
+    <tr><td><code>id</code></td><td>Links the control to its <code>&lt;label for&gt;</code>.</td></tr>
+    <tr><td><code>value</code></td><td>What gets submitted (radios/checkboxes/options); pre-fills text fields.</td></tr>
+    <tr><td><code>checked</code> · <code>disabled</code></td><td>Pre-selected · unselectable.</td></tr>
+  </table>
+
+  <h2>Controls</h2>
+  <table>
+    <tr><th>Control</th><th>Rule of thumb</th></tr>
+    <tr><td><code>&lt;input type="text|email|url|tel|password|number|color"&gt;</code></td><td>Typed inputs validate their format for free.</td></tr>
+    <tr><td><code>&lt;input type="radio"&gt;</code></td><td>One of a set: shared <code>name</code>, per-option <code>value</code>.</td></tr>
+    <tr><td><code>&lt;input type="checkbox"&gt;</code></td><td>Any number: separate <code>name</code> per checkbox.</td></tr>
+    <tr><td><code>&lt;select&gt;</code>/<code>&lt;option&gt;</code>/<code>&lt;optgroup&gt;</code></td><td>Drop-down; <code>optgroup label</code> groups options.</td></tr>
+    <tr><td><code>&lt;textarea rows cols&gt;</code></td><td>Multi-line; its <em>content</em> is its value.</td></tr>
+    <tr><td><code>&lt;fieldset&gt;</code>+<code>&lt;legend&gt;</code></td><td>Names a group of controls — announced by screen readers.</td></tr>
+  </table>
+
+  <h2>Labels — the contract</h2>
+  <p>Explicit: <code>&lt;label for="x"&gt;</code> ↔ <code>id="x"</code>. Buys: screen
+  readers announce the label at the control; clicking the label focuses the control
+  (bigger hit area). Prefer explicit over nesting the input inside the label.</p>
+
+  <h2>Validation attributes</h2>
+  <table>
+    <tr><th>Attribute</th><th>Effect</th></tr>
+    <tr><td><code>required</code></td><td>Blocks submission when empty.</td></tr>
+    <tr><td><code>minlength</code>/<code>maxlength</code></td><td>Length bounds.</td></tr>
+    <tr><td><code>min</code>/<code>max</code></td><td>Numeric bounds.</td></tr>
+  </table>
+  <p>Client-side validation is <b>UX</b>; server-side validation is <b>security</b>.
+  Never trust what the client sends.</p>
+
+  <h2>Buttons</h2>
+  <table>
+    <tr><th>Type</th><th>Behavior</th></tr>
+    <tr><td><code>&lt;button&gt;</code> (default: submit)</td><td>Submits the form.</td></tr>
+    <tr><td><code>type="button"</code></td><td>Nothing without JavaScript.</td></tr>
+    <tr><td><code>type="reset"</code></td><td>Wipes the form — avoid; it destroys people's work.</td></tr>
+  </table>
+  <p>Use <code>&lt;button&gt;</code>, not legacy <code>&lt;input type="submit"&gt;</code>.</p>
+
+  <p><a href="../lessons/0008-forms.html">Lesson 8</a> · <a href="text-semantics.html">Text semantics</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

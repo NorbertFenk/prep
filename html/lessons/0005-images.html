@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 5 — Images and figures</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0005 · HTML · ~25 min · prereq: 0001, 0003</p>
+<h1>Images and figures</h1>
+<p>You embedded an image in lesson 1 by copying an <code>&lt;img&gt;</code> tag.
+Today you learn what every attribute is <em>for</em> — including the one that
+decides whether blind visitors get the content or a filename read aloud.</p>
+
+<h2>&lt;img&gt; and its attributes</h2>
+<pre><code>&lt;img src="images/dinosaur.jpg"
+     alt="The head and torso of a dinosaur skeleton; a large head with long sharp teeth"
+     width="400" height="341"&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b><code>src</code> — required</b>
+  <p>Path or URL to the image; relative for your own files, absolute only when the
+  image lives elsewhere. Never hotlink someone else's image without permission —
+  you'd be spending their bandwidth for content you don't control.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b><code>alt</code> — the accessibility contract</b>
+  <p>A text stand-in for people who can't see the image: screen reader users,
+  broken paths, disabled images, search engines. What you write depends on why
+  the image exists — see below.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>width</code>/<code>height</code> — reserve the space</b>
+  <p>The page renders before images arrive. Declaring dimensions lets the browser
+  reserve the right box, so content doesn't reflow and jolt when each image lands.</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b><code>title</code> — a tooltip</b>
+  <p>Hover-only supporting information. Never a substitute for <code>alt</code> —
+  touch and keyboard users never see it.</p></div></div>
+
+<h2>Writing alt text: the decision tree</h2>
+<pre><code>&lt;img src="chart.png" alt="Quarterly revenue rose 40% between 2024 and 2026"&gt;  &lt;!-- content --&gt;
+&lt;img src="divider.png" alt=""&gt;   &lt;!-- decoration: empty, not missing --&gt;
+&lt;a href="report.pdf"&gt;&lt;img src="icon.png" alt="Download the report"&gt;&lt;/a&gt;  &lt;!-- image as link --&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b>Content image?</b> Describe the information it carries, briefly. If the
+  surrounding text already says it, <code>alt=""</code> is honest.</div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Pure decoration?</b> <code>alt=""</code> — <em>empty</em>, never missing.
+  A missing alt makes many screen readers read the filename aloud; an empty alt
+  is a deliberate "skip this".</div></div>
+<div class="step"><div class="num">3</div><div>
+  <b>Image inside a link?</b> The alt becomes the link text: describe the
+  destination, not the picture.</div></div>
+
+<h2>Captions: &lt;figure&gt; and &lt;figcaption&gt;</h2>
+<pre><code>&lt;figure&gt;
+  &lt;img src="firefox.png"
+       alt="An abstract flaming fox wrapping around a blue sphere"
+       width="446" height="460"&gt;
+  &lt;figcaption&gt;The 2019 Firefox logo&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+<p><code>&lt;figure&gt;</code> semantically ties the image to its caption. Caption and
+alt do different jobs: alt is the invisible stand-in; figcaption is visible context
+that sits <em>alongside</em> — don't just repeat one in the other.</p>
+
+<h2>Exercise 1 — the real MDN task (Images 1)</h2>
+<p>Embed the blueberries photo at
+<code>https://github.com/mdn/learning-area/blob/main/html/multimedia-and-embedding/tasks/images/blueberries.jpg?raw=true</code>
+with alt text, a <code>width</code> of 400 and the matching <code>height</code>
+(intrinsic size: 615 × 419 — compute it so the aspect ratio survives):</p>
+<pre><code>&lt;h1&gt;Basic image embed&lt;/h1&gt;
+
+&lt;img /&gt;
+
+&lt;p&gt;You should see a picture of some blueberries above.&lt;/p&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;img src="https://github.com/mdn/learning-area/blob/main/html/multimedia-and-embedding/tasks/images/blueberries.jpg?raw=true"
+     alt="blueberries" width="400" height="273" /&gt;
+
+&lt;!-- 400 × 419 / 615 = 273 --&gt;</code></pre>
+</details>
+
+<h2>Exercise 2 — the real MDN task (Images 3)</h2>
+<p>Associate this image with its caption properly:</p>
+<pre><code>&lt;h1&gt;Image and caption&lt;/h1&gt;
+
+&lt;img
+  src="https://github.com/mdn/learning-area/blob/main/html/multimedia-and-embedding/tasks/images/firefox.png?raw=true"
+  alt="An abstract flaming fox wrapping around a blue sphere"
+  width="446"
+  height="460" /&gt;
+The 2019 Firefox logo</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;figure&gt;
+  &lt;img
+    src="https://github.com/mdn/learning-area/blob/main/html/multimedia-and-embedding/tasks/images/firefox.png?raw=true"
+    alt="An abstract flaming fox wrapping around a blue sphere"
+    width="446"
+    height="460" /&gt;
+  &lt;figcaption&gt;The 2019 Firefox logo&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="2">
+  <p>1. Why set width and height on an image?</p>
+  <button>The browser then loads the image faster</button>
+  <button>Validators reject images without dimensions</button>
+  <button>The browser reserves the box so the page doesn't reflow</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>2. What's wrong with omitting alt on a decorative image?</p>
+  <button>Screen readers may read the filename aloud; use alt="" instead</button>
+  <button>The image renders at the wrong size</button>
+  <button>Search engines then cannot index the page</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>3. An image inside an &lt;a&gt; should have alt text that…</p>
+  <button>Describes the image's colors in detail</button>
+  <button>Describes the link's destination</button>
+  <button>Is always left empty</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. What does &lt;figcaption&gt; do that alt cannot?</p>
+  <button>It is read out by screen readers</button>
+  <button>It describes the image for broken paths</button>
+  <button>It shows visible context alongside, for everyone</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>5. Hotlinking someone else's image is bad because…</p>
+  <button>It breaks the page's own width and height attributes</button>
+  <button>They pay the bandwidth, and you don't control the content</button>
+  <button>Browsers block images served from other domains</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_images"><b>Primary:</b> MDN — HTML images</a></li>
+  <li><a href="https://www.w3.org/WAI/tutorials/images/decision-tree/">W3C — An alt Decision Tree</a> — the official flowchart</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Test_your_skills/Images">MDN — Test your skills: Images</a> — today's exercises (plus a tooltip task)</li>
+</ul>
+<p>Reference: <a href="../reference/images-media.html">Images &amp; media reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what's a 'replaced element'?",
+"how do responsive images work?", "when does alt text help SEO?"
+Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML validation and debugging workflow reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Validation &amp; workflow</h1>
+  <p class="lede">HTML has no syntax errors — the browser silently fixes your markup. These two tools tell you what it actually built.</p>
+
+  <h2>The loop</h2>
+  <ol>
+    <li>Edit → save → refresh browser → look. The entire dev cycle for static HTML.</li>
+    <li>Suspect something? Open devtools (<b>F12</b>) → <b>Inspector/Elements</b> tab: the rendered DOM, not your source. Hover nodes to highlight them in the viewport.</li>
+    <li>Before shipping: <a href="https://validator.w3.org/">validator.w3.org</a> → Validate by Direct Input → Check. Done when the green banner says <em>"No errors or warnings to show."</em></li>
+  </ol>
+
+  <h2>Common validator messages decoded</h2>
+  <table>
+    <tr><th>Message</th><th>Really means</th></tr>
+    <tr><td>"End tag <code>li</code> implied, but there were open elements"</td><td>A missing close tag — the end tag was guessed, not present.</td></tr>
+    <tr><td>"Unclosed element <code>strong</code>"</td><td>Exactly what it says; everything after it is bold.</td></tr>
+    <tr><td>"End tag <code>strong</code> violates nesting rules"</td><td>Overlapping tags — close in reverse order.</td></tr>
+    <tr><td>"End of file reached when inside an attribute value"</td><td>An unterminated quote swallowed the rest of the document. The browser deleted the element entirely.</td></tr>
+    <tr><td>"End of file seen and there were open elements"</td><td>Something never closed — often caused by that same missing quote.</td></tr>
+  </table>
+  <p>One broken tag cascades into a dozen errors. Fix the first few, revalidate, repeat.</p>
+
+  <h2>What the browser fixes (and how)</h2>
+  <table>
+    <tr><th>Your mistake</th><th>Browser's guess</th></tr>
+    <tr><td>Unclosed <code>&lt;p&gt;</code>/<code>&lt;li&gt;</code></td><td>Usually closed correctly — which is why the habit forms.</td></tr>
+    <tr><td>Unclosed <code>&lt;strong&gt;</code></td><td>Bolds the rest of the document, block by block.</td></tr>
+    <tr><td>Badly nested <code>&lt;strong&gt;&lt;em&gt;…&lt;/strong&gt;&lt;/em&gt;</code></td><td>Untangles into valid (but maybe unintended) nesting.</td></tr>
+    <tr><td>Missing attribute quote</td><td>May delete the element entirely — the most invisible failure.</td></tr>
+  </table>
+
+  <p><a href="../lessons/0011-debugging.html">Lesson 11</a> · <a href="anatomy-cheatsheet.html">Anatomy</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

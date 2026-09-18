@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 12 — What's in the head?</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0012 · HTML · ~25 min · prereq: 0001, 0009</p>
+<h1>What's in the head?</h1>
+<p>The <code>&lt;head&gt;</code> is the part of the page nobody sees and everything
+uses: the browser, search engines, social networks, screen readers. You've written
+its skeleton since lesson 1 — now meet everything that lives there.</p>
+
+<h2>&lt;title&gt; is not &lt;h1&gt;</h2>
+<p>The <code>&lt;h1&gt;</code> is the title of the page's <em>content</em>; the
+<code>&lt;title&gt;</code> is metadata for the document itself. It's the browser-tab
+text, the default bookmark name, and the headline of your search result. Different
+things, both required.</p>
+
+<h2>&lt;meta&gt;: name/content pairs</h2>
+<pre><code>&lt;meta charset="utf-8"&gt;                         &lt;!-- encoding: always --&gt;
+&lt;meta name="author" content="Chris Mills" /&gt;
+&lt;meta name="description"
+      content="A complete beginner's guide to getting started with the web." /&gt;</code></pre>
+<p>The <code>description</code> is what search engines show under your link —
+your one honest sentence of marketing. (The old <code>keywords</code> meta is dead:
+spammers stuffed it, search engines ignore it.)</p>
+<p>Social networks read <b>Open Graph</b> properties — that's why shared links
+sprout images and titles:</p>
+<pre><code>&lt;meta property="og:title" content="Mozilla Developer Network" /&gt;
+&lt;meta property="og:description" content="…information about Open Web technologies…" /&gt;
+&lt;meta property="og:image" content="https://developer.mozilla.org/mdn-social-share.png" /&gt;</code></pre>
+
+<h2>Icons, CSS, and JavaScript</h2>
+<pre><code>&lt;link rel="icon" href="/favicon.ico" type="image/x-icon" /&gt;
+
+&lt;link rel="stylesheet" href="my-css-file.css" /&gt;
+
+&lt;script src="my-js-file.js" defer&gt;&lt;/script&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b><code>&lt;link rel="icon"&gt;</code></b>
+  <p>The favicon in the tab and bookmarks bar. Most browsers also auto-find
+  <code>/favicon.ico</code> — the explicit link is for anything custom.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b><code>&lt;link rel="stylesheet"&gt;</code></b>
+  <p>How CSS attaches: <code>rel</code> says what the resource is, <code>href</code>
+  where it is. Always in the head.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>&lt;script src="…" defer&gt;</code></b>
+  <p><code>defer</code> runs the script only after the HTML has fully parsed — the
+  reliable modern default, so your JS never grabs an element that doesn't exist yet.
+  Note <code>&lt;script&gt;</code> is <em>not</em> a void element: it needs its
+  closing tag.</p></div></div>
+
+<h2>lang: the whole page's accent</h2>
+<pre><code>&lt;html lang="en-US"&gt;
+  …
+  &lt;p&gt;Japanese example: &lt;span lang="ja"&gt;ご飯が熱い。&lt;/span&gt;.&lt;/p&gt;</code></pre>
+<p>Set the document language on <code>&lt;html&gt;</code> (search indexing, correct
+screen-reader pronunciation); switch languages inline with <code>lang</code> on the
+spanning element.</p>
+
+<h2>Exercise — from the real MDN challenge (Marking up a letter, head part)</h2>
+<p>Build just the head of the university-letter document: UTF-8 charset, the author
+"Dr. Eleanor Gaye" in a meta tag, language <code>en-US</code>, title "Awesome science
+application correspondence", and this CSS in the appropriate element:</p>
+<pre><code>body { font: 1.2em / 1.5 system-ui; }
+.sender-column { text-align: right; }
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.3em; }</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="en-US"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="author" content="Dr. Eleanor Gaye" /&gt;
+    &lt;title&gt;Awesome science application correspondence&lt;/title&gt;
+    &lt;style&gt;
+      body {
+        font: 1.2em / 1.5 system-ui;
+      }
+
+      .sender-column {
+        text-align: right;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      h2 {
+        font-size: 1.3em;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- the letter body, from the full challenge on MDN --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="2">
+  <p>1. &lt;title&gt; and &lt;h1&gt; differ how?</p>
+  <button>title is for the body; h1 is for the head</button>
+  <button>h1 is metadata; title is visible content</button>
+  <button>h1 titles the content; title is the document's metadata</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>2. What became of &lt;meta name="keywords"&gt;?</p>
+  <button>It became required for search indexing</button>
+  <button>Search engines ignore it: spammers ruined it</button>
+  <button>It was merged into the description meta</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>3. What does defer do on a script tag?</p>
+  <button>Runs the script after the HTML finishes parsing</button>
+  <button>Delays the download until the user scrolls</button>
+  <button>Marks the script as optional for old browsers</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. Which element is not a void element?</p>
+  <button>&lt;meta&gt;</button>
+  <button>&lt;link&gt;</button>
+  <button>&lt;script&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>5. What do Open Graph meta tags control?</p>
+  <button>The browser tab icon and color</button>
+  <button>The card shown when the page is shared socially</button>
+  <button>The page's language and encoding</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>6. Why set lang on &lt;html&gt;?</p>
+  <button>Screen readers need it to pronounce the page correctly</button>
+  <button>Browsers need it to pick the character encoding</button>
+  <button>Validators reject documents without a lang attribute</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Webpage_metadata"><b>Primary:</b> MDN — What's in the head?</a></li>
+  <li><a href="https://ogp.me/">Open Graph protocol</a> — the spec behind social cards</li>
+</ul>
+<p>Reference: <a href="../reference/document-head.html">Document head reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what other link rel values
+exist?", "what does viewport meta actually do?", "how does the head relate to the
+critical rendering path?" Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

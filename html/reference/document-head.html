@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML document head reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Document head</h1>
+  <p class="lede">The metadata container: what the browser, search engines, and social networks know before they render anything.</p>
+
+  <h2>The residents</h2>
+  <table>
+    <tr><th>Element</th><th>For</th></tr>
+    <tr><td><code>&lt;title&gt;</code></td><td>Tab text, bookmark name, search-result headline. Titles the <em>document</em>; <code>&lt;h1&gt;</code> titles the <em>content</em>.</td></tr>
+    <tr><td><code>&lt;meta charset="utf-8"&gt;</code></td><td>Character encoding — always first in the head.</td></tr>
+    <tr><td><code>&lt;meta name="author" content&gt;</code></td><td>Who wrote the page.</td></tr>
+    <tr><td><code>&lt;meta name="description" content&gt;</code></td><td>The sentence search engines show under your link. (The <code>keywords</code> meta is dead — spammers killed it.)</td></tr>
+    <tr><td><code>&lt;meta property="og:*" content&gt;</code></td><td><b>Open Graph</b>: <code>og:title</code>, <code>og:description</code>, <code>og:image</code> — the card shown when the page is shared.</td></tr>
+    <tr><td><code>&lt;link rel="icon" href&gt;</code></td><td>Favicon (tab, bookmarks). Browsers also auto-find <code>/favicon.ico</code>.</td></tr>
+    <tr><td><code>&lt;link rel="stylesheet" href&gt;</code></td><td>Attaches CSS. Always in the head.</td></tr>
+    <tr><td><code>&lt;script src defer&gt;</code></td><td>Attaches JS. <code>defer</code> runs it after the HTML finishes parsing — the reliable default. Not a void element: needs <code>&lt;/script&gt;</code>.</td></tr>
+  </table>
+
+  <h2>Language</h2>
+  <pre><code>&lt;html lang="en-US"&gt;
+  &lt;p&gt;Japanese example: &lt;span lang="ja"&gt;ご飯が熱い。&lt;/span&gt;.&lt;/p&gt;</code></pre>
+  <p>Document language on <code>&lt;html&gt;</code> (search indexing, screen-reader
+  pronunciation); inline switches with <code>lang</code> on the spanning element.</p>
+
+  <h2>Minimal production head</h2>
+  <pre><code>&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;meta name="description" content="One honest sentence."&gt;
+  &lt;title&gt;Page title&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+  &lt;script src="app.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;</code></pre>
+
+  <p><a href="../lessons/0012-document-head.html">Lesson 12</a> · <a href="anatomy-cheatsheet.html">Anatomy</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

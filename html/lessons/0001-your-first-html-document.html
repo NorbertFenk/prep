@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 1 — Your first HTML document</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0001 · HTML · ~20 min · start here</p>
+<h1>Your first HTML document</h1>
+<p>You already know what happens to a page after the browser receives it (see
+the <a href="../../how-the-internet-works/lessons/0006-browser-rendering.html">rendering lesson</a>).
+Today you build the thing it receives: a complete HTML document, on purpose.</p>
+
+<h2>Write it yourself</h2>
+<p>Create a file called <code>index.html</code>, type this in — typing, not pasting,
+is the point — then open it in your browser:</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;My test page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Some music&lt;/h1&gt;
+    &lt;p&gt;I really enjoy &lt;strong&gt;playing the drums&lt;/strong&gt;.&lt;/p&gt;
+    &lt;img src="https://www.cygnus-x1.net/links/rush/images/albums/sectors/sector2-movingpictures-cover-s.jpg" alt="Rush Moving Pictures album cover" width="300"&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Save, switch to the browser, refresh. Edit the text, refresh again. This loop —
+save, refresh, look — is the entire development cycle for this course.</p>
+
+<h2>What each part is for</h2>
+<div class="step"><div class="num">1</div><div>
+  <b><code>&lt;!doctype html&gt;</code></b>
+  <p>A historical artifact that must still be present: it used to link to a rulebook
+  the page promised to follow. <code>&lt;!doctype html&gt;</code> is the shortest
+  valid string, and it's all you'll ever need.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b><code>&lt;html lang="en"&gt;</code> — the root</b>
+  <p>Wraps everything. The <code>lang</code> attribute tells search engines and
+  screen readers which language the page speaks — screen readers pronounce
+  <em>six</em> differently in French and English.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>&lt;head&gt;</code> — the part nobody sees</b>
+  <p>Metadata: what the page <em>is</em>. <code>&lt;meta charset="utf-8"&gt;</code>
+  declares the character encoding so any human language renders correctly.
+  <code>&lt;title&gt;</code> is the browser-tab text, the bookmark name, and the
+  headline in search results.</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b><code>&lt;body&gt;</code> — the part everybody sees</b>
+  <p>All content: text, images, video, everything displayed. In the example,
+  <code>&lt;h1&gt;</code> marks a top-level heading, <code>&lt;p&gt;</code> a paragraph,
+  <code>&lt;strong&gt;</code> gives a word strong importance, and <code>&lt;img&gt;</code>
+  embeds an image.</p></div></div>
+
+<h2>Elements, tags, attributes</h2>
+<p>An <b>element</b> is the complete package: opening tag, content, closing tag.
+The element <em>is</em> the meaning ("this is a paragraph"); the tag is just its punctuation.
+Attributes live in the opening tag: <code>name="value"</code>, separated by spaces:</p>
+<pre><code>&lt;p&gt;My cat is &lt;strong&gt;very&lt;/strong&gt; grumpy.&lt;/p&gt;
+&lt;img src="cat.jpg" alt="A grumpy cat" width="300"&gt;</code></pre>
+<p>Two rules that prevent most early bugs: <b>nest, don't overlap</b> —
+close things in the reverse order you opened them — and <b>always quote attribute
+values</b>. <code>title=The Mozilla homepage</code> silently becomes three
+attributes: <code>title="The"</code> plus boolean <code>Mozilla</code> and
+<code>homepage</code>.</p>
+<p>A few elements have no content to wrap, so they have no closing tag —
+<b>void elements</b>: <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;meta&gt;</code>,
+<code>&lt;link&gt;</code>. You'll also meet <b>boolean attributes</b> like
+<code>disabled</code> that are true just by being present.</p>
+
+<h2>Check yourself (instant feedback)</h2>
+
+<div class="q" data-answer="1">
+  <p>1. What does <code>&lt;meta charset="utf-8"&gt;</code> do?</p>
+  <button>It declares the encoding used</button>
+  <button>It declares the page language</button>
+  <button>It declares the frame policy</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>2. What appears in the browser tab, the bookmark, and the search result?</p>
+  <button>The first &lt;h1&gt; on the page</button>
+  <button>The &lt;body&gt; element content</button>
+  <button>The &lt;title&gt; element content</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>3. Which is correctly nested?</p>
+  <button>&lt;p&gt;My cat is &lt;strong&gt;very grumpy.&lt;/p&gt;&lt;/strong&gt;</button>
+  <button>&lt;p&gt;My cat is &lt;strong&gt;very&lt;/strong&gt; grumpy.&lt;/p&gt;</button>
+  <button>&lt;strong&gt;&lt;p&gt;My cat is very grumpy.&lt;/strong&gt;&lt;/p&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. Why always quote attribute values?</p>
+  <button>Unquoted values are only supported in modern browsers</button>
+  <button>Quotes make the file smaller for caching</button>
+  <button>Unquoted values with spaces split into separate attributes</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>5. Which of these is a void element?</p>
+  <button>&lt;br&gt;</button>
+  <button>&lt;ul&gt;</button>
+  <button>&lt;em&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>6. What is the doctype for?</p>
+  <button>It sets the page language for screen readers</button>
+  <button>It must be present; historically it linked to a rulebook the page followed</button>
+  <button>It loads the browser's default stylesheet</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax"><b>Primary:</b> MDN — Basic HTML syntax</a> — the article this lesson is grounded in.</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Webpage_metadata">MDN — What's in the head?</a> — for lesson 12, or if the head already interests you.</li>
+</ul>
+<p>Reference: <a href="../reference/anatomy-cheatsheet.html">Anatomy cheat sheet</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "why is <code>&lt;meta charset&gt;</code>
+in every page?", "what's a boolean attribute?", "why did my image not show up?"
+Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

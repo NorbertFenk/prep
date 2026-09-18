@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML structure and landmarks reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Structure &amp; landmarks</h1>
+  <p class="lede">The semantic page skeleton — what screen readers navigate by.</p>
+
+  <h2>The landmarks</h2>
+  <pre><code>&lt;header&gt;  — intro content: global (child of body) or per-article
+&lt;nav&gt;     — the main navigation only; secondary links stay out
+&lt;main&gt;    — unique content of THIS page: exactly one, in body directly
+  &lt;article&gt; — self-contained: makes sense on its own (post, card)
+  &lt;section&gt; — thematic grouping; begin it with a heading
+  &lt;aside&gt;   — tangential: related links, author bio
+&lt;footer&gt;  — end content: fine print, credits, contacts</code></pre>
+
+  <h2>Decisions</h2>
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>Makes sense on its own, outside the page?</td><td><code>&lt;article&gt;</code></td></tr>
+    <tr><td>A themed chunk of this page?</td><td><code>&lt;section&gt;</code> (+ heading)</td></tr>
+    <tr><td>Indirectly related content?</td><td><code>&lt;aside&gt;</code></td></tr>
+    <tr><td>No semantic element fits, need a CSS/JS hook?</td><td><code>&lt;div&gt;</code> (block) / <code>&lt;span&gt;</code> (inline) + <code>class</code> — the honest fallback, use sparingly</td></tr>
+  </table>
+
+  <h2>Why it pays</h2>
+  <ul>
+    <li>Screen readers list landmarks as a menu: "jump to navigation", "jump to main". Div soup = empty menu = users wade through everything, every page.</li>
+    <li>Search engines weigh headings and structure.</li>
+    <li>Designs change; the structure (and every tool built on it) survives.</li>
+  </ul>
+
+  <p><a href="../lessons/0009-semantic-structure.html">Lesson 9</a> · <a href="tables.html">Tables</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 9 — Structure: semantic page landmarks</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0009 · HTML · ~30 min · prereq: 0002, 0008</p>
+<h1>Structure: semantic page landmarks</h1>
+<p>Every page has the same anatomy: a header strip, navigation, the main content,
+maybe a sidebar, a footer. HTML has an element for each — and using them instead of
+anonymous <code>&lt;div&gt;</code>s is what turns pixels into a structure.</p>
+
+<h2>The landmarks</h2>
+<pre><code>&lt;header&gt;      &lt;!-- introductory content for the page (or a section) --&gt;
+&lt;nav&gt;         &lt;!-- the main navigation --&gt;
+&lt;main&gt;        &lt;!-- the unique content of THIS page: one per page --&gt;
+  &lt;article&gt;   &lt;!-- self-contained: makes sense on its own --&gt;
+  &lt;section&gt;   &lt;!-- a thematic grouping; start it with a heading --&gt;
+  &lt;aside&gt;     &lt;!-- tangential content: related links, author bio --&gt;
+&lt;/main&gt;
+&lt;footer&gt;      &lt;!-- end content: fine print, credits, contacts --&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b><code>&lt;main&gt;</code>: one per page</b>
+  <p>Directly inside <code>&lt;body&gt;</code>, not nested in other elements — it's
+  exactly the part that makes this page this page.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b><code>&lt;article&gt;</code> vs <code>&lt;section&gt;</code></b>
+  <p>An article makes sense on its own (a blog post, a product card); a section is
+  a themed piece of the page (a mini map, a set of headlines). They nest both ways,
+  and sections should begin with a heading.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>&lt;header&gt;</code> and <code>&lt;footer&gt;</code> are contextual</b>
+  <p>Child of <code>&lt;body&gt;</code>: the global page header/footer. Child of an
+  article: that article's own header/footer. Not the same thing as
+  <code>&lt;title&gt;</code> or headings.</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b><code>&lt;div&gt;</code> and <code>&lt;span&gt;</code>: the honest fallbacks</b>
+  <p>When no semantic element fits and you need a hook for CSS or JS:
+  <code>&lt;div&gt;</code> (block) or <code>&lt;span&gt;</code> (inline), usually with
+  a <code>class</code>. They mean nothing — that's their job. But div-itis clutters
+  documents; use them only when nothing better exists.</p></div></div>
+
+<h2>Why bother: the screen reader dividend</h2>
+<p>Assistive tech exposes landmarks as a menu: "find the main navigation",
+"jump to main content". With div soup, that menu is empty and users must wade
+through everything, every time. Semantics also feed SEO. The look changes at a
+designer's whim; the meaning — and the navigation built on it — survives.</p>
+
+<h2>Exercise — the real MDN challenge (Birdwatching site)</h2>
+<p>Take this unstructured page and add: a <code>&lt;header&gt;</code> wrapping the
+<code>&lt;h1&gt;</code> (with the dove logo inside it, empty alt) and the nav menu;
+a <code>&lt;main&gt;</code> containing an <code>&lt;article&gt;</code> (the welcome
+text) and an <code>&lt;aside&gt;</code> (four thumbnail images, each wrapped in a
+link to its full-size version, each with real alt text); and a
+<code>&lt;footer&gt;</code> for the credits:</p>
+<pre><code>&lt;h1&gt;Birdwatching&lt;/h1&gt;
+
+Home Get started Photos Gear Forum
+
+&lt;h2&gt;Welcome&lt;/h2&gt;
+
+&lt;p&gt;
+  Welcome to our fake birdwatching site. If this were a real site, it would
+  be the ideal place to come to learn more about birdwatching, whether you
+  are a beginner looking to learn how to get into birding, or an expert
+  wanting to share ideas, tips, and photos with other like-minded people.
+&lt;/p&gt;
+
+&lt;p&gt;
+  So don't waste time! Get what you need, then turn off that computer and
+  get out into the great outdoors!
+&lt;/p&gt;
+
+&lt;h2&gt;Favorite photos&lt;/h2&gt;
+
+&lt;!-- four thumbnail images go here, linking to the full-size versions --&gt;
+
+&lt;p&gt;This fake website example is CC0 — any part of this code may be reused
+in any way you wish. Original example written by Chris Mills, 2016.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://game-icons.net/lorc/originals/dove.html"&gt;Dove icon&lt;/a&gt; by Lorc.&lt;/p&gt;</code></pre>
+<p>Assets:
+logo <code>https://mdn.github.io/shared-assets/images/examples/learn/birds/dove.png</code>;
+thumbnails/panels <code>…/learn/birds/favorite-bird-1_th.jpg</code> (and
+<code>-2</code>, <code>-3</code>, <code>-4</code>; drop <code>_th</code> for the
+full-size versions).</p>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;header&gt;
+  &lt;h1&gt;
+    Birdwatching
+    &lt;img src="https://mdn.github.io/shared-assets/images/examples/learn/birds/dove.png" alt="" /&gt;
+  &lt;/h1&gt;
+
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Get started&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Photos&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Gear&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#"&gt;Forum&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Welcome&lt;/h2&gt;
+    &lt;p&gt;Welcome to our fake birdwatching site…&lt;/p&gt;
+    &lt;p&gt;So don't waste time!…&lt;/p&gt;
+  &lt;/article&gt;
+
+  &lt;aside&gt;
+    &lt;h2&gt;Favorite photos&lt;/h2&gt;
+    &lt;a href="https://mdn.github.io/shared-assets/images/examples/learn/birds/favorite-bird-1.jpg"&gt;
+      &lt;img src="https://mdn.github.io/shared-assets/images/examples/learn/birds/favorite-bird-1_th.jpg"
+           alt="Small black bird, black claws, long black slender beak" /&gt;
+    &lt;/a&gt;
+    &lt;!-- …three more, each with real alt text --&gt;
+  &lt;/aside&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;This fake website example is CC0 — any part of this code may be reused
+  in any way you wish. Original example written by Chris Mills, 2016.&lt;/p&gt;
+  &lt;p&gt;&lt;a href="http://game-icons.net/lorc/originals/dove.html"&gt;Dove icon&lt;/a&gt; by Lorc.&lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. How many &lt;main&gt; elements belong on a page?</p>
+  <button>Exactly none</button>
+  <button>Exactly one</button>
+  <button>Exactly two</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>2. What makes &lt;article&gt; the right choice?</p>
+  <button>It makes sense on its own, without the rest of the page</button>
+  <button>It is shorter than the page's other content</button>
+  <button>It is the first element inside &lt;main&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>3. When is &lt;div&gt; the correct element?</p>
+  <button>Whenever you need a visual container</button>
+  <button>When CSS needs to target a heading</button>
+  <button>When no semantic element fits and you need a styling hook</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>4. What does a &lt;header&gt; inside an &lt;article&gt; mean?</p>
+  <button>The site's global header</button>
+  <button>That article's own introductory content</button>
+  <button>An invalid nesting; headers only belong to body</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>5. What's the concrete accessibility payoff of landmarks?</p>
+  <button>Pages load without JavaScript</button>
+  <button>Screen readers skip the footer automatically</button>
+  <button>Screen readers list landmarks: jump straight to nav or main</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Structuring_documents"><b>Primary:</b> MDN — Structuring documents</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Structuring_a_page_of_content">MDN — Challenge: Birdwatching site</a> — today's exercise, with CSS included</li>
+</ul>
+<p>Reference: <a href="../reference/structure-landmarks.html">Structure &amp; landmarks reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what happened to
+&lt;article&gt; vs &lt;section&gt; debates?", "does &lt;aside&gt; hurt SEO?",
+"how do landmarks map to ARIA roles?" Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 3 — Links: the web's reason to exist</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0003 · HTML · ~25 min · prereq: 0002</p>
+<h1>Links: the web's reason to exist</h1>
+<p>Hyperlinks are what makes the Web <em>a web</em>. No links, no web. They're also
+where paths, accessibility, and honesty all intersect — interviewers love them.</p>
+
+<h2>The anatomy</h2>
+<pre><code>&lt;p&gt;&lt;a href="https://www.firefox.com/"&gt;Download Firefox&lt;/a&gt;&lt;/p&gt;</code></pre>
+<p><code>&lt;a&gt;</code> — the <b>anchor</b> — wraps content and turns it into a link.
+The <code>href</code> attribute holds the destination URL. <code>title</code> adds a
+hover tooltip of supporting information.</p>
+
+<h2>Paths: same directory, down, up</h2>
+<pre><code>&lt;a href="contacts.html"&gt;                    &lt;!-- same directory --&gt;
+&lt;a href="projects/index.html"&gt;              &lt;!-- down into a subdirectory --&gt;
+&lt;a href="../pdfs/project-brief.pdf"&gt;        &lt;!-- up one level, then down --&gt;
+&lt;a href="https://www.some-other-site.com"&gt;  &lt;!-- absolute: another site --&gt;</code></pre>
+<p><b>Internal links</b> (your own site) should use relative paths — if the site
+moves domains, relative paths keep working and absolute ones all break.
+<b>External links</b> need the full URL: the browser can't find another site from
+a path alone.</p>
+
+<h2>Fragments: link to the middle of a page</h2>
+<p>Any element with an <code>id</code> can be linked to with a <code>#fragment</code>:</p>
+<pre><code>&lt;h2 id="mailing_address"&gt;Mailing address&lt;/h2&gt;
+&lt;p&gt;Use our &lt;a href="contacts.html#mailing_address"&gt;mailing address&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Or jump to our &lt;a href="#mailing_address"&gt;address on this page&lt;/a&gt;.&lt;/p&gt;</code></pre>
+
+<h2>Email links</h2>
+<pre><code>&lt;a href="mailto:whales@example.com?subject=Question%20about%20Whales"&gt;email us&lt;/a&gt;</code></pre>
+<p>The <code>mailto:</code> scheme opens the visitor's mail client; query-style
+parameters prefill <code>subject</code>, <code>cc</code>, <code>body</code>. Spaces
+in values must be percent-encoded (<code>%20</code>).</p>
+
+<h2>Link text is content, not decoration</h2>
+<div class="step"><div class="num">1</div><div>
+  <b>Say where the link goes</b>
+  <p>Screen reader users jump from link to link, out of context — a page of
+  "click here" links is unusable. Search engines index link text too.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Signpost surprises</b>
+  <p>Linking a 4MB PDF? Say so: "download our factfile (PDF, 4MB)". Low-bandwidth
+  users deserve the warning.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b>Never repeat the URL as text, never say "link"</b>
+  <p>Both are noise: screen readers already announce links, and URLs read aloud
+  letter-by-letter are painful.</p></div></div>
+
+<h2>Exercise 1 — the real MDN task (Links 1)</h2>
+<p>Fix the two links on a whales information page: the first should go to
+<code>whales.html</code> (same directory) with a tooltip saying the page covers
+Blue Whales and Sperm Whales; the second should open an email to
+<code>whales@example.com</code> with the subject "Question about Whales":</p>
+<pre><code>&lt;h1&gt;Information on Whales&lt;/h1&gt;
+
+&lt;p&gt;
+  For more information on our conservation activities and which Whales we study,
+  see our &lt;a&gt;Whales page&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+  If you want to ask our team more questions, feel free to &lt;a&gt;email us&lt;/a&gt;.
+&lt;/p&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;a href="whales.html" title="Includes information on Blue Whales and Sperm Whales"&gt;
+Whales page&lt;/a&gt;
+
+&lt;a href="mailto:whales@example.com?subject=Question%20about%20Whales"&gt;
+email us&lt;/a&gt;</code></pre>
+</details>
+
+<h2>Exercise 2 — the real MDN task (Links 2)</h2>
+<p>Four links, four destinations: <code>blue/blue-whale.jpg</code> (subdirectory),
+<code>narwhal.jpg</code> in a directory <em>above</em> the current one, the UK
+Google image search (<code>https://www.google.co.uk/imghp</code>), and the paragraph
+with <code>id="bottom"</code> at the foot of the page:</p>
+<pre><code>&lt;h1&gt;List path tests&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a&gt;Link me to the blue whale image&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a&gt;Link me to the narwhal image&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a&gt;Link me to Google image search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a&gt;Link me to the paragraph at the bottom of the page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div&gt;&lt;/div&gt;
+
+&lt;p id="bottom"&gt;The bottom of the page!&lt;/p&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;li&gt;&lt;a href="blue/blue-whale.jpg"&gt;
+  Link me to the blue whale image
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="../narwhal/narwhal.jpg"&gt;
+  Link me to the narwhal image
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.google.co.uk/imghp"&gt;
+  Link me to Google image search
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#bottom"&gt;
+  Link me to the paragraph at the bottom of the page
+&lt;/a&gt;&lt;/li&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. Why prefer relative paths for links within your own site?</p>
+  <button>Relative paths load without a DNS lookup</button>
+  <button>They keep working if the site moves to another domain</button>
+  <button>They are the only paths validators accept</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>2. What does href="../pdfs/brief.pdf" mean?</p>
+  <button>A pdfs folder at the site root</button>
+  <button>A pdfs folder next to the current page</button>
+  <button>Go up one directory, then into pdfs</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>3. How do you link to the middle of another page?</p>
+  <button>Link to the page URL plus #id-of-element</button>
+  <button>Link to the page and mention the section in the text</button>
+  <button>Give the target element a name attribute and use ?name=</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>4. Why is "click here" bad link text?</p>
+  <button>It breaks search engine crawlers</button>
+  <button>Out of context, screen readers hear a page of identical meaningless links</button>
+  <button>It makes the link slower to activate</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>5. What must spaces in a mailto subject line become?</p>
+  <button>Percent-encoded as %20</button>
+  <button>Replaced with a plus</button>
+  <button>Replaced with a dash</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Creating_links"><b>Primary:</b> MDN — Creating links</a> — the full article behind this lesson</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Test_your_skills/Links">MDN — Test your skills: Links</a> — today's exercises, plus a link-text rewrite task</li>
+</ul>
+<p>Reference: <a href="../reference/links-paths.html">Links &amp; paths reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "why is it called an anchor?",
+"what's the download attribute?", "when should target=_blank be used?"
+Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

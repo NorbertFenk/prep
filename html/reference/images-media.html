@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML images and media reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Images &amp; media</h1>
+  <p class="lede"><code>&lt;img&gt;</code>, <code>&lt;figure&gt;</code>, <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code> — and the alt decision tree.</p>
+
+  <h2>&lt;img&gt; attributes</h2>
+  <table>
+    <tr><th>Attribute</th><th>For</th></tr>
+    <tr><td><code>src</code></td><td>Path/URL — required. Relative for your own files; never hotlink others' images without permission.</td></tr>
+    <tr><td><code>alt</code></td><td>Text stand-in for those who can't see it. Content → brief description. Decoration → <code>alt=""</code> (empty, never missing). In a link → describe the destination.</td></tr>
+    <tr><td><code>width</code>/<code>height</code></td><td>Reserve the box: no layout reflow when the image arrives.</td></tr>
+    <tr><td><code>title</code></td><td>Hover tooltip; never a substitute for alt.</td></tr>
+  </table>
+
+  <h2>Captions</h2>
+  <pre><code>&lt;figure&gt;
+  &lt;img src="logo.png" alt="description for non-visual users" width="446" height="460"&gt;
+  &lt;figcaption&gt;Visible context, alongside — not a repeat of alt&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+
+  <h2>&lt;video&gt; / &lt;audio&gt;</h2>
+  <table>
+    <tr><th>Attribute / element</th><th>For</th></tr>
+    <tr><td><code>controls</code></td><td>Browser's play/pause/volume UI — users must be able to stop playback.</td></tr>
+    <tr><td><code>&lt;source src type&gt;</code></td><td>Multiple formats; <code>type</code> (MIME) lets the browser skip unsupported ones without downloading.</td></tr>
+    <tr><td>fallback content</td><td>Inside the element, non-<code>&lt;source&gt;</code>: shown when media can't play (e.g. a download link).</td></tr>
+    <tr><td><code>autoplay</code> + <code>muted</code></td><td>Must pair: silent autoplay only; browsers (and users) reject noisy autoplay.</td></tr>
+    <tr><td><code>loop</code> · <code>preload="auto|metadata|none"</code></td><td>Restart forever · how eagerly to buffer.</td></tr>
+    <tr><td><code>poster</code> · <code>width/height</code></td><td>Video only — splash image and box size.</td></tr>
+    <tr><td><code>&lt;track kind="subtitles" srclang label&gt;</code></td><td>WebVTT captions/subtitles; <code>srclang</code> + <code>label</code> identify the language in the menu.</td></tr>
+  </table>
+  <p>Vocabulary: a media file is a <b>container</b> (MP4, WebM) holding tracks encoded by a <b>codec</b> (H.264, VP9).</p>
+
+  <h2>SVG: two ways in</h2>
+  <table>
+    <tr><th>Via</th><th>Trade-off</th></tr>
+    <tr><td><code>&lt;img src="logo.svg"&gt;</code></td><td>Cached, alt works — but no CSS/JS access to the shapes.</td></tr>
+    <tr><td>Inline <code>&lt;svg&gt;…&lt;/svg&gt;</code></td><td>Shapes join the DOM: styleable, animatable — but no caching, bloats each page.</td></tr>
+  </table>
+
+  <p><a href="../lessons/0005-images.html">Lesson 5</a> · <a href="../lessons/0006-video-and-audio.html">Lesson 6</a> · <a href="embedding-security.html">Embedding</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

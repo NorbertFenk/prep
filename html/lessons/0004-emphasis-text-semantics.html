@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 4 — Emphasis, importance, and text semantics</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0004 · HTML · ~25 min · prereq: 0002</p>
+<h1>Emphasis, importance, and text semantics</h1>
+<p>Most of a web page is text. HTML has precise elements for saying <em>why</em> a
+stretch of text is different — and a graveyard of deprecated elements that only
+said how it should look.</p>
+
+<h2>&lt;em&gt; and &lt;strong&gt;</h2>
+<pre><code>&lt;p&gt;There are &lt;strong&gt;two&lt;/strong&gt; things I care about —
+&lt;strong&gt;music&lt;/strong&gt; and &lt;strong&gt;friends&lt;/strong&gt;.
+Someday I &lt;em&gt;might&lt;/em&gt; get my friends interested in each other,
+&lt;em&gt;and&lt;/em&gt; my music!&lt;/p&gt;</code></pre>
+<p><code>&lt;em&gt;</code> marks <b>emphasis</b> — stress on a word that would change
+if spoken ("Someday I <em>might</em>…"). <code>&lt;strong&gt;</code> marks
+<b>strong importance</b> — words that genuinely matter: warnings, key terms.
+Browsers render them italic and bold, but the rendering is the side effect;
+the meaning is the point.</p>
+
+<h2>The &lt;b&gt;/&lt;i&gt;/&lt;u&gt; question</h2>
+<p>These are <b>presentational elements</b> — born in an era when CSS barely
+existed. HTML5 repurposed them with narrow semantic roles, but the honest rule:
+<b>use them only when there's no more suitable element — and there usually is.</b></p>
+<pre><code>&lt;p&gt;The Ruby-throated Hummingbird (&lt;i&gt;Archilochus colubris&lt;/i&gt;) is the most
+common hummingbird in Eastern North America.&lt;/p&gt;  &lt;!-- i: technical term --&gt;
+
+&lt;p&gt;Someday I'll learn how to &lt;u class="spelling-error"&gt;spel&lt;/u&gt; better.&lt;/p&gt;  &lt;!-- u: misspelling --&gt;</code></pre>
+<p>Truly presentational relics like <code>&lt;font&gt;</code> and <code>&lt;big&gt;</code>
+are deprecated — never use them. And never underline non-links: on the web,
+underline <em>means</em> link.</p>
+
+<h2>Advanced text semantics</h2>
+<div class="step"><div class="num">1</div><div>
+  <b>Quotations</b>
+  <p><code>&lt;blockquote&gt;</code> for a block-level quote (with an optional
+  <code>cite</code> attribute for the source URL); <code>&lt;q&gt;</code> for short
+  inline quotes. <code>&lt;cite&gt;</code> holds the <em>title</em> of the work cited.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Abbreviations</b>
+  <p><code>&lt;abbr title="HyperText Markup Language"&gt;HTML&lt;/abbr&gt;</code> —
+  expansion shown as a tooltip, readable by assistive tech.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b>Contact details</b>
+  <p><code>&lt;address&gt;</code> marks contact info for the nearest
+  <code>&lt;article&gt;</code> or <code>&lt;body&gt;</code> — author, or the site's
+  contact — not arbitrary postal addresses.</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b>Machine-readable dates</b>
+  <p><code>&lt;time datetime="2019-12-25"&gt;December 25th 2019&lt;/time&gt;</code> —
+  humans write dates a hundred ways; <code>datetime</code> gives computers exactly one.</p></div></div>
+<div class="step"><div class="num">5</div><div>
+  <b>Superscript and subscript</b>
+  <p><code>H&lt;sub&gt;2&lt;/sub&gt;O</code>, <code>25&lt;sup&gt;th&lt;/sup&gt;</code>,
+  <code>10&lt;sup&gt;3&lt;/sup&gt;</code> — correct <em>semantics</em> for formulae,
+  ordinals, and exponents, not just prettier rendering.</p></div></div>
+<div class="step"><div class="num">6</div><div>
+  <b>Code</b>
+  <p><code>&lt;code&gt;</code> for inline snippets; <code>&lt;pre&gt;</code> to keep
+  whitespace (their nesting, <code>&lt;pre&gt;&lt;code&gt;</code>, is this course's
+  standard code block).</p></div></div>
+
+<h2>Exercise 1 — the real MDN task (Text basics 4)</h2>
+<p>Mark two words with strong importance and two with emphasis:</p>
+<pre><code>&lt;h1&gt;Emphasis and importance&lt;/h1&gt;
+
+&lt;p&gt;
+  There are two things I care about — music and friends. Someday I might be
+  able to get my friends interested in each other, and my music!
+&lt;/p&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;p&gt;
+  There are &lt;strong&gt;two&lt;/strong&gt; things I care about —
+  &lt;strong&gt;music&lt;/strong&gt; and &lt;strong&gt;friends&lt;/strong&gt;. Someday I
+  &lt;em&gt;might&lt;/em&gt; be able to get my friends interested in each other,
+  &lt;em&gt;and&lt;/em&gt; my music!
+&lt;/p&gt;</code></pre>
+</details>
+
+<h2>Exercise 2 — the real MDN task (Advanced text 1)</h2>
+<p>Add four kinds of semantics: turn the second paragraph into a block quote cited
+from the MDN Accessibility page; mark <code>HTML</code> and <code>CSS</code> as
+abbreviations with expansions; fix the chemical formulae and the dates; wrap the
+dates in machine-readable elements:</p>
+<pre><code>&lt;h1&gt;Advanced text semantics&lt;/h1&gt;
+
+&lt;p&gt;Let's start with a quote:&lt;/p&gt;
+
+&lt;p&gt;
+  HTML, Hypertext Markup Language is by default accessible, if used correctly.
+&lt;/p&gt;
+
+&lt;p&gt;CSS can also be used to make web pages more, or less, accessible.&lt;/p&gt;
+
+&lt;p&gt;Chemical Formulae: H2O (Water), C2H6O (Ethanol).&lt;/p&gt;
+
+&lt;p&gt;
+  Dates: December 25th 2019 (Christmas Day), November 2nd 2019 (Día de los
+  Muertos).
+&lt;/p&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;p&gt;Let's start with a quote:&lt;/p&gt;
+
+&lt;blockquote cite="https://developer.mozilla.org/en-US/docs/Learn/Accessibility"&gt;
+  &lt;p&gt;
+    &lt;abbr title="HyperText Markup Language"&gt;HTML&lt;/abbr&gt;, Hypertext Markup
+    Language is by default accessible, if used correctly.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+  &lt;abbr title="Cascading Style Sheets"&gt;CSS&lt;/abbr&gt;, Cascading Style Sheets, can
+  also be used to make web pages more, or less, accessible.
+&lt;/p&gt;
+
+&lt;p&gt;
+  Chemical Formulae: H&lt;sub&gt;2&lt;/sub&gt;O (Water), C&lt;sub&gt;2&lt;/sub&gt;H&lt;sub&gt;6&lt;/sub&gt;O
+  (Ethanol).
+&lt;/p&gt;
+
+&lt;p&gt;
+  Dates:
+  &lt;time datetime="2019-12-25"&gt;December 25&lt;sup&gt;th&lt;/sup&gt; 2019&lt;/time&gt;
+  (Christmas Day),
+  &lt;time datetime="2019-11-02"&gt;November 2&lt;sup&gt;nd&lt;/sup&gt; 2019&lt;/time&gt; (Día de los
+  Muertos).
+&lt;/p&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. What does &lt;strong&gt; mark?</p>
+  <button>Text rendered in a bolder weight</button>
+  <button>Words of strong importance: warnings, key points</button>
+  <button>Words carrying stressed spoken emphasis</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>2. Why are &lt;font&gt; and &lt;big&gt; never used?</p>
+  <button>They are slower to parse than CSS rules</button>
+  <button>They only work when JavaScript is enabled</button>
+  <button>They are presentational and deprecated: style is CSS's job</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>3. What belongs in &lt;blockquote&gt;'s cite attribute?</p>
+  <button>The URL of the quoted source</button>
+  <button>The name of the quoted book</button>
+  <button>The author's email address</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>4. Why wrap dates in &lt;time datetime="…"&gt;?</p>
+  <button>Dates render consistently in every browser</button>
+  <button>The datetime gives computers one unambiguous format</button>
+  <button>The element is required inside &lt;abbr&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>5. Water's formula is marked up as…</p>
+  <button>H(small)2(small)O</button>
+  <button>H(upper)2(upper)O</button>
+  <button>H&lt;sub&gt;2&lt;/sub&gt;O</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Emphasis_and_importance"><b>Primary:</b> MDN — Emphasis and importance</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Advanced_text_features">MDN — Advanced text features</a> — quotes, abbr, address, time, sup/sub, code</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Test_your_skills/Advanced_HTML_text">MDN — Test: Advanced HTML text</a> — exercise 2's source</li>
+</ul>
+<p>Reference: <a href="../reference/text-semantics.html">Text semantics reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "when is &lt;i&gt; actually right?",
+"why doesn't anyone display the cite attribute?", "what's the difference between
+&lt;q&gt; and quotation marks?" Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

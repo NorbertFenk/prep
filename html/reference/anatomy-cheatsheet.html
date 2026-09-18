@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML anatomy cheat sheet</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Anatomy cheat sheet</h1>
+  <p class="lede">The document skeleton, the element anatomy, and the rules that prevent 90% of beginner bugs.</p>
+
+  <h2>The minimal valid page</h2>
+  <pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Page title&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;Visible content.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  <table>
+    <tr><th>Part</th><th>For</th></tr>
+    <tr><td><code>&lt;!doctype html&gt;</code></td><td>Historical artifact; must be first line. Shortest valid string.</td></tr>
+    <tr><td><code>&lt;html lang="…"&gt;</code></td><td>Root element; language for search engines and screen readers.</td></tr>
+    <tr><td><code>&lt;head&gt;</code></td><td>Metadata nobody sees: encoding, title, CSS/JS, icons.</td></tr>
+    <tr><td><code>&lt;meta charset="utf-8"&gt;</code></td><td>Character encoding; any human language renders correctly.</td></tr>
+    <tr><td><code>&lt;title&gt;</code></td><td>Tab text, bookmark name, search-result headline. Not the <code>&lt;h1&gt;</code>.</td></tr>
+    <tr><td><code>&lt;body&gt;</code></td><td>All displayed content.</td></tr>
+  </table>
+
+  <h2>Element anatomy</h2>
+  <pre><code>&lt;p class="note" title="extra info"&gt;content&lt;/p&gt;
+ └┬┘└──┬──┘└──────┬──────┘└──┬──┘└┬┘
+opening attributes       content closing
+ tag                     (inside)    tag</code></pre>
+  <ul>
+    <li><b>Element</b> = opening tag + content + closing tag. The element <em>is</em> the meaning.</li>
+    <li><b>Attributes</b>: <code>name="value"</code>, space-separated, in the opening tag. Always quote values.</li>
+    <li><b>Boolean attributes</b> are true by presence alone: <code>disabled</code>, <code>required</code>, <code>controls</code>.</li>
+  </ul>
+
+  <h2>Void elements</h2>
+  <p><code>&lt;img&gt;</code> · <code>&lt;br&gt;</code> · <code>&lt;meta&gt;</code> · <code>&lt;link&gt;</code> · <code>&lt;input&gt;</code> · <code>&lt;hr&gt;</code> — no content, no closing tag. <code>&lt;script&gt;</code> is <b>not</b> void: it needs <code>&lt;/script&gt;</code>.</p>
+
+  <h2>Rules that prevent most bugs</h2>
+  <table>
+    <tr><th>Rule</th><th>Why</th></tr>
+    <tr><td>Nest, don't overlap: close in reverse order</td><td>Overlapping tags make the browser guess; permissive parsing fixes things silently, sometimes wrongly.</td></tr>
+    <tr><td>Always quote attribute values</td><td><code>title=The Mozilla homepage</code> becomes three attributes: <code>title="The"</code> + two booleans.</td></tr>
+    <tr><td>Don't mix quote types</td><td>A stray single quote inside double quotes ends the value early.</td></tr>
+    <tr><td>Whitespace collapses on render</td><td>Indent for readability; <code>&lt;pre&gt;</code> is the only element that keeps it.</td></tr>
+  </table>
+
+  <h2>Character references</h2>
+  <table>
+    <tr><th>Literal</th><th>Reference</th><th>Mnemonic</th></tr>
+    <tr><td><code>&lt;</code></td><td><code>&amp;lt;</code></td><td>less than</td></tr>
+    <tr><td><code>&gt;</code></td><td><code>&amp;gt;</code></td><td>greater than</td></tr>
+    <tr><td><code>&amp;</code></td><td><code>&amp;amp;</code></td><td>ampersand</td></tr>
+    <tr><td><code>"</code></td><td><code>&amp;quot;</code></td><td>quotation</td></tr>
+    <tr><td><code>'</code></td><td><code>&amp;apos;</code></td><td>apostrophe</td></tr>
+  </table>
+  <p>Comments: <code>&lt;!-- invisible to users --&gt;</code>.</p>
+
+  <h2>Global attributes (work on every element)</h2>
+  <table>
+    <tr><th>Attribute</th><th>For</th></tr>
+    <tr><td><code>id</code></td><td>Unique identifier: label association, fragment links (<code>#id</code>), CSS/JS hooks.</td></tr>
+    <tr><td><code>class</code></td><td>Reusable label for CSS/JS targeting.</td></tr>
+    <tr><td><code>lang</code></td><td>Language of this element's content (e.g. switch mid-page).</td></tr>
+    <tr><td><code>title</code></td><td>Hover tooltip of supporting info; never a substitute for visible text.</td></tr>
+    <tr><td><code>hidden</code></td><td>Boolean: removes the element from rendering and accessibility tree.</td></tr>
+  </table>
+
+  <p><a href="../lessons/0001-your-first-html-document.html">Lesson 1</a> · <a href="text-semantics.html">Text semantics</a> · <a href="../lessons/0013-the-gauntlet.html">Gauntlet</a></p>
+</main></body>
+</html>

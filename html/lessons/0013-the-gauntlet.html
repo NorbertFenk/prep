@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 13 — The gauntlet: your graduation test</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<h1>The gauntlet: your graduation test</h1>
+<p class="meta">Lesson 0013 · HTML · ~25 min · the finale — everything, under pressure</p>
+
+<p>You've scored full marks on every quiz. Quizzes measure recognition; interviews
+measure <b>retrieval under pressure</b>. Today's gauntlet simulates the real thing:
+timed questions in random order, graded by the only judge present — you, honestly.</p>
+
+<h2>The rules</h2>
+<ol>
+  <li>Answer <b>aloud</b>, as if an interviewer asked. Recording yourself is
+  strongly encouraged — listen back once.</li>
+  <li>Grade each answer the moment it ends: <b>Solid</b> (correct, fluent, no long
+  gaps) · <b>Shaky</b> (got there, but stumbled) · <b>Froze</b> (timer beat you).</li>
+  <li>No notes, no pausing the timer. The timer turning red means wrap up your sentence.</li>
+</ol>
+
+<h2>Round 1 — the build test</h2>
+<p>Before the questions, one live task: open your editor and <b>write, from memory,
+a complete valid page</b> — skeleton, one heading, one paragraph with an abbreviation
+and a machine-readable date, one image with proper alt, one labelled text input with
+a submit button. Then validate it at
+<a href="https://validator.w3.org/">validator.w3.org</a>. Green banner or it counts
+as a Froze.</p>
+
+<h2>Round 2 — follow-up roulette</h2>
+<p>Twenty questions from every chapter, shuffled. 25 seconds each. This is where
+interviews are won.</p>
+
+<div class="gauntlet">
+  <div class="gcard on" data-time="60" data-cat="Skeleton" data-href="0001-your-first-html-document.html">
+    <div class="gcat">Skeleton · lesson 1</div>
+    <p>Walk me through every line of a minimal valid HTML page — what each part is for.</p>
+  </div>
+  <div class="gtime"><div class="gbar"></div></div>
+  <div class="gbtns">
+    <button data-grade="solid">Solid</button><button data-grade="shaky">Shaky</button><button data-grade="froze">Froze</button>
+  </div>
+  <p class="gres"></p>
+</div>
+
+<div class="gauntlet">
+  <div class="gcard" data-time="25" data-cat="Skeleton" data-href="0001-your-first-html-document.html"><div class="gcat">Skeleton · lesson 1</div><p>Why do attribute values always need quotes? What actually goes wrong otherwise?</p></div>
+  <div class="gcard" data-time="25" data-cat="Skeleton" data-href="0001-your-first-html-document.html"><div class="gcat">Skeleton · lesson 1</div><p>What's a void element? Name three and explain what they have in common.</p></div>
+  <div class="gcard" data-time="25" data-cat="Text" data-href="0002-headings-paragraphs-lists.html"><div class="gcat">Text · lesson 2</div><p>What does semantic markup mean, and who — besides the browser — consumes the semantics?</p></div>
+  <div class="gcard" data-time="25" data-cat="Text" data-href="0002-headings-paragraphs-lists.html"><div class="gcat">Text · lesson 2</div><p>Three list types: when is each the right one? And what's a nav menu built from?</p></div>
+  <div class="gcard" data-time="25" data-cat="Links" data-href="0003-links.html"><div class="gcat">Links · lesson 3</div><p>Relative or absolute paths inside your own site — why does it matter?</p></div>
+  <div class="gcard" data-time="25" data-cat="Links" data-href="0003-links.html"><div class="gcat">Links · lesson 3</div><p>Why is "click here" bad link text? Give the accessibility and SEO reasons.</p></div>
+  <div class="gcard" data-time="25" data-cat="Text semantics" data-href="0004-emphasis-text-semantics.html"><div class="gcat">Text semantics · lesson 4</div><p>&lt;em&gt; versus &lt;strong&gt; versus &lt;b&gt; — who wins, and why does &lt;b&gt; still exist?</p></div>
+  <div class="gcard" data-time="25" data-cat="Text semantics" data-href="0004-emphasis-text-semantics.html"><div class="gcat">Text semantics · lesson 4</div><p>Why machine-readable dates? Show me &lt;time&gt; and say who reads the datetime attribute.</p></div>
+  <div class="gcard" data-time="25" data-cat="Images" data-href="0005-images.html"><div class="gcat">Images · lesson 5</div><p>The alt attribute decision tree: content image, decorative image, image-as-link. What goes in each alt?</p></div>
+  <div class="gcard" data-time="25" data-cat="Images" data-href="0005-images.html"><div class="gcat">Images · lesson 5</div><p>Why declare width and height on images — and what user experience breaks otherwise?</p></div>
+  <div class="gcard" data-time="25" data-cat="Media" data-href="0006-video-and-audio.html"><div class="gcat">Media · lesson 6</div><p>Why multiple &lt;source&gt; elements with type attributes? What are container and codec?</p></div>
+  <div class="gcard" data-time="25" data-cat="Media" data-href="0006-video-and-audio.html"><div class="gcat">Media · lesson 6</div><p>Autoplay, muted, controls: which go together, and which is an accessibility failure?</p></div>
+  <div class="gcard" data-time="25" data-cat="Tables" data-href="0007-tables.html"><div class="gcat">Tables · lesson 7</div><p>What does scope="rowgroup" do, and what would a screen reader user hear without it?</p></div>
+  <div class="gcard" data-time="25" data-cat="Tables" data-href="0007-tables.html"><div class="gcat">Tables · lesson 7</div><p>Why were layout tables abandoned? Three concrete reasons.</p></div>
+  <div class="gcard" data-time="25" data-cat="Forms" data-href="0008-forms.html"><div class="gcat">Forms · lesson 8</div><p>Explicit versus implicit labels — which and why? What does the label buy users?</p></div>
+  <div class="gcard" data-time="25" data-cat="Forms" data-href="0008-forms.html"><div class="gcat">Forms · lesson 8</div><p>Why is client-side validation never the security layer?</p></div>
+  <div class="gcard" data-time="25" data-cat="Structure" data-href="0009-semantic-structure.html"><div class="gcat">Structure · lesson 9</div><p>&lt;article&gt; versus &lt;section&gt; versus &lt;div&gt; — the decision rule for each.</p></div>
+  <div class="gcard" data-time="25" data-cat="Structure" data-href="0009-semantic-structure.html"><div class="gcat">Structure · lesson 9</div><p>What's the concrete screen-reader payoff of landmarks like nav and main?</p></div>
+  <div class="gcard" data-time="25" data-cat="Embedding" data-href="0010-svg-iframes.html"><div class="gcat">Embedding · lesson 10</div><p>Why is a bare sandbox attribute the right default for iframes? What does it block?</p></div>
+  <div class="gcard" data-time="25" data-cat="Debugging" data-href="0011-debugging.html"><div class="gcat">Debugging · lesson 11</div><p>HTML has no syntax errors — explain the permissive-parsing trap and the two tools that catch it.</p></div>
+  <div class="gcard" data-time="25" data-cat="Head" data-href="0012-document-head.html"><div class="gcat">Head · lesson 12</div><p>&lt;title&gt; versus &lt;h1&gt; — and name everything the title text is used for.</p></div>
+  <div class="gcard" data-time="25" data-cat="Synthesis" data-href="0007-tables.html"><div class="gcat">Curveball · lessons 5+7+11</div><p>A screen reader reads "images slash dog dot j-p-g" on your page — name every mistake that could cause.</p></div>
+  <div class="gcard" data-time="60" data-cat="Skeleton" data-href="0001-your-first-html-document.html"><div class="gcat">Finale · lesson 1</div><p>Recite the minimal valid page again, cold — and say what the browser would silently fix if you skipped the quotes.</p></div>
+  <div class="gtime"><div class="gbar"></div></div>
+  <div class="gbtns">
+    <button data-grade="solid">Solid</button><button data-grade="shaky">Shaky</button><button data-grade="froze">Froze</button>
+  </div>
+  <p class="gres"></p>
+</div>
+
+<h2>Graduation criteria</h2>
+<ul>
+  <li>Round 1: a complete page and a green validator banner.</li>
+  <li>Round 2 overall: <b>≥80% solid, zero freezes</b>.</li>
+  <li>Any miss links its lesson below the result — review, then rerun tomorrow.
+  Spacing beats cramming; the second clean run is what makes it stick.</li>
+</ul>
+
+<h2>After graduation: take it to real humans</h2>
+<p>I'm your practice partner, but wisdom needs live fire. Two verified communities:</p>
+<ul class="srcs">
+  <li><a href="https://www.reddit.com/r/webdev/">r/webdev</a> — markup critiques and "is this semantic?" sanity checks from working developers (verified 2026-09-18).</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/MDN/Community/Communication_channels">MDN community channels</a> — the Discord where MDN contributors and learners hang out; ask the people who write the docs (verified 2026-09-18).</li>
+</ul>
+<p>Or ask me to play interviewer anytime — I can raise difficulty, interrupt
+mid-answer like real interviewers do, and grade against these same criteria.</p>
+
+<h2>Sources (pre-interview skim)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content"><b>Primary:</b> MDN — Structuring content with HTML</a> — one final read-through the night before (verified 2026-09-18).</li>
+  <li><a href="../reference/anatomy-cheatsheet.html">Anatomy cheat sheet</a> · <a href="../reference/forms.html">Forms</a> · <a href="../reference/tables.html">Tables</a> · <a href="../reference/glossary.html">Glossary</a> — if any term feels foggy here, that's your weak beat.</li>
+</ul>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — I'll play hostile
+interviewer, explain anything that tripped you, or set a lighter rematch deck.
+Course complete either way: thirteen lessons, one honest page, mission met.</div>
+
+<script src="../../assets/gauntlet.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 8 — Forms: the user speaks back</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0008 · HTML · ~30 min · prereq: 0003, 0007</p>
+<h1>Forms: the user speaks back</h1>
+<p>Links send users away; forms bring data in. They're half of how users interact
+with a website — and the place where "semantic" stops being an ideal and starts
+being measurable in support tickets.</p>
+
+<h2>The anatomy</h2>
+<pre><code>&lt;form action="/submit_page" method="get"&gt;
+  &lt;label for="name"&gt;Name (required):&lt;/label&gt;
+  &lt;input type="text" name="name" id="name" required /&gt;
+  &lt;button&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b><code>&lt;form&gt;</code> — the wrapper</b>
+  <p><code>action</code> is where submission goes; <code>method</code> is how
+  (<code>get</code> puts the data in the URL — you'll recognize
+  <code>?name=Bob&amp;email=bob%40bob.com</code> from the Internet course).</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b><code>&lt;input&gt;</code> — the data items</b>
+  <p><code>type</code> picks the control: <code>text</code>, <code>email</code>,
+  <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>,
+  <code>color</code>… <code>name</code> names the data item submitted;
+  <code>id</code> links the control to its label;
+  <code>required</code> makes the field mandatory.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>&lt;label&gt;</code> — the contract</b>
+  <p>Explicit association: <code>&lt;label for="name"&gt;</code> matches
+  <code>id="name"</code>. Screen readers announce the label at each control, and
+  clicking the label focuses the control — a bigger hit area for thumbs.
+  (Implicit labels — nesting the input inside the label — work, but explicit
+  ones are easier to read and more reliably announced.)</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b><code>&lt;button&gt;</code> — the trigger</b>
+  <p>Inside a form, <code>&lt;button&gt;</code> submits. <code>type="button"</code>
+  does nothing without JavaScript; <code>type="reset"</code> wipes the form —
+  a relic that mostly destroys people's work. Use <code>&lt;button&gt;</code>, not
+  legacy <code>&lt;input type="submit"&gt;</code>.</p></div></div>
+
+<h2>Choosing controls</h2>
+<pre><code>&lt;!-- radio: exactly one of a named set --&gt;
+&lt;fieldset&gt;
+  &lt;legend&gt;Choose hotel room type:&lt;/legend&gt;
+  &lt;input type="radio" id="r1" name="hotel" value="economy" checked /&gt;
+  &lt;label for="r1"&gt;Economy (+$0)&lt;/label&gt;
+  &lt;input type="radio" id="r2" name="hotel" value="superior" /&gt;
+  &lt;label for="r2"&gt;Superior (+$50)&lt;/label&gt;
+&lt;/fieldset&gt;
+
+&lt;!-- checkbox: any number, each its own name --&gt;
+&lt;input type="checkbox" id="yoga" name="yoga" /&gt;
+&lt;label for="yoga"&gt;Yoga (+$10)&lt;/label&gt;
+
+&lt;!-- select: drop-down of options --&gt;
+&lt;select name="transport" id="transport"&gt;
+  &lt;option value=""&gt;--Please choose an option--&lt;/option&gt;
+  &lt;option value="plane"&gt;Plane&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- textarea: multi-line --&gt;
+&lt;textarea id="comments" name="comments" rows="5" cols="33"&gt;&lt;/textarea&gt;</code></pre>
+<p>Radio buttons in a set share one <code>name</code> and each needs a
+<code>value</code> (submission is <code>hotel=economy</code>). Checkboxes represent
+separate data items. <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>
+group related controls — the semantically correct way to say "these belong
+together", which screen readers announce.</p>
+
+<h2>Client-side validation</h2>
+<pre><code>&lt;input type="text" id="uname" name="uname" required minlength="5" maxlength="20" /&gt;
+&lt;input type="email" id="email" name="email" required /&gt;
+&lt;input type="tel" id="phone" name="phone" required maxlength="15" /&gt;
+&lt;textarea id="comment" name="comment" required maxlength="200"&gt;&lt;/textarea&gt;</code></pre>
+<p>Submit with an empty required field and the browser blocks it with an error
+message — no JavaScript. Typed inputs (<code>email</code>, <code>url</code>)
+validate their format for free. Remember the two-layer rule:
+<b>client-side validation is UX, server-side validation is security</b> — never
+trust what the client sends.</p>
+
+<h2>Exercise 1 — the real MDN task (Forms and buttons 1)</h2>
+<p>Create ID and password inputs with semantic labels and a "Log in" submit button:</p>
+<pre><code>&lt;form&gt;
+  &lt;ul&gt;
+    &lt;li&gt;User ID&lt;/li&gt;
+    &lt;li&gt;Password&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/form&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;form&gt;
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;label for="uid"&gt;User ID&lt;/label&gt;
+      &lt;input type="text" id="uid" name="uid" /&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;label for="pwd"&gt;Password&lt;/label&gt;
+      &lt;input type="password" id="pwd" name="pwd" /&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;button&gt;Log in&lt;/button&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/form&gt;</code></pre>
+</details>
+
+<h2>Exercise 2 — the real MDN task (Forms and buttons 6)</h2>
+<p>Add validation to a support form: all fields mandatory; proper types for email
+and phone; username 5–20 characters; phone max 15; comment max 200. Submitting
+should refuse until everything passes:</p>
+<pre><code>&lt;form&gt;
+  &lt;h2&gt;Enter your support query&lt;/h2&gt;
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;label for="uname"&gt;User name:&lt;/label&gt;
+      &lt;input type="text" name="uname" id="uname" /&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;label for="email"&gt;Email address:&lt;/label&gt;
+      &lt;input type="text" name="email" id="email" /&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;label for="phone"&gt;Phone number:&lt;/label&gt;
+      &lt;input type="text" name="phone" id="phone" /&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;label for="comment"&gt;Comment:&lt;/label&gt;
+      &lt;textarea name="comment" id="comment"&gt; &lt;/textarea&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;button&gt;Submit comment&lt;/button&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/form&gt;</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>      &lt;input type="text" name="uname" id="uname"
+             required minlength="5" maxlength="20" /&gt;
+      &lt;input type="email" name="email" id="email" required /&gt;
+      &lt;input type="tel" name="phone" id="phone" required maxlength="15" /&gt;
+      &lt;textarea name="comment" id="comment" required maxlength="200"&gt;&lt;/textarea&gt;</code></pre>
+<p>(Same form; only the control attributes change. Note the stray space inside the
+original <code>&lt;textarea&gt;</code> — textarea content <em>is</em> its value,
+so it needed clearing too.)</p>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="2">
+  <p>1. Why must a radio set share one name?</p>
+  <button>So the browser renders one line</button>
+  <button>So validators can require them</button>
+  <button>The name defines the set: pick one</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>2. What does the explicit label pattern look like?</p>
+  <button>&lt;label for="x"&gt; paired with id="x"</button>
+  <button>&lt;label name="x"&gt; paired with name="x"</button>
+  <button>&lt;label&gt; as the first child of &lt;form&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>3. Which attribute marks a field mandatory before submission?</p>
+  <button>mandatory</button>
+  <button>required</button>
+  <button>checked</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. Why is client-side validation not the security layer?</p>
+  <button>It only runs on old browsers</button>
+  <button>It cannot check email formats</button>
+  <button>It's trivially bypassed: don't trust what the client sends</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>5. What does &lt;fieldset&gt; + &lt;legend&gt; give screen reader users?</p>
+  <button>A named group announced at each control</button>
+  <button>Faster form submission and loading</button>
+  <button>Automatic required-field checking</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>6. Which button type should you avoid?</p>
+  <button>submit</button>
+  <button>reset</button>
+  <button>button</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_forms"><b>Primary:</b> MDN — HTML forms and buttons</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Test_your_skills/Forms_and_buttons">MDN — Test: Forms and buttons</a> — all six tasks, including today's two</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Forms_challenge">MDN — Challenge: Feedback form</a> — a full-page form challenge for the weekend</li>
+</ul>
+<p>Reference: <a href="../reference/forms.html">Forms reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "how does GET actually
+submit data?", "why is the placeholder attribute not a label?", "what does
+autocomplete buy?" Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2 — Headings, paragraphs, and lists</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0002 · HTML · ~20 min · prereq: 0001</p>
+<h1>Headings, paragraphs, and lists</h1>
+<p>Last lesson you wrote a page. This lesson you structure it — and learn the one
+idea that separates HTML writers from HTML copiers: <b>semantics</b>, meaning chosen
+for what content <em>is</em>, not how it should look.</p>
+
+<h2>Semantics: the right element for the right job</h2>
+<p>You could make any element <em>look</em> like a heading by wrapping it in a
+<code>&lt;span&gt;</code> with CSS. That gets you the pixels but nothing else. The
+<code>&lt;h1&gt;</code> element means "the top-level heading of this page" — and that
+meaning is used by screen readers (which navigate by headings), search engines
+(which boost keywords found in headings), and your future self. Style is CSS's job;
+structure is HTML's.</p>
+
+<h2>Headings</h2>
+<p><code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code> form a document outline. Use
+one <code>&lt;h1&gt;</code>, nest the rest logically, and never skip levels
+(<code>&lt;h2&gt;</code> then <code>&lt;h4&gt;</code> breaks the outline). Don't pick a
+level because you like its font size — that's CSS territory.</p>
+
+<h2>Lists</h2>
+<pre><code>&lt;ul&gt;
+  &lt;li&gt;milk&lt;/li&gt;
+  &lt;li&gt;eggs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Turn right&lt;/li&gt;
+  &lt;li&gt;Go across the roundabouts&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;dl&gt;
+  &lt;dt&gt;soliloquy&lt;/dt&gt;
+  &lt;dd&gt;In drama, where a character speaks to themselves...&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b><code>&lt;ul&gt;</code> — unordered</b>
+  <p>Items where order doesn't matter: shopping lists, feature lists — and the raw
+  material of every navigation menu on the web.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b><code>&lt;ol&gt;</code> — ordered</b>
+  <p>Steps where sequence matters: directions, recipes, rankings.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>&lt;dl&gt;</code> — description</b>
+  <p>Term/description pairs (<code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code>):
+  glossaries, FAQs, metadata. You've been reading one in every reference doc of
+  this workspace.</p></div></div>
+
+<h2>Exercise 1 — the real MDN task (Text basics 1)</h2>
+<p>Mark up this raw text with the right heading and paragraph elements:</p>
+<pre><code>Basic HTML Animals
+
+This is the first paragraph in our page. It introduces our animals.
+
+The Llama
+
+Our Llama is a big fan of list items. When she spies a patch of them on a
+web page, she will eat them like sweets, licking her lips as she goes.
+
+The Anaconda
+
+The crafty anaconda likes to slither around the page, traveling rapidly by
+way of anchors to sneak up on his prey.</code></pre>
+<p>Do it, then compare:</p>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;h1&gt;Basic HTML Animals&lt;/h1&gt;
+
+&lt;p&gt;This is the first paragraph in our page. It introduces our animals.&lt;/p&gt;
+
+&lt;h2&gt;The Llama&lt;/h2&gt;
+
+&lt;p&gt;Our Llama is a big fan of list items. When she spies a patch of them on a
+web page, she will eat them like sweets, licking her lips as she goes.&lt;/p&gt;
+
+&lt;h2&gt;The Anaconda&lt;/h2&gt;
+
+&lt;p&gt;The crafty anaconda likes to slither around the page, traveling rapidly by
+way of anchors to sneak up on his prey.&lt;/p&gt;</code></pre>
+</details>
+
+<h2>Exercise 2 — the real MDN task (Text basics 2)</h2>
+<p>Turn the vegetables into an unordered list and the directions into an ordered one:</p>
+<pre><code>&lt;h1&gt;Looking at lists&lt;/h1&gt;
+
+&lt;p&gt;Turn the following list of my favorite vegetables into an unordered list.&lt;/p&gt;
+
+Cucumber
+Broccoli
+Asparagus
+Pepper
+
+&lt;p&gt;Turn the following directions into an ordered list.&lt;/p&gt;
+
+First knock on the door
+When prompted, say the magic word
+Wait for at least 5 seconds
+Turn the handle and push</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;ul&gt;
+  &lt;li&gt;Cucumber&lt;/li&gt;
+  &lt;li&gt;Broccoli&lt;/li&gt;
+  &lt;li&gt;Asparagus&lt;/li&gt;
+  &lt;li&gt;Pepper&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;First knock on the door&lt;/li&gt;
+  &lt;li&gt;When prompted, say the magic word&lt;/li&gt;
+  &lt;li&gt;Wait for at least 5 seconds&lt;/li&gt;
+  &lt;li&gt;Turn the handle and push&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+</details>
+
+<h2>Exercise 3 — the real MDN task (Text basics 3)</h2>
+<p>Turn animals and definitions into a description list:</p>
+<pre><code>&lt;h1&gt;Advanced HTML Animals&lt;/h1&gt;
+
+Llama
+Tall, woolly quadruped, pointy ears. Sometimes rideable, but grumpy and
+spits a lot. Big fan of list items.
+Anaconda
+A very large constrictor snake; travels rapidly by way of anchors to sneak
+up on his prey.
+Hippopotamus
+His description is bottomless.</code></pre>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;dl&gt;
+  &lt;dt&gt;Llama&lt;/dt&gt;
+  &lt;dd&gt;
+    Tall, woolly quadruped, pointy ears. Sometimes rideable, but grumpy and
+    spits a lot. Big fan of list items.
+  &lt;/dd&gt;
+  &lt;dt&gt;Anaconda&lt;/dt&gt;
+  &lt;dd&gt;
+    A very large constrictor snake; travels rapidly by way of anchors to
+    sneak up on his prey.
+  &lt;/dd&gt;
+  &lt;dt&gt;Hippopotamus&lt;/dt&gt;
+  &lt;dd&gt;His description is bottomless.&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. What does semantic markup mean?</p>
+  <button>Writing markup that renders identically in all browsers</button>
+  <button>Choosing elements for what the content is, not how it should look</button>
+  <button>Writing markup that search engines index fastest</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>2. Why avoid skipping heading levels?</p>
+  <button>Skip levels render at the wrong font size</button>
+  <button>Validators reject pages that skip levels</button>
+  <button>The outline breaks for screen readers navigating by headings</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>3. A set of driving directions belongs in which element?</p>
+  <button>&lt;ol&gt;</button>
+  <button>&lt;ul&gt;</button>
+  <button>&lt;dl&gt;</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. In a description list, what does &lt;dd&gt; hold?</p>
+  <button>The data type</button>
+  <button>The document description</button>
+  <button>The description of one &lt;dt&gt; term</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>5. A navigation menu is conventionally marked up as…</p>
+  <button>A table of links</button>
+  <button>An unordered list of links</button>
+  <button>A series of headings</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Headings_and_paragraphs"><b>Primary:</b> MDN — Headings and paragraphs</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Lists">MDN — Lists</a> — nesting lists, and lists as navigation menus</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Test_your_skills/HTML_text_basics">MDN — Test your skills: HTML text basics</a> — the source of today's exercises</li>
+</ul>
+<p>Reference: <a href="../reference/anatomy-cheatsheet.html">Anatomy cheat sheet</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "why is one &lt;h1&gt; the rule?",
+"when is &lt;dl&gt; better than a table?", "what did headings cost SEO before?"
+Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

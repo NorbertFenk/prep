@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 7 — Tables that don't lie</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0007 · HTML · ~30 min · prereq: 0002</p>
+<h1>Tables that don't lie</h1>
+<p>Tables are for one thing: <b>tabular data</b> — information that means something
+in rows and columns. Not page layout; that era ended with modern CSS, and layout
+tables still confuse screen readers, produce tag soup, and refuse to be responsive.</p>
+
+<h2>The skeleton</h2>
+<pre><code>&lt;table&gt;
+  &lt;caption&gt;Data about the planets of our solar system&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;&lt;/td&gt;
+      &lt;th scope="col"&gt;Name&lt;/th&gt;
+      &lt;th scope="col"&gt;Mass (10&lt;sup&gt;24&lt;/sup&gt;kg)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th rowspan="4" colspan="2" scope="rowgroup"&gt;Terrestrial planets&lt;/th&gt;
+      &lt;th scope="row"&gt;Mercury&lt;/th&gt;
+      &lt;td&gt;0.330&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;!-- more rows --&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b>Cells and rows</b>
+  <p><code>&lt;tr&gt;</code> is a row; <code>&lt;td&gt;</code> a data cell;
+  <code>&lt;th&gt;</code> a header cell — semantically a heading, not just bold text.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Structure</b>
+  <p><code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> (and
+  <code>&lt;tfoot&gt;</code>) group rows so screen readers and styling can address
+  regions. <code>&lt;caption&gt;</code> titles the whole table.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b>Spanning</b>
+  <p><code>colspan="2"</code> stretches a cell across two columns;
+  <code>rowspan="4"</code> down four rows — how the "Terrestrial planets" group
+  header covers its four planets.</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b><code>colgroup</code>/<code>col</code></b>
+  <p>Style whole columns structurally: <code>&lt;colgroup&gt;&lt;col span="2"&gt;&lt;col
+  class="column-border"&gt;&lt;col span="9"&gt;&lt;/colgroup&gt;</code> draws a border
+  around the planet-name column without touching a single <code>&lt;td&gt;</code>.</p></div></div>
+
+<h2>Why &lt;th&gt; and scope: the accessibility payoff</h2>
+<p>A sighted user reads a cell by glancing up and left. A screen reader user needs
+the associations <em>declared</em>. <code>scope</code> does it:</p>
+<pre><code>&lt;th scope="col"&gt;Diameter (km)&lt;/th&gt;      &lt;!-- headers this column --&gt;
+&lt;th scope="row"&gt;Mercury&lt;/th&gt;            &lt;!-- headers this row --&gt;
+&lt;th scope="rowgroup"&gt;Terrestrial planets&lt;/th&gt;  &lt;!-- headers the row group --&gt;</code></pre>
+<p>With correct headers and scopes, a screen reader can announce
+"Mercury, diameter: 4,879 kilometres" — or read out an entire column at once.
+(The <code>id</code>/<code>headers</code> pairing is the alternative for gnarly
+tables; <code>scope</code> is the one that's easy and covers most cases.)</p>
+
+<h2>Exercise — the real MDN challenge (Planet data table)</h2>
+<p>Build the full planetary table with this data and these column headers.
+Requirements: caption; header row whose first cell is blank and spans two columns;
+all row headings as semantic <code>&lt;th&gt;</code>; scopes making every
+row/column/group association unambiguous; group headers spanning correctly
+(<code>rowspan</code>/<code>colspan</code>); and a black border around the
+planet-name column via <code>&lt;colgroup&gt;</code>.</p>
+<pre><code>Terrestrial planets
+Mercury  0.330  4,879  5427  3.7  4222.6  57.9   167  0  Closest to the Sun
+Venus    4.87   12,104 5243  8.9  2802.0  108.2  464  0
+Earth    5.97   12,756 5514  9.8  24.0    149.6  15   1  Our world
+Mars     0.642  6,792  3933  3.7  24.7    227.9  -65  2  The red planet
+
+Gas giants
+Jupiter  1898   142,984 1326 23.1 9.9     778.6  -110 67 The largest planet
+Saturn   568    120,536 687  9.0  10.7    1433.5 -140 62
+
+Ice giants
+Uranus   86.8   51,118  1271 8.7  17.2    2872.5 -195 27
+Neptune  102    49,528  1638 11.0 16.1    4495.1 -200 14
+
+Dwarf planets*
+Pluto    0.0146 2,370   2095 0.7  153.3   5906.4 -225 5  Declassified in 2006
+
+Columns: Name · Mass (10^24 kg) · Diameter (km) · Density (kg/m^3) ·
+Gravity (m/s^2) · Length of day (hours) · Distance from Sun (10^6 km) ·
+Mean temperature (°C) · Number of moons · Notes</code></pre>
+<p>This one is genuinely hard — draw the grid on paper first. The full reference
+solution is on <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Planet_data_table">the MDN challenge page</a>;
+the skeleton at the top of this lesson is the shape of it.</p>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="2">
+  <p>1. What are tables for?</p>
+  <button>Laying out multi-column pages</button>
+  <button>Displaying any list of items</button>
+  <button>Tabular data that means something in rows and columns</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>2. What does &lt;th&gt; give you that bold &lt;td&gt; doesn't?</p>
+  <button>Header semantics that assistive tech can act on</button>
+  <button>Automatic centering in all browsers</button>
+  <button>Better compression over the wire</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>3. scope="rowgroup" means the header cell labels…</p>
+  <button>the row it sits in</button>
+  <button>the group of rows it spans</button>
+  <button>the whole table</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. What does &lt;caption&gt; do?</p>
+  <button>Titles each column of the table</button>
+  <button>Adds a hover tooltip over the table</button>
+  <button>Names the whole table, visible to all users</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>5. A group header spanning 4 planet rows needs…</p>
+  <button>colspan="4" on a &lt;td&gt;</button>
+  <button>rowspan="4" scope="rowgroup" on a &lt;th&gt;</button>
+  <button>four separate &lt;th&gt; cells</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>6. Why avoid table-based page layout?</p>
+  <button>It confuses screen readers and produces unresponsive tag soup</button>
+  <button>Tables cannot contain headings</button>
+  <button>Layout tables are deprecated by browsers</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_table_basics"><b>Primary:</b> MDN — HTML table basics</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Table_accessibility">MDN — HTML table accessibility</a> — scope, thead/tbody, id/headers</li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Planet_data_table">MDN — Challenge: Planet data table</a> — the full worked solution</li>
+</ul>
+<p>Reference: <a href="../reference/tables.html">Tables reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "when is id/headers better
+than scope?", "what did the CSS layout era replace?", "how do screen readers
+actually read a table?" Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

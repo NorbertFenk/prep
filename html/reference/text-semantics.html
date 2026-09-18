@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML text semantics reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Text semantics</h1>
+  <p class="lede">Inline and block elements that say <em>why</em> text is different — style is CSS's job.</p>
+
+  <h2>Structure</h2>
+  <table>
+    <tr><th>Element</th><th>Meaning</th></tr>
+    <tr><td><code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code></td><td>Document outline. One <code>&lt;h1&gt;</code>, no skipped levels; size is CSS's job.</td></tr>
+    <tr><td><code>&lt;p&gt;</code></td><td>Paragraph.</td></tr>
+    <tr><td><code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code>/<code>&lt;li&gt;</code></td><td>Lists: order doesn't matter / order matters / item. Nav menus are <code>&lt;ul&gt;</code>s of links.</td></tr>
+    <tr><td><code>&lt;dl&gt;</code>/<code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code></td><td>Description list: term / description pairs (glossaries, FAQs, metadata).</td></tr>
+    <tr><td><code>&lt;hr&gt;</code></td><td>Thematic break between topics.</td></tr>
+    <tr><td><code>&lt;br&gt;</code></td><td>Line break for fixed short lines (addresses, verse) — not for spacing.</td></tr>
+  </table>
+
+  <h2>Inline semantics</h2>
+  <table>
+    <tr><th>Element</th><th>Meaning</th><th>Use when</th></tr>
+    <tr><td><code>&lt;em&gt;</code></td><td>Stressed emphasis</td><td>The spoken stress would change the sentence ("I <em>might</em>").</td></tr>
+    <tr><td><code>&lt;strong&gt;</code></td><td>Strong importance</td><td>Warnings, key terms — words that genuinely matter.</td></tr>
+    <tr><td><code>&lt;b&gt;</code></td><td>Bold-look keywords</td><td>Only when no better element exists (product names, lead sentences).</td></tr>
+    <tr><td><code>&lt;i&gt;</code></td><td>Italic-look offset</td><td>Foreign words, technical/scientific terms, thoughts.</td></tr>
+    <tr><td><code>&lt;u&gt;</code></td><td>Underline-look annotation</td><td>Rare: misspellings, proper names. Never for links look-alikes.</td></tr>
+    <tr><td><code>&lt;mark&gt;</code></td><td>Relevance highlight</td><td>Text highlighted for the current context (search matches).</td></tr>
+  </table>
+  <p><code>&lt;font&gt;</code>, <code>&lt;big&gt;</code>, <code>&lt;center&gt;</code>: presentational, deprecated, never use.</p>
+
+  <h2>Quotations, terms, machines</h2>
+  <table>
+    <tr><th>Element</th><th>Meaning</th></tr>
+    <tr><td><code>&lt;blockquote cite="URL"&gt;</code></td><td>Block-level quote; <code>cite</code> records the source URL (not displayed).</td></tr>
+    <tr><td><code>&lt;q cite="URL"&gt;</code></td><td>Short inline quote; browsers add quote marks.</td></tr>
+    <tr><td><code>&lt;cite&gt;</code></td><td>The <em>title</em> of the work being cited.</td></tr>
+    <tr><td><code>&lt;abbr title="expansion"&gt;</code></td><td>Acronym/abbreviation with tooltip expansion.</td></tr>
+    <tr><td><code>&lt;address&gt;</code></td><td>Contact info for the nearest <code>&lt;article&gt;</code>/<code>&lt;body&gt;</code> — not any postal address.</td></tr>
+    <tr><td><code>&lt;time datetime="2019-12-25"&gt;</code></td><td>Machine-readable date/time; ISO format in the attribute.</td></tr>
+    <tr><td><code>&lt;sub&gt;</code>/<code>&lt;sup&gt;</code></td><td>Chemical subscripts, exponents, ordinals — semantics, not just looks.</td></tr>
+    <tr><td><code>&lt;code&gt;</code></td><td>Inline code snippet.</td></tr>
+    <tr><td><code>&lt;pre&gt;</code></td><td>Preserves whitespace; pair as <code>&lt;pre&gt;&lt;code&gt;</code> for code blocks.</td></tr>
+  </table>
+
+  <h2>Canonical example</h2>
+  <pre><code>&lt;p&gt;In drama, a &lt;em&gt;soliloquy&lt;/em&gt; — from Latin
+&lt;i lang="la"&gt;solo&lt;/i&gt; — matters &lt;strong&gt;hugely&lt;/strong&gt;.
+It appears in &lt;abbr title="HyperText Markup Language"&gt;HTML&lt;/abbr&gt;
+docs since &lt;time datetime="1991-08"&gt;August 1991&lt;/time&gt;.&lt;/p&gt;</code></pre>
+
+  <p><a href="../lessons/0002-headings-paragraphs-lists.html">Lesson 2</a> · <a href="../lessons/0004-emphasis-text-semantics.html">Lesson 4</a> · <a href="anatomy-cheatsheet.html">Anatomy</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>

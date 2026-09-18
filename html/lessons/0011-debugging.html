@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 11 — Debugging: when the browser lies to you</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0011 · HTML · ~25 min · prereq: all prior</p>
+<h1>Debugging: when the browser lies to you</h1>
+<p>HTML has no syntax errors — and that's the trap. Browsers parse it
+<b>permissively</b>: badly-formed markup still renders something, fixed silently by
+rules you didn't choose. You get a page, but not necessarily <em>your</em> page.</p>
+
+<h2>What the browser does with your mistakes</h2>
+<pre><code>&lt;p&gt;I didn't expect to find the &lt;em&gt;next-door neighbor's &lt;strong&gt;cat&lt;/em&gt;&lt;/strong&gt; here!&lt;/p&gt;</code></pre>
+<p>Badly nested. The browser untangles it into</p>
+<pre><code>&lt;em&gt;next-door neighbor's &lt;strong&gt;cat&lt;/strong&gt;&lt;/em&gt;</code></pre>
+<p>— but worse cases bite harder:</p>
+<div class="step"><div class="num">1</div><div>
+  <b>Unclosed <code>&lt;strong&gt;</code></b>
+  <p>The browser can't guess where it ends, so it bolds the rest of the document —
+  each block wrapped in its own strong element, to the bottom of the page.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Missing attribute quote</b>
+  <p><code>&lt;a href="https://www.mozilla.org/&gt;link&lt;/a&gt;</code> — the
+  unterminated quote swallows the tag, and the browser <em>deletes the link
+  entirely</em>. The most invisible failure in HTML.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b>Unclosed <code>&lt;li&gt;</code>/<code>&lt;p&gt;</code></b>
+  <p>Usually guessed correctly — that's why the habit forms. Then you meet a case
+  where the guess is wrong and spend an hour.</p></div></div>
+
+<h2>Tool 1: the DOM inspector</h2>
+<p>The devtools <b>Inspector/Elements</b> tab shows the rendered DOM — not your
+source, but what the browser made of it. Open devtools (F12 / right-click →
+Inspect), expand nodes, hover to highlight in the viewport. When something looks
+wrong, the first question is: <em>what did the browser actually build?</em></p>
+
+<h2>Tool 2: the W3C validator</h2>
+<p>Paste your document into <a href="https://validator.w3.org/">validator.w3.org</a>
+(Direct Input tab) and press Check. Interpreting the messages:</p>
+<ul>
+  <li>"End tag <code>li</code> implied, but there were open elements" — a missing close tag.</li>
+  <li>"Unclosed element <code>strong</code>" — exactly what it says.</li>
+  <li>"End of file reached when inside an attribute value" — cryptic, but it means an
+  unterminated quote swallowed the rest of the document.</li>
+</ul>
+<p>One broken tag can cascade into a dozen errors — fix the first few, revalidate,
+repeat. You're done when the green banner appears: <em>"Document checking completed.
+No errors or warnings to show."</em> Aim for that banner on everything you ship —
+including every exercise in this course.</p>
+
+<h2>Exercise — the real MDN task (Debugging HTML)</h2>
+<p>This document has three planted bugs. Run it in a browser, inspect the rendered
+DOM to see what the browser built, then validate it and fix everything:</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="en-US"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;HTML debugging examples&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;h1&gt;HTML debugging examples&lt;/h1&gt;
+    &lt;p&gt;What causes errors in HTML?
+    &lt;ul&gt;
+      &lt;li&gt;Unclosed elements: If an element is &lt;strong&gt;not closed properly,then
+          its effect can spread to areas you didn't intend
+      &lt;li&gt;Badly nested elements: Nesting elements properly is also very important
+          for code behaving correctly. &lt;strong&gt;strong &lt;em&gt;strong emphasized?&lt;/strong&gt;
+          what is this?&lt;/em&gt;
+      &lt;li&gt;Unclosed attributes: Another common source of HTML problems. Let's look
+          at an example: &lt;a href="https://www.mozilla.org/&gt;link to Mozilla homepage&lt;/a&gt;
+    &lt;/ul&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<details>
+  <summary>Show the fixes</summary>
+<pre><code>Close the &lt;p&gt; after "in HTML?" — close each &lt;li&gt; — close the first &lt;strong&gt;
+after "properly," — untangle the strong/em nesting — and put the closing
+double-quote back on the href:
+
+&lt;a href="https://www.mozilla.org/"&gt;link to Mozilla homepage&lt;/a&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. Why is permissive HTML parsing a bad news story?</p>
+  <button>Pages render slower when the parser must guess</button>
+  <button>You always get a page — but possibly not the one you wrote</button>
+  <button>Permissive pages cannot be validated</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>2. An anchor's href is missing its closing quote. What happens?</p>
+  <button>The link is silently deleted from the rendered page</button>
+  <button>The browser closes the quote at the next line break</button>
+  <button>The validator catches it before the browser does</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>3. The devtools Elements/Inspector tab shows…</p>
+  <button>Your saved source file, with errors underlined</button>
+  <button>The server's response headers</button>
+  <button>The rendered DOM: what the browser actually built</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>4. "End of file reached when inside an attribute value" means…</p>
+  <button>The file was truncated during download</button>
+  <button>Some quote opened and never closed, swallowing the rest</button>
+  <button>An attribute was misspelled</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>5. A dozen validator errors often mean…</p>
+  <button>A dozen independent mistakes</button>
+  <button>The validator is broken</button>
+  <button>One or two root errors cascading — fix, revalidate, repeat</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Debugging_HTML"><b>Primary:</b> MDN — Debugging HTML</a> — the full walkthrough with screenshots</li>
+  <li><a href="https://validator.w3.org/">W3C Markup Validation Service</a> — bookmark it; it's part of your workflow now</li>
+</ul>
+<p>Reference: <a href="../reference/validation-workflow.html">Validation &amp; workflow reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "why was HTML made permissive
+in the first place?", "what's an HTML entity?", "how do I edit the live DOM?"
+Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

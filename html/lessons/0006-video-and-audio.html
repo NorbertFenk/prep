@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 6 — Video and audio</title>
+<link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body>
+
+<p class="meta">Lesson 0006 · HTML · ~25 min · prereq: 0005</p>
+<h1>Video and audio</h1>
+<p>Before HTML5, video meant plugins — Flash, QuickTime. Now two native elements
+do it, and the interesting parts are the attributes and the fallback habits.</p>
+
+<h2>&lt;video&gt;</h2>
+<pre><code>&lt;video src="rabbit320.webm" controls&gt;
+  &lt;p&gt;
+    Your browser doesn't support HTML video. Here is a
+    &lt;a href="rabbit320.webm"&gt;link to the video&lt;/a&gt; instead.
+  &lt;/p&gt;
+&lt;/video&gt;</code></pre>
+<div class="step"><div class="num">1</div><div>
+  <b><code>controls</code></b>
+  <p>Shows the browser's play/pause/volume UI. Users must be able to stop playback
+  — autoplaying unsilent video is an accessibility failure, not just bad taste.</p></div></div>
+<div class="step"><div class="num">2</div><div>
+  <b>Fallback content</b>
+  <p>Anything inside the element that isn't <code>&lt;source&gt;</code> renders when
+  the browser can't play the media at all — here, a download link.</p></div></div>
+<div class="step"><div class="num">3</div><div>
+  <b><code>width</code>/<code>height</code>, <code>poster</code></b>
+  <p>Size and aspect ratio as with images; <code>poster</code> supplies a splash
+  image shown before playback starts.</p></div></div>
+<div class="step"><div class="num">4</div><div>
+  <b><code>autoplay</code>, <code>loop</code>, <code>muted</code>,
+  <code>preload</code></b>
+  <p>Autoplay annoys — if you must autoplay, also <code>muted</code> (many browsers
+  require it). <code>loop</code> restarts forever. <code>preload</code> buffers
+  ahead: <code>auto</code>, <code>metadata</code>, or <code>none</code>.</p></div></div>
+
+<h2>Why multiple sources: containers and codecs</h2>
+<p>A media file is a <b>container</b> (WebM, MP4) holding tracks encoded by a
+<b>codec</b> (VP8/VP9, H.264…). Browsers support different sets — MP4/H.264 was
+patent-encumbered, WebM is open — so you offer both and let the browser choose:</p>
+<pre><code>&lt;video controls&gt;
+  &lt;source src="rabbit320.mp4" type="video/mp4" /&gt;
+  &lt;source src="rabbit320.webm" type="video/webm" /&gt;
+  &lt;p&gt;Your browser doesn't support this video. Here is a
+     &lt;a href="rabbit320.mp4"&gt;link to the video&lt;/a&gt; instead.&lt;/p&gt;
+&lt;/video&gt;</code></pre>
+<p>The <code>type</code> attribute lets the browser skip formats it can't play
+<em>without downloading them first</em>. It plays the first source it supports,
+top to bottom.</p>
+
+<h2>&lt;audio&gt; and text tracks</h2>
+<pre><code>&lt;audio controls&gt;
+  &lt;source src="viper.mp3" type="audio/mp3" /&gt;
+  &lt;source src="viper.ogg" type="audio/ogg" /&gt;
+&lt;/audio&gt;
+
+&lt;video controls width="320" height="240"&gt;
+  &lt;source src="video.mp4" type="video/mp4" /&gt;
+  &lt;track kind="subtitles" src="subtitles_en.vtt" srclang="en" label="English" /&gt;
+&lt;/video&gt;</code></pre>
+<p><code>&lt;audio&gt;</code> works like <code>&lt;video&gt;</code> minus the visual
+bits — no <code>width</code>/<code>height</code>/<code>poster</code>.
+<code>&lt;track&gt;</code> attaches subtitles or captions (WebVTT files);
+<code>srclang</code> and <code>label</code> tell users which language they're picking.</p>
+
+<h2>Exercise — the real MDN task (Audio and video 2)</h2>
+<p>Build the full player: multiple sources with types, intrinsic 320×240 size,
+muted default, controls, and English subtitles from
+<code>subtitles_en.vtt</code>. Starting point is a bare <code>&lt;video&gt;&lt;/video&gt;</code>;
+the sources are
+<code>video.mp4</code> / <code>video.webm</code> under
+<code>https://github.com/mdn/learning-area/raw/refs/heads/main/html/multimedia-and-embedding/tasks/media-embed/media/</code>.
+Try it, then compare:</p>
+<details>
+  <summary>Show solution</summary>
+<pre><code>&lt;video controls width="320" height="240" muted&gt;
+  &lt;source
+    src="https://github.com/mdn/learning-area/raw/refs/heads/main/html/multimedia-and-embedding/tasks/media-embed/media/video.mp4"
+    type="video/mp4" /&gt;
+  &lt;source
+    src="https://github.com/mdn/learning-area/raw/refs/heads/main/html/multimedia-and-embedding/tasks/media-embed/media/video.webm"
+    type="video/webm" /&gt;
+  &lt;track
+    kind="subtitles"
+    src="https://raw.githubusercontent.com/mdn/learning-area/refs/heads/main/html/multimedia-and-embedding/tasks/media-embed/media/subtitles_en.vtt"
+    srclang="en"
+    label="English" /&gt;
+&lt;/video&gt;</code></pre>
+</details>
+
+<h2>Check yourself (instant feedback)</h2>
+<div class="q" data-answer="1">
+  <p>1. Why include several &lt;source&gt; elements?</p>
+  <button>They load in parallel for faster start times</button>
+  <button>Browsers support different containers and codecs</button>
+  <button>Each source plays one after another as a playlist</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>2. What does the type attribute on &lt;source&gt; buy you?</p>
+  <button>It decrypts DRM-protected media streams</button>
+  <button>It scales the video to fit its container</button>
+  <button>The browser skips unsupported formats without downloading them</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="0">
+  <p>3. What is the content inside &lt;video&gt;…&lt;/video&gt; for?</p>
+  <button>Fallback shown when the browser can't play the media</button>
+  <button>Captions rendered over the playing video</button>
+  <button>A poster frame shown before playback</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="2">
+  <p>4. Which attribute combo must go together for autoplaying video?</p>
+  <button>autoplay and loop</button>
+  <button>autoplay and preload</button>
+  <button>autoplay and muted</button>
+  <div class="fb"></div>
+</div>
+<div class="q" data-answer="1">
+  <p>5. Which attributes does &lt;audio&gt; lack compared with &lt;video&gt;?</p>
+  <button>controls and preload</button>
+  <button>width, height, and poster</button>
+  <button>source and type</button>
+  <div class="fb"></div>
+</div>
+
+<p id="score"></p>
+
+<h2>Sources (go deeper)</h2>
+<ul class="srcs">
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_video_and_audio"><b>Primary:</b> MDN — HTML video and audio</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Test_your_skills/Audio_and_video">MDN — Test: Audio and video</a> — today's exercise (plus a basic audio task)</li>
+</ul>
+<p>Reference: <a href="../reference/images-media.html">Images &amp; media reference</a>.</p>
+
+<div class="ask"><b>Stuck or curious?</b> Ask your agent — "what's a WebVTT file?",
+"why was Flash abandoned?", "how does autoplay policy differ on mobile?"
+Follow-up questions are part of the lesson.</div>
+
+<script src="../../assets/quiz.js"></script>
+</body>
+</html>

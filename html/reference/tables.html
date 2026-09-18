@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML tables reference</title>
+  <link rel="stylesheet" href="../../assets/course.css">
+</head>
+<body><main>
+  <p class="eyebrow">HTML quick reference</p>
+  <h1>Tables</h1>
+  <p class="lede">For tabular data only — never layout. Structure plus <code>scope</code> is what makes them readable by machines.</p>
+
+  <h2>Skeleton</h2>
+  <pre><code>&lt;table&gt;
+  &lt;caption&gt;What this table is&lt;/caption&gt;
+  &lt;colgroup&gt;
+    &lt;col span="2" /&gt;
+    &lt;col class="highlight" /&gt;
+  &lt;/colgroup&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;td colspan="2"&gt;&lt;/td&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;th scope="row"&gt;Mercury&lt;/th&gt;&lt;td&gt;0.330&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
+  <h2>Building blocks</h2>
+  <table>
+    <tr><th>Element / attribute</th><th>For</th></tr>
+    <tr><td><code>&lt;tr&gt;</code> / <code>&lt;td&gt;</code> / <code>&lt;th&gt;</code></td><td>Row / data cell / header cell (semantic heading, not just bold).</td></tr>
+    <tr><td><code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code>/<code>&lt;tfoot&gt;</code></td><td>Row regions: addressed by screen readers and styling.</td></tr>
+    <tr><td><code>&lt;caption&gt;</code></td><td>Titles the whole table, visible to all users.</td></tr>
+    <tr><td><code>colspan</code> / <code>rowspan</code></td><td>Cell spans N columns / N rows (group headers).</td></tr>
+    <tr><td><code>&lt;colgroup&gt;</code>/<code>&lt;col&gt;</code></td><td>Style whole columns structurally, without touching cells.</td></tr>
+  </table>
+
+  <h2>scope — the accessibility payoff</h2>
+  <table>
+    <tr><th>Value</th><th>"This header labels…"</th></tr>
+    <tr><td><code>scope="col"</code></td><td>Its column.</td></tr>
+    <tr><td><code>scope="row"</code></td><td>Its row.</td></tr>
+    <tr><td><code>scope="colgroup"</code></td><td>Multiple columns it spans.</td></tr>
+    <tr><td><code>scope="rowgroup"</code></td><td>Multiple rows it spans.</td></tr>
+  </table>
+  <p>With headers + scopes, a screen reader announces "Mercury, diameter: 4,879
+  kilometres" — or reads a whole column at once. Alternative for gnarly tables:
+  <code>id</code> on headers, <code>headers</code> on data cells.</p>
+
+  <h2>Never for layout</h2>
+  <ul>
+    <li>Layout tables confuse screen readers (they announce row/column structure that isn't real).</li>
+    <li>They produce tag soup — harder to write, maintain, debug.</li>
+    <li>They don't reflow: not responsive by default.</li>
+  </ul>
+
+  <p><a href="../lessons/0007-tables.html">Lesson 7</a> · <a href="structure-landmarks.html">Structure</a> · <a href="glossary.html">Glossary</a></p>
+</main></body>
+</html>
