@@ -6,15 +6,16 @@
 <title>Lesson 4 — TLS: the handshake that turns TCP into HTTPS</title>
 <link rel="stylesheet" href="../../assets/course.css">
 </head>
-<body>
+<body><main>
 
-<p class="meta">Lesson 0004 · How the Internet Works · ~15 min · builds on lesson 0001 step 4 and lesson 0003</p>
+<p class="eyebrow">How the Internet Works / Lesson 4</p>
 <h1>TLS: the handshake that turns TCP into HTTPS</h1>
-<p>Last chapter your browser finished the TCP handshake with port 443. The connection is open —
+<p class="lede">Last chapter your browser finished the TCP handshake with port 443. The connection is open —
 and completely readable by anyone on the path. TLS fixes three things:
 <b>encryption</b> (nobody can read it), <b>integrity</b> (nobody can tamper undetected), and
 <b>authentication</b> (you're really talking to Google, not a wifi snooper impersonating them).
 The interview core: <i>how does the handshake deliver all three?</i></p>
+<p class="meta">~15 min · builds on lesson 0001 step 4 and lesson 0003</p>
 
 <h2>Two cryptosystems, one trick</h2>
 <table>
@@ -124,6 +125,13 @@ to establish a fast symmetric <b>session key</b>, then switch.</p>
 "what happens when a cert is revoked?", or drill the model answers with me. Next chapter: what
 finally rides inside this encrypted tunnel — the HTTP request and response.</div>
 
+<ul class="links">
+  <li><a href="../MISSION.md">Mission</a></li>
+  <li><a href="../RESOURCES.md">Resources</a></li>
+  <li><a href="0003-tcp-three-way-handshake.html">Lesson 3</a></li>
+  <li><a href="0005-http-request-response.html">Lesson 5</a></li>
+</ul>
+<footer>Lesson 4 of the How the Internet Works course. TLS proves identity and agrees keys before any HTTP moves.</footer>
 <script src="../../assets/quiz.js"></script>
-</body>
+</main></body>
 </html>

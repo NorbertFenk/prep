@@ -6,14 +6,15 @@
 <title>Lesson 7 — Performance: caching, compression, and where the milliseconds go</title>
 <link rel="stylesheet" href="../../assets/course.css">
 </head>
-<body>
+<body><main>
 
-<p class="meta">Lesson 0007 · How the Internet Works · ~15 min · builds on lesson 0006</p>
+<p class="eyebrow">How the Internet Works / Lesson 7</p>
 <h1>Performance: caching, compression, and where the milliseconds go</h1>
-<p>You now know the whole journey — DNS, TCP, TLS, HTTP, rendering. Every one of those steps
+<p class="lede">You now know the whole journey — DNS, TCP, TLS, HTTP, rendering. Every one of those steps
 costs time, and interviewers love the follow-up: <i>"the page is slow — where would you look,
 and what would you do?"</i> The answer is a short mental model: find where the time goes, then
 apply three levers — <b>fewer bytes</b>, <b>fewer round trips</b>, <b>don't repeat work</b>.</p>
+<p class="meta">~15 min · builds on lesson 0006</p>
 
 <h2>Where the milliseconds go</h2>
 <div class="wire">
@@ -146,6 +147,13 @@ re-compressing things that are already compressed (JPEG, video, WOFF2 fonts).</p
 other side of the wire — reverse proxies, load balancers, and how one domain becomes a fleet
 of servers.</div>
 
+<ul class="links">
+  <li><a href="../MISSION.md">Mission</a></li>
+  <li><a href="../RESOURCES.md">Resources</a></li>
+  <li><a href="0006-browser-rendering.html">Lesson 6</a></li>
+  <li><a href="0008-reverse-proxies-and-load-balancers.html">Lesson 8</a></li>
+</ul>
+<footer>Lesson 7 of the How the Internet Works course. Every saved round trip and byte is a millisecond a user feels.</footer>
 <script src="../../assets/quiz.js"></script>
-</body>
+</main></body>
 </html>

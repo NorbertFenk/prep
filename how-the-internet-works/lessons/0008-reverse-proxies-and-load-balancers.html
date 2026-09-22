@@ -6,14 +6,15 @@
 <title>Lesson 8 — The server side: reverse proxies, load balancers, and one domain, many machines</title>
 <link rel="stylesheet" href="../../assets/course.css">
 </head>
-<body>
+<body><main>
 
-<p class="meta">Lesson 0008 · How the Internet Works · ~15 min · builds on lesson 0007</p>
+<p class="eyebrow">How the Internet Works / Lesson 8</p>
 <h1>The server side: reverse proxies, load balancers, and one domain, many machines</h1>
-<p>Every chapter so far drew the server as one box that answers. But a real site gets millions of
+<p class="lede">Every chapter so far drew the server as one box that answers. But a real site gets millions of
 visits: no single machine has the CPU, memory, or connections for that — and even the world's
 biggest server would still be <b>one box that can die</b>, taking the site with it. The interview
 core of this chapter: <i>"how does one domain name serve millions of users at once?"</i></p>
+<p class="meta">~15 min · builds on lesson 0007</p>
 
 <h2>Why one server is never enough</h2>
 <p>You can scale <b>vertically</b> — buy a bigger machine. It works until the ceiling: there's always
@@ -142,6 +143,13 @@ Two fixes:</p>
 consistent hashing?", or drill the model answers with me. Next chapter: putting it all together —
 the fluent 60-second answer to "what happens when you type google.com and press Enter".</div>
 
+<ul class="links">
+  <li><a href="../MISSION.md">Mission</a></li>
+  <li><a href="../RESOURCES.md">Resources</a></li>
+  <li><a href="0007-making-it-fast-caching-compression.html">Lesson 7</a></li>
+  <li><a href="0009-putting-it-all-together.html">Lesson 9</a></li>
+</ul>
+<footer>Lesson 8 of the How the Internet Works course. One domain, many machines — the proxy is the seam.</footer>
 <script src="../../assets/quiz.js"></script>
-</body>
+</main></body>
 </html>

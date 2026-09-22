@@ -6,13 +6,14 @@
 <title>Lesson 2 — DNS: how a name becomes an IP</title>
 <link rel="stylesheet" href="../../assets/course.css">
 </head>
-<body>
+<body><main>
 
-<p class="meta">Lesson 0002 · How the Internet Works · ~15 min · builds on lesson 0001, step 2</p>
+<p class="eyebrow">How the Internet Works / Lesson 2</p>
 <h1>DNS: how a name becomes an IP address</h1>
-<p>Last lesson, step 2 was a black box called "DNS lookup". Interviews open that box:
+<p class="lede">Last lesson, step 2 was a black box called "DNS lookup". Interviews open that box:
 <i>"walk me through a DNS resolution."</i> By the end you'll answer it cleanly, plus the
 follow-ups: <i>CNAME vs A record? Why does DNS use UDP? Why do changes propagate slowly?</i></p>
+<p class="meta">~15 min · builds on lesson 0001, step 2</p>
 
 <h2>The cast</h2>
 <p>Four servers can be involved when nothing is cached:</p>
@@ -133,6 +134,13 @@ follow-ups: <i>CNAME vs A record? Why does DNS use UDP? Why do changes propagate
 <div class="ask"><b>Stuck or curious?</b> Ask your agent anything — "how do I look up DNS myself?"
 (nslookup / dig — next lesson could be exactly that), "what breaks when DNS breaks?", or quiz me on this chapter.</div>
 
+<ul class="links">
+  <li><a href="../MISSION.md">Mission</a></li>
+  <li><a href="../RESOURCES.md">Resources</a></li>
+  <li><a href="0001-what-happens-when-you-type-a-url.html">Lesson 1</a></li>
+  <li><a href="0003-tcp-three-way-handshake.html">Lesson 3</a></li>
+</ul>
+<footer>Lesson 2 of the How the Internet Works course. DNS is a cacheable tree walk: root, TLD, then the authoritative server.</footer>
 <script src="../../assets/quiz.js"></script>
-</body>
+</main></body>
 </html>

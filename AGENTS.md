@@ -28,8 +28,8 @@ Lessons and references are two levels below root → link assets as `../../asset
 - Name `lessons/NNNN-dash-case-name.html`; NNNN increments per course.
 - Body uses course.css classes: `.eyebrow` (course/lesson label) → `<h1>` →
   `.lede` (one-line summary) → `.meta` (prereqs · time) → sections →
-  `<ul class="links">` back-links (MISSION, RESOURCES, prev/next) →
-  `.ask` (invite follow-up questions) → `<footer>`.
+  `.ask` (invite follow-up questions) →
+  `<ul class="links">` back-links (MISSION, RESOURCES, prev/next) → `<footer>`.
 - Recommend one primary source (high-trust external link).
 - Load `<script src="../../assets/quiz.js"></script>` right before `</body>`.
 

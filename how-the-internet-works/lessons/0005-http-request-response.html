@@ -6,15 +6,16 @@
 <title>Lesson 5 — HTTP: the request/response pair that carries the web</title>
 <link rel="stylesheet" href="../../assets/course.css">
 </head>
-<body>
+<body><main>
 
-<p class="meta">Lesson 0005 · How the Internet Works · ~15 min · builds on lesson 0004</p>
+<p class="eyebrow">How the Internet Works / Lesson 5</p>
 <h1>HTTP: the request/response pair that carries the web</h1>
-<p>Last chapter ended with an encrypted TLS tunnel to the server. So what finally travels
+<p class="lede">Last chapter ended with an encrypted TLS tunnel to the server. So what finally travels
 through it? <b>HTTP</b> — a plain-text protocol with exactly one pattern: the client sends a
 <b>request</b>, the server sends a <b>response</b>. Nothing else. It's also <b>stateless</b>:
 the server forgets you the moment the response is sent. The interview core:
 <i>what's inside a request and a response, and how do methods, status codes and cookies fit in?</i></p>
+<p class="meta">~15 min · builds on lesson 0004</p>
 
 <h2>The request, on the wire</h2>
 <div class="wire">
@@ -147,6 +148,13 @@ timed-out GET can be retried blindly but a timed-out POST ("charge my card?") mu
 "how does a CDN decide what to cache?", or drill the model answers with me. Next chapter: what
 your browser does with the response — parsing and rendering the page.</div>
 
+<ul class="links">
+  <li><a href="../MISSION.md">Mission</a></li>
+  <li><a href="../RESOURCES.md">Resources</a></li>
+  <li><a href="0004-tls-handshake.html">Lesson 4</a></li>
+  <li><a href="0006-browser-rendering.html">Lesson 6</a></li>
+</ul>
+<footer>Lesson 5 of the How the Internet Works course. One request line, headers, a body — the web rides on that.</footer>
 <script src="../../assets/quiz.js"></script>
-</body>
+</main></body>
 </html>

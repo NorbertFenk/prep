@@ -6,12 +6,13 @@
 <title>Lesson 11 — CDNs: how google.com is a thousand places at once</title>
 <link rel="stylesheet" href="../../assets/course.css">
 </head>
-<body>
+<body><main>
 
+<p class="eyebrow">How the Internet Works / Lesson 11</p>
 <h1>CDNs: how google.com is a thousand places at once</h1>
-<p class="meta">Lesson 0011 · How the Internet Works · ~15 min · builds on lessons 0002, 0007, 0008</p>
 
-<p>Your 60-second answer ends at <i>a</i> server. Sharp interviewers ask: <i>"which one? Google has thousands."</i> The answer is a <b>CDN</b> — and it interleaves three chapters you already own: DNS (lesson 2), caching (lesson 7), load balancing (lesson 8).</p>
+<p class="lede">Your 60-second answer ends at <i>a</i> server. Sharp interviewers ask: <i>"which one? Google has thousands."</i> The answer is a <b>CDN</b> — and it interleaves three chapters you already own: DNS (lesson 2), caching (lesson 7), load balancing (lesson 8).</p>
+<p class="meta">~15 min · builds on lessons 0002, 0007, 0008</p>
 
 <h2>Why distance costs milliseconds</h2>
 <p>Packets move through fiber at roughly 200 km per millisecond — fast, but finite. Every beat of your journey pays for it: TCP's handshake, TLS's round trips, the request itself. Sit 10,000 km from the server and even a flawless site stacks dozens of cross-ocean round trips per page. <b>The fix isn't faster packets — it's shorter wires.</b> Put copies of the content near the user.</p>
@@ -104,6 +105,13 @@
 
 <div class="ask"><b>Stuck or curious?</b> Ask your agent — drill both spoken answers with graded feedback, ask "what happens on a cache miss storm?", or demand surprise follow-ups. Next chapter: the gauntlet — random timed follow-ups across the whole journey, your graduation test.</div>
 
+<ul class="links">
+  <li><a href="../MISSION.md">Mission</a></li>
+  <li><a href="../RESOURCES.md">Resources</a></li>
+  <li><a href="0010-http2-and-quic.html">Lesson 10</a></li>
+  <li><a href="0012-the-gauntlet.html">Lesson 12</a></li>
+</ul>
+<footer>Lesson 11 of the How the Internet Works course. A CDN is DNS, caching, and load balancing pushed to the edge.</footer>
 <script src="../../assets/quiz.js"></script>
-</body>
+</main></body>
 </html>
