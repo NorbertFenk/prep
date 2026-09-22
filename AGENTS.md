@@ -9,7 +9,8 @@ workspace with `./assets/`), this file wins.
 - Root `index.html` = the course catalog.
 - Each course = one top-level dir (`go/`, `how-the-internet-works/`) holding
   `MISSION.md`, `NOTES.md`, `RESOURCES.md`, `learning-records/`, `lessons/`, `reference/`.
-- Shared components live in root `assets/`: `course.css`, `quiz.js`, `gauntlet.js`.
+- Shared components live in root `assets/`: `course.css`, `quiz.js`, `gauntlet.js`, `search.js`.
+  (`search.js` is catalog-only — loaded by root `index.html`, not by lessons.)
 
 ## Golden rule — reuse shared assets, never inline
 Before authoring any lesson/reference: read `assets/` and one existing lesson in

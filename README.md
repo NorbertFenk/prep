@@ -13,7 +13,7 @@ links resolve.
 ## Layout
 
 - `index.html` — course catalog
-- `assets/` — shared components (`course.css`, `quiz.js`, `gauntlet.js`)
+- `assets/` — shared components (`course.css`, `quiz.js`, `gauntlet.js`, `search.js`)
 - one dir per course (`go/`, `how-the-internet-works/`) with `MISSION.md`,
   `RESOURCES.md`, `NOTES.md`, `learning-records/`, `lessons/`, `reference/`
 
