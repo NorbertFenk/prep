@@ -62,3 +62,35 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   .sres a.on{border-color:#2563eb;background:#eff6ff}
   .sres b{display:block;color:#2563eb}
   .sres span{font-size:.85rem;color:#374151}
+  .theme-toggle{position:fixed;bottom:.8rem;right:.8rem;z-index:10;padding:.4rem .65rem;border:1px solid #cbd5e1;border-radius:6px;background:#fff;color:#374151;cursor:pointer;font-size:.8rem;line-height:1}
+  .theme-toggle:hover{border-color:#2563eb}
+  :root{color-scheme:light;background:#fff}
+  :root[data-theme=dark]{color-scheme:dark;background:#0f172a}
+  :root[data-theme=dark] body{color:#e2e8f0}
+  :root[data-theme=dark] h2{border-left-color:#60a5fa}
+  :root[data-theme=dark] .eyebrow,:root[data-theme=dark] .gcat,:root[data-theme=dark] .sres b{color:#60a5fa}
+  :root[data-theme=dark] .lede,:root[data-theme=dark] .step p,:root[data-theme=dark] dd,:root[data-theme=dark] .sres span{color:#cbd5e1}
+  :root[data-theme=dark] .meta,:root[data-theme=dark] .aka{color:#94a3b8}
+  :root[data-theme=dark] a,:root[data-theme=dark] .srcs a,:root[data-theme=dark] .links a,:root[data-theme=dark] .gres a{color:#60a5fa}
+  :root[data-theme=dark] code{background:#1e293b;color:#e2e8f0}
+  :root[data-theme=dark] pre,:root[data-theme=dark] .wire{background:#1e293b}
+  :root[data-theme=dark] th,:root[data-theme=dark] td{border-color:#334155}
+  :root[data-theme=dark] th{background:#1e293b}
+  :root[data-theme=dark] .q,:root[data-theme=dark] .card,:root[data-theme=dark] .gcard,:root[data-theme=dark] .sres a{background:#1e293b;border-color:#334155}
+  :root[data-theme=dark] .q button,:root[data-theme=dark] .gbtns button{background:#1e293b;border-color:#475569;color:#e2e8f0}
+  :root[data-theme=dark] .q button:hover,:root[data-theme=dark] .gbtns button:hover{border-color:#60a5fa}
+  :root[data-theme=dark] .q button.correct{background:#14532d;border-color:#22c55e}
+  :root[data-theme=dark] .q button.wrong{background:#7f1d1d;border-color:#ef4444}
+  :root[data-theme=dark] .fb.ok{color:#4ade80}
+  :root[data-theme=dark] .fb.no{color:#f87171}
+  :root[data-theme=dark] details,:root[data-theme=dark] .prompt{background:#1e293b;border-color:#334155}
+  :root[data-theme=dark] .prompt{border-left-color:#60a5fa}
+  :root[data-theme=dark] .ask{background:#3f3a12;border-color:#a16207}
+  :root[data-theme=dark] .gtime{background:#334155}
+  :root[data-theme=dark] .gbar.low{background:#ef4444}
+  :root[data-theme=dark] .search{background:#0f172a;border-bottom-color:#334155}
+  :root[data-theme=dark] .search input{background:#1e293b;border-color:#475569;color:#e2e8f0}
+  :root[data-theme=dark] .sres a.on{background:#1e3a5f;border-color:#60a5fa}
+  :root[data-theme=dark] .theme-toggle{background:#1e293b;border-color:#475569;color:#cbd5e1}
+  :root[data-theme=dark] .theme-toggle:hover{border-color:#60a5fa}
+  @media print{.theme-toggle{display:none}}
