@@ -35,7 +35,7 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;max-width:46re
   dt{font-weight:700;margin-top:1rem}
   dd{margin:.2rem 0 0 0;color:#374151}
   .aka{color:#6b7280;font-size:.85em;font-weight:normal}
-  .links{list-style:none;display:flex;gap:1rem;padding:0;margin:1.5rem 0;font-size:.9rem}
+  .links{list-style:none;display:flex;flex-wrap:wrap;gap:1rem;padding:0;margin:1.5rem 0;font-size:.9rem}
   .links a{color:#2563eb}
   .prompt{background:#f8fafc;border-left:4px solid #2563eb;border-radius:0 6px 6px 0;padding:.6rem .9rem}
   .ask{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem}
