@@ -33,6 +33,18 @@ if (typeof document !== 'undefined') (async function () {
   const bank = document.getElementById('bank');
   const nav = document.getElementById('qnav');
   bank.innerHTML = '';
+
+  bank.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    const summaries = [...bank.querySelectorAll('summary')];
+    const i = summaries.indexOf(e.target);
+    if (i < 0) return;
+    const next = summaries[i + (e.key === 'ArrowDown' ? 1 : -1)];
+    if (!next) return;
+    e.preventDefault();
+    next.focus();
+  });
+
   let total = 0, loaded = 0;
 
   for (const name of QFILES) {
